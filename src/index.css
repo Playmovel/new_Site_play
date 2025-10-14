@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: #fff;
+  color: #333;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #6200ee;
+  color: white;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #bb86fc;
+  color: white;
+}
+
+.hero button {
+  padding: 0.8rem 2rem;
+  margin-top: 1rem;
+  border: none;
+  background: #3700b3;
+  color: white;
+  cursor: pointer;
+}
+
+.plans {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.plan-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.plan-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 220px;
+}
+
+.plan-card button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #6200ee;
+  color: white;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  background: #6200ee;
+  color: white;
+}
+
