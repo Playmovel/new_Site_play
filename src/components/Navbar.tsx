@@ -1,3 +1,4 @@
+import logo from"../assets/logo.png"
 export default function Navbar() {
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -20,8 +21,13 @@ export default function Navbar() {
         zIndex: 100,
       }}
     >
-      <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>Zyber</div>
-
+      <div>
+        <img
+          src= {logo}
+          alt="Logo Zyber"
+          style={{ height: "40px" }} 
+        />
+      </div>
       <ul
         style={{
           listStyle: "none",

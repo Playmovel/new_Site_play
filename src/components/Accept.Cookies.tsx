@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
- 
   const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -33,20 +32,18 @@ export default function CookieConsent() {
       style={{
         position: "fixed",
         bottom: "20px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        background: "#fff",
-        color: "#333",
+        left: "20px", 
+        transform: "none", 
+        background: "linear-gradient(135deg, #ff2600ff, #f5775bff)", 
+        color: "#fff",
         padding: "1.5rem",
         borderRadius: "12px",
-        boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+        boxShadow: "0 4px 15px rgba(0,0,0,0.25)",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flexDirection: "column",
         gap: "1rem",
         zIndex: 1000,
-        width: "90%",
-        maxWidth: "600px",
+        width: "500px", 
       }}
     >
       <p style={{ margin: 0, fontSize: "0.95rem", textAlign: "left" }}>
@@ -55,7 +52,7 @@ export default function CookieConsent() {
           href="https://privacidade.operadora.app.br/#/Zyber"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "#a41902", textDecoration: "underline" }}
+          style={{ color: "#fff", textDecoration: "underline", fontWeight: "bold" }}
         >
           Política de Privacidade
         </a>.
@@ -65,16 +62,18 @@ export default function CookieConsent() {
         onClick={handleAccept}
         style={{
           padding: "0.6rem 1.2rem",
-          backgroundColor: "#a41902",
+          backgroundColor: "#333",
           color: "#fff",
           border: "none",
           borderRadius: "8px",
           cursor: "pointer",
           fontWeight: "bold",
+          alignSelf: "flex-start",
           transition: "background 0.3s ease",
         }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#FF5733")}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#a41902")}
+       onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b22222")}  
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#272727")} 
+
       >
         Aceitar
       </button>

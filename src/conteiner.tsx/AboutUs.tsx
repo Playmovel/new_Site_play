@@ -1,55 +1,64 @@
 import { useState } from "react";
 
-export default function About() {
-  const slides = [
+export default function AboutUs() {
+  const sections = [
     {
-      title: "Sobre Nós",
-      text: "Somos uma empresa dedicada a fornecer o melhor serviço de internet, com qualidade, estabilidade e suporte de ponta.",
+      title: "Nossa História",
+      text: "A Zyber nasceu com o objetivo de conectar pessoas e empresas com soluções de internet de alta qualidade, oferecendo atendimento humanizado e tecnologia de ponta.",
     },
     {
       title: "Nossa Missão",
-      text: "Conectar pessoas e negócios com tecnologia de alto desempenho e atendimento humanizado.",
+      text: "Proporcionar a melhor experiência em conectividade, garantindo velocidade, estabilidade e suporte confiável para nossos clientes.",
     },
     {
-      title: "Por que escolher a Zyber?",
-      text: "Oferecemos planos flexíveis, tecnologia de ponta e compromisso total com a satisfação do cliente.",
+      title: "Nossa Visão",
+      text: "Ser referência em serviços de internet, reconhecida pela qualidade, inovação e compromisso com a satisfação do cliente.",
+    },
+    {
+      title: "Nossos Valores",
+      text: "Integridade, transparência, excelência no atendimento e dedicação total à satisfação dos clientes são os pilares que nos guiam.",
     },
   ];
+
   const [current, setCurrent] = useState(0);
 
-  function nextSlide() {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  }
-
-  const prevSlide = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  const next = () => setCurrent((prev) => (prev + 1) % sections.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + sections.length) % sections.length);
 
   return (
     <section
       id="sobre"
       style={{
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#fff",
         padding: "4rem 2rem",
         textAlign: "center",
         position: "relative",
       }}
     >
-      <h2 style={{ fontSize: "2.2rem", marginBottom: "2rem", color: "#333" }}>
-        {slides[current].title}
+      <h2 style={{ fontSize: "2.2rem", marginBottom: "2rem", color: "#a41902", fontWeight: "bold" }}>
+        Sobre Nós
       </h2>
 
-      <p
+      {/* Modal do carrossel */}
+      <div
         style={{
           maxWidth: "700px",
           margin: "0 auto",
-          fontSize: "1.2rem",
-          color: "#555",
+          padding: "2rem",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "12px",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
           transition: "all 0.5s ease",
         }}
       >
-        {slides[current].text}
-      </p>
+        <h3 style={{ fontSize: "1.5rem", marginBottom: "1rem", color: "#333" }}>
+          {sections[current].title}
+        </h3>
+        <p style={{ color: "#555", fontSize: "1.1rem", lineHeight: "1.6" }}>
+          {sections[current].text}
+        </p>
+      </div>
+
       <div
         style={{
           display: "flex",
@@ -59,7 +68,7 @@ export default function About() {
         }}
       >
         <button
-          onClick={prevSlide}
+          onClick={prev}
           style={{
             backgroundColor: "#a41902",
             color: "#fff",
@@ -67,8 +76,8 @@ export default function About() {
             borderRadius: "50%",
             width: "45px",
             height: "45px",
+            fontSize: "1.5rem",
             cursor: "pointer",
-            fontSize: "1.2rem",
             transition: "transform 0.2s ease",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
@@ -76,9 +85,8 @@ export default function About() {
         >
           ‹
         </button>
-
         <button
-          onClick={nextSlide}
+          onClick={next}
           style={{
             backgroundColor: "#a41902",
             color: "#fff",
@@ -86,8 +94,8 @@ export default function About() {
             borderRadius: "50%",
             width: "45px",
             height: "45px",
+            fontSize: "1.5rem",
             cursor: "pointer",
-            fontSize: "1.2rem",
             transition: "transform 0.2s ease",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}

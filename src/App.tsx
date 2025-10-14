@@ -1,9 +1,9 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import PlansContainer from "./components/PlansContainer";
+import PlanosCarousel from "./components/PlanosCarousel";
 import Footer from "./components/Footer";
 import "./index.css";
-
+ 
 
 import AboutUs from "./conteiner.tsx/AboutUs";
 import InfoSection from "./components/InfoSection"; 
@@ -14,9 +14,9 @@ function App() {
     <>
       <Navbar />
       <Hero />
-      <AboutUs />
+      <PlanosCarousel/>
       <InfoSection /> 
-      <PlansContainer />
+      <AboutUs />
       <Footer />
       <CookieConsent/>
     </>
