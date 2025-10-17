@@ -14,8 +14,8 @@ function App() {
     <>
       <Navbar />
       <Hero />
-      <PlanosCarousel/>
       <InfoSection /> 
+      <PlanosCarousel/>
       <AboutUs />
       <Footer />
       <CookieConsent/>

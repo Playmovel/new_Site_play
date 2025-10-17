@@ -1,128 +1,75 @@
-import { useState } from "react";
 import centralImage from "../assets/cell.webp";
 
 export default function InfoSection() {
-  const [showLeft1, setShowLeft1] = useState(false);
-  const [showLeft2, setShowLeft2] = useState(false);
-  const [showRight1, setShowRight1] = useState(false);
-  const [showRight2, setShowRight2] = useState(false);
+  const infosLeft = [
+    {
+      title: "Portabilidade",
+      content:
+        "Faça a portabilidade pelo app ou CHAT. Informe nome, CPF, número e operadora antiga. Em até 5 dias úteis seu plano estará ativo.",
+    },
+    {
+      title: "Ligações internacionais",
+      content:
+        "Benefícios de voz/sms não são válidos para ligações internacionais (DDI).",
+    },
+  ];
 
-  const questions = [
+  const infosRight = [
     {
-      title: "Como faço a portabilidade para a Zyber?",
+      title: "Renovação automática",
       content:
-        "O titular da conta pode utilizar o nosso aplicativo ou o CHAT para fazer a solicitação. Serão solicitadas as seguintes informações: Nome e CPF, número que deseja manter e operadora antiga. É importante que as linhas estejam no mesmo CPF e DDD. Pronto! Em até 5 dias úteis, o Plano Play Móvel estará disponível no seu número.",
-      show: showLeft1,
-      setShow: setShowLeft1,
-      align: "right",
-      gridColumn: 1,
-      gridRow: 1,
+        "A renovação ocorre automaticamente a cada 30 dias via Pix, boleto ou cartão. Pode ser desativada no app.",
     },
     {
-      title: "É possível fazer ligações internacionais (DDI)?",
+      title: "Sem taxa de adesão",
       content:
-        "Não é possível. Os benefícios dos serviços de voz/sms dos planos não são válidos para ligações internacionais.",
-      show: showLeft2,
-      setShow: setShowLeft2,
-      align: "right",
-      gridColumn: 1,
-      gridRow: 2,
-    },
-    {
-      title: "Como é feita a renovação do plano?",
-      content:
-        "A renovação do plano é automática, e ocorre no dia seguinte ao término da validade do mesmo, que é de 30 dias. Para isso, o cliente precisa efetuar o pagamento da próxima assinatura via Pix, boleto ou cartão. Também é possível desativar a renovação no app.",
-      show: showRight1,
-      setShow: setShowRight1,
-      align: "left",
-      gridColumn: 3,
-      gridRow: 1,
-    },
-    {
-      title: "É necessário pagar alguma taxa para aderir ao plano?",
-      content:
-        "Não há cobrança de taxa de adesão. Para aderir, basta ativar o chip pelo app e fazer a primeira recarga. A confirmação será enviada por SMS e no aplicativo.",
-      show: showRight2,
-      setShow: setShowRight2,
-      align: "left",
-      gridColumn: 3,
-      gridRow: 2,
+        "Ative o chip pelo app e faça a primeira recarga. Confirmação enviada por SMS e app.",
     },
   ];
 
   return (
     <section
       style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 600px 1fr",
-        gridTemplateRows: "auto auto",
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center",
         gap: "2rem",
         padding: "3rem",
-        margin: "0 auto",
         backgroundColor: "#f5f5f5",
       }}
     >
-      
-      {questions.map((q, index) => (
-        <div
-          key={index}
-          style={{
-            gridColumn: q.gridColumn,
-            gridRow: q.gridRow,
-           
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent:
-                q.align === "right" ? "flex-end" : "flex-start",
-              alignItems: "center",
-              gap: "0.5rem",
-              cursor: "pointer",
-            }}
-            onClick={() => q.setShow(!q.show)}
-          >
-            <h3 style={{ color: "#a41902", marginBottom: "0.5rem" }}>
-              {q.title}
-            </h3>
-            <span
-              style={{
-                display: "inline-block",
-                transform: q.show ? "rotate(90deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease",
-                color: "#a41902",
-                fontWeight: "bold",
-              }}
-            >
-              ▶
-            </span>
-          </div>
-
-          <div
-            style={{
-              maxHeight: q.show ? "500px" : "0px",
-              overflow: "hidden",
-              transition: "all 0.5s ease",
-              opacity: q.show ? 1 : 0,
-              marginTop: q.show ? "0.5rem" : "0",
-              color: "#333",
-              lineHeight: 1.5,
-            }}
-          >
-            <p>{q.content}</p>
-          </div>
-        </div>
-      ))}
-
-      
       <div
         style={{
-          gridColumn: 2,
-          gridRow: "1 / span 2",
+          flex: "1 1 250px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        {infosLeft.map((info, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "#fff",
+              padding: "1rem 1.5rem",
+              borderRadius: "12px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+            }}
+          >
+            <h3 style={{ color: "#a41902", marginBottom: "0.5rem" }}>
+              {info.title}
+            </h3>
+            <p style={{ color: "#333", lineHeight: 1.5 }}>{info.content}</p>
+          </div>
+        ))}
+      </div>
+
+      <div
+        style={{
+          flex: "1 1 300px",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
         }}
       >
         <img
@@ -130,12 +77,37 @@ export default function InfoSection() {
           alt="Imagem central"
           style={{
             width: "100%",
-            maxWidth: "800px",
+            maxWidth: "400px",
             height: "auto",
             borderRadius: "12px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
           }}
         />
+      </div>
+
+      <div
+        style={{
+          flex: "1 1 250px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        {infosRight.map((info, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "#fff",
+              padding: "1rem 1.5rem",
+              borderRadius: "12px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+            }}
+          >
+            <h3 style={{ color: "#a41902", marginBottom: "0.5rem" }}>
+              {info.title}
+            </h3>
+            <p style={{ color: "#333", lineHeight: 1.5 }}>{info.content}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

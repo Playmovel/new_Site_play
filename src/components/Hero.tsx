@@ -1,4 +1,5 @@
 import Banner from "../assets/background.webp";
+import "../styles/Button.css"; 
 
 export default function Hero() {
   return (
@@ -10,7 +11,7 @@ export default function Hero() {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         position: "relative",
-        minHeight: "100vh",
+        minHeight: "60vh",
         display: "flex",
         alignItems: "center",
       }}
@@ -26,8 +27,6 @@ export default function Hero() {
           zIndex: 0,
         }}
       ></div>
-
-      
       <div
         style={{
           position: "relative",
@@ -35,23 +34,24 @@ export default function Hero() {
           color: "white",
           padding: "0 10%",
           maxWidth: "600px",
-          textAlign: "left", 
+          textAlign: "left",
         }}
       >
         <h1
           style={{
-            fontSize: "3rem",
-            marginBottom: "1rem",
+            fontSize: "5rem",
+            marginBottom: "0.9rem",
             lineHeight: 1.2,
+            color: "#252525ff",
           }}
         >
-          Telefonia{" "}
-          <span style={{ color: "#FF5733" }}>100% Digital</span>
+          <span style={{ color: "#fff" }}>A ERA DIGITAL CHEGOU, VOCÊ ESTÁ </span>
+          <span style={{ color: "#FF5733" }}>PRONTO?</span>
         </h1>
         <p
           style={{
-            fontSize: "1.25rem",
-            marginBottom: "2rem",
+            fontSize: "2rem",
+            marginBottom: "1rem",
             color: "#f2f2f2",
           }}
         >
@@ -67,61 +67,76 @@ export default function Hero() {
           }}
         >
           <a
-            href="https://play.google.com/store/apps/details?id=app.mobile.zyber"
+            href="https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0APoderia+me+ajudar%3F&type=phone_number&app_absent=0"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button
-              style={{
-                padding: "0.8rem 1.5rem",
-                border: "none",
-                borderRadius: "8px",
-                backgroundColor: "#FF5733", 
-                color: "#fff",
-                fontWeight: "bold",
-                cursor: "pointer",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#a41902";
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#FF5733";
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              Google Play
+            <button className="button">
+              <span className="outline"></span>
+              <span className="state state--default">
+                <span className="icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2 12L22 12M22 12L15 5M22 12L15 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <p>
+                  {["P","e","d","ir"," ","C","h","i","p"].map((letter, i) => (
+                    <span key={i} style={{ "--i": i } as React.CSSProperties}>
+                      {letter}
+                    </span>
+                  ))}
+                </p>
+              </span>
+
+              <span className="state state--sent">
+                <span className="icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <p>
+                  <span style={{ "--i": 1 } as React.CSSProperties}>E</span>
+                  <span style={{ "--i": 2 } as React.CSSProperties}>n</span>
+                  <span style={{ "--i": 3 } as React.CSSProperties}>v</span>
+                  <span style={{ "--i": 4 } as React.CSSProperties}>i</span>
+                  <span style={{ "--i": 5 } as React.CSSProperties}>a</span>
+                  <span style={{ "--i": 6 } as React.CSSProperties}>d</span>
+                  <span style={{ "--i": 7 } as React.CSSProperties}>o</span>
+                </p>
+              </span>
             </button>
           </a>
 
           <a
-            href="https://apps.apple.com/us/app/zyber/id6746278691"
+            href="https://atendimento.operadora.app.br/?companyId=362"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button
-              style={{
-                padding: "0.8rem 1.5rem",
-                border: "none",
-                borderRadius: "8px",
-                backgroundColor: "#FF5733", 
-                color: "#fff",
-                fontWeight: "bold",
-                cursor: "pointer",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#a41902"; 
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#FF5733";
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              App Store
-            </button>
+            {/* Aqui você pode adicionar outro botão animado ou deixar vazio */}
           </a>
         </div>
       </div>

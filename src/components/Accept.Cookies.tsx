@@ -2,21 +2,18 @@ import { useState, useEffect } from "react";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
-
   const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()!.split(";").shift() || null;
     return null;
   };
-
   useEffect(() => {
     const accepted = getCookie("cookiesAccepted");
     if (!accepted) {
       setVisible(true);
     }
   }, []);
-
   const handleAccept = () => {
     const expirationDays = 180; 
     const date = new Date();
@@ -46,6 +43,12 @@ export default function CookieConsent() {
         width: "500px", 
       }}
     >
+
+
+
+
+
+      
       <p style={{ margin: 0, fontSize: "0.95rem", textAlign: "left" }}>
         Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa{" "}
         <a

@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import "../styles/PlanCard.css";
 
 export default function PlanosCarousel() {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -6,14 +7,15 @@ export default function PlanosCarousel() {
   const scroll = (direction: "left" | "right") => {
     if (carouselRef.current) {
       const container = carouselRef.current;
+
       if (direction === "left") {
         container.scrollTo({
-          left: 0, 
+          left: 0,
           behavior: "smooth",
         });
       } else {
         container.scrollTo({
-          left: container.scrollWidth, 
+          left: container.scrollWidth,
           behavior: "smooth",
         });
       }
@@ -21,11 +23,31 @@ export default function PlanosCarousel() {
   };
 
   const planos = [
-    { nome: "Básico", preco: "R$ 49,90", descricao: "Ideal para uso doméstico." },
-    { nome: "Intermediário", preco: "R$ 79,90", descricao: "Mais velocidade e estabilidade." },
-    { nome: "Premium", preco: "R$ 119,90", descricao: "Perfeito para gamers e streamers." },
-    { nome: "Empresarial", preco: "R$ 199,90", descricao: "Alta performance para empresas." },
-    { nome: "Sócio", preco: "R$ 30,00", descricao: "Plano especial de apoio para associados." },
+    {
+      nome: "Básico",
+      preco: "R$ 49,90",
+      descricao: "Ideal para uso doméstico.",
+    },
+    {
+      nome: "Intermediário",
+      preco: "R$ 79,90",
+      descricao: "Mais velocidade e estabilidade.",
+    },
+    {
+      nome: "Premium",
+      preco: "R$ 119,90",
+      descricao: "Perfeito para gamers e streamers.",
+    },
+    {
+      nome: "Empresarial",
+      preco: "R$ 199,90",
+      descricao: "Alta performance para empresas.",
+    },
+    {
+      nome: "Sócio",
+      preco: "R$ 30,00",
+      descricao: "Plano especial de apoio para associados.",
+    },
   ];
 
   return (
@@ -50,30 +72,6 @@ export default function PlanosCarousel() {
         Nossos Planos
       </h2>
 
-      {/* Botão Esquerdo */}
-      <button
-        onClick={() => scroll("left")}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "1rem",
-          transform: "translateY(-50%)",
-          backgroundColor: "#a41902",
-          color: "#fff",
-          border: "none",
-          borderRadius: "50%",
-          width: "45px",
-          height: "45px",
-          fontSize: "1.5rem",
-          cursor: "pointer",
-          zIndex: 10,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        }}
-      >
-        ‹
-      </button>
-
-      {/* Container Centralizado */}
       <div
         style={{
           width: "100%",
@@ -82,7 +80,6 @@ export default function PlanosCarousel() {
           overflow: "hidden",
         }}
       >
-        {/* Carrossel */}
         <div
           ref={carouselRef}
           style={{
@@ -98,6 +95,7 @@ export default function PlanosCarousel() {
           {planos.map((plano, index) => (
             <div
               key={index}
+              className="card"
               style={{
                 flex: "0 0 260px",
                 backgroundColor: "#fff",
@@ -116,7 +114,13 @@ export default function PlanosCarousel() {
                 e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
               }}
             >
-              <h3 style={{ color: "#a41902", fontSize: "1.3rem", fontWeight: "bold" }}>
+              <h3
+                style={{
+                  color: "#a41902",
+                  fontSize: "1.3rem",
+                  fontWeight: "bold",
+                }}
+              >
                 {plano.nome}
               </h3>
               <p
@@ -128,8 +132,11 @@ export default function PlanosCarousel() {
               >
                 {plano.preco}
               </p>
-              <p style={{ color: "#555", fontSize: "0.95rem" }}>{plano.descricao}</p>
+              <p style={{ color: "#ffffffff", fontSize: "0.95rem" }}>
+                {plano.descricao}
+              </p>
               <button
+                className="opaaaaa"
                 style={{
                   backgroundColor: "#a41902",
                   color: "#fff",
@@ -141,7 +148,7 @@ export default function PlanosCarousel() {
                   transition: "background-color 0.3s ease",
                 }}
                 onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#7e3412")
+                  (e.currentTarget.style.backgroundColor = "#b22222")
                 }
                 onMouseOut={(e) =>
                   (e.currentTarget.style.backgroundColor = "#a41902")
@@ -153,29 +160,6 @@ export default function PlanosCarousel() {
           ))}
         </div>
       </div>
-
-      {/* Botão Direito */}
-      <button
-        onClick={() => scroll("right")}
-        style={{
-          position: "absolute",
-          top: "50%",
-          right: "1rem",
-          transform: "translateY(-50%)",
-          backgroundColor: "#a41902",
-          color: "#fff",
-          border: "none",
-          borderRadius: "50%",
-          width: "45px",
-          height: "45px",
-          fontSize: "1.5rem",
-          cursor: "pointer",
-          zIndex: 10,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        }}
-      >
-        ›
-      </button>
     </section>
   );
 }
