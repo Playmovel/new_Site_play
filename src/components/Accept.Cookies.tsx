@@ -29,7 +29,7 @@ export default function CookieConsent() {
       style={{
         position: "fixed",
         bottom: "20px",
-        left: "20px", 
+        left: "17px", 
         transform: "none", 
         background: "linear-gradient(135deg, #ff2600ff, #f5775bff)", 
         color: "#fff",
@@ -40,7 +40,7 @@ export default function CookieConsent() {
         flexDirection: "column",
         gap: "1rem",
         zIndex: 1000,
-        width: "500px", 
+        width: "600px", 
       }}
     >
 
