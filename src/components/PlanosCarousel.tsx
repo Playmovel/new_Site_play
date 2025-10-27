@@ -132,7 +132,7 @@ export default function PlanosCarousel() {
           <ProgressBar />
         </ProgressIndicator>
       </Container>
-    </Section>
+    </Section >
   );
 }
 

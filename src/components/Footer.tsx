@@ -6,43 +6,50 @@ export default function Footer() {
       <FooterContent>
         {/* COLUNA 1 */}
         <FooterColumn>
-          <h3>Institucional</h3>
-          <a href="">Sobre nós</a>
-          <a href="#">Como comprar na Zyber</a>
-          <a href="#">FAQ</a>
+          <ColumnTitle>Institucional</ColumnTitle>
+          <FooterLink href="">Sobre nós</FooterLink>
+          <FooterLink href="#">Como comprar na Zyber</FooterLink>
+          <FooterLink href="#">FAQ</FooterLink>
         </FooterColumn>
 
         {/* COLUNA 2 */}
         <FooterColumn>
-          <h3>Atendimento</h3>
-          <a href="https://atendimento.operadora.app.br/?companyId=362">
+          <ColumnTitle>Atendimento</ColumnTitle>
+          <FooterLink href="https://atendimento.operadora.app.br/?companyId=362">
             Atendimento ao cliente
-          </a>
-          <a href="#">Métodos de Pagamento</a>
-          <a href="#">Frete</a>
+          </FooterLink>
+          <FooterLink href="#">Métodos de Pagamento</FooterLink>
+          <FooterLink href="#">Frete</FooterLink>
         </FooterColumn>
 
         {/* COLUNA 3 */}
         <FooterColumn>
-          <h3>Minha Conta</h3>
-          <a href="#">Rastrear meu pedido</a>
-          <a href="#">Pedir meu chip</a>
+          <ColumnTitle>Minha Conta</ColumnTitle>
+          <FooterLink href="#">Rastrear meu pedido</FooterLink>
+          <FooterLink href="#">Pedir meu chip</FooterLink>
         </FooterColumn>
 
         {/* COLUNA 4 */}
         <FooterColumn>
-          <h3>Legal</h3>
-          <a href="https://privacidade.operadora.app.br/#/Zyber">
+          <ColumnTitle>Legal</ColumnTitle>
+          <FooterLink href="https://privacidade.operadora.app.br/#/Zyber">
             Política de Privacidade
-          </a>
-          <a href="https://privacidade.operadora.app.br/#/adesao/Zyber">
+          </FooterLink>
+          <FooterLink href="https://privacidade.operadora.app.br/#/adesao/Zyber">
             Termo de Adesão
-          </a>
+          </FooterLink>
         </FooterColumn>
       </FooterContent>
 
+      <Divider />
+
       <FooterBottom>
-        <p>© 2025 Zyber. Todos os direitos reservados.</p>
+        <Copyright>© 2025 Zyber. Todos os direitos reservados.</Copyright>
+        <SocialLinks>
+          <SocialIcon href="#" aria-label="Facebook">📘</SocialIcon>
+          <SocialIcon href="#" aria-label="Instagram">📷</SocialIcon>
+          <SocialIcon href="#" aria-label="LinkedIn">💼</SocialIcon>
+        </SocialLinks>
       </FooterBottom>
     </FooterContainer>
   );
@@ -51,52 +58,186 @@ export default function Footer() {
 /* ===== ESTILOS ===== */
 
 const FooterContainer = styled.footer`
-  background-color: #a41902;
+  background: linear-gradient(135deg, #a41902 0%, #8a1502 100%);
   color: #fff;
-  padding: 3rem 2rem 2rem;
-  text-align: center;
+  padding: 4rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 50%, rgba(255, 229, 1, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(255, 229, 1, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 3rem 1.5rem 1.5rem;
+  }
 `;
 
 const FooterContent = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 3rem;
-  margin-bottom: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: left;
+  }
 `;
 
 const FooterColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  min-width: 180px;
+  gap: 0.8rem;
+  animation: fadeInUp 0.6s ease;
 
-  h3 {
-    color: #ffe501;
-    font-size: 1.2rem;
-    margin-bottom: 0.8rem;
-    text-transform: uppercase;
-  }
-
-  a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-    padding: 0.4rem 0;
-    border-radius: 6px;
-
-    &:hover {
-      color: #ffe501;
-      transform: translateX(5px);
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 `;
 
+const ColumnTitle = styled.h3`
+  color: #ffe501;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 0.5rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #ffe501, transparent);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
+`;
+
+const FooterLink = styled.a`
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 0.3rem 0;
+  position: relative;
+  display: inline-block;
+
+  &::before {
+    content: '→';
+    position: absolute;
+    left: -20px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #ffe501;
+  }
+
+  &:hover {
+    color: #ffe501;
+    padding-left: 20px;
+    
+    &::before {
+      opacity: 1;
+      left: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 229, 1, 0.3),
+    transparent
+  );
+  margin: 2.5rem 0 1.5rem;
+  position: relative;
+  z-index: 1;
+`;
+
 const FooterBottom = styled.div`
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
   font-size: 0.9rem;
-  opacity: 0.8;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+`;
+
+const Copyright = styled.p`
+  opacity: 0.85;
+  margin: 0;
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const SocialIcon = styled.a`
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.1);
+    filter: brightness(1.3);
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.3rem;
+  }
 `;

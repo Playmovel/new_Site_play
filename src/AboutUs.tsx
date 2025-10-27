@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import aboutImage from "../assets/favicon.png";
+import aboutImage from "../src/assets/favicon.png"
 
 export default function AboutUs() {
   return (
