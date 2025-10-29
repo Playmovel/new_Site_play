@@ -5,27 +5,27 @@ import button2 from "../assets/botao_google.svg"
 export default function InfoSection() {
   const InfosLeft = [
     {
-      title: "Portabilidade",
+      title: "Segurança",
       content:
-        "Faça a portabilidade pelo app ou CHAT. Informe nome, CPF, número e operadora antiga. Em até 5 dias úteis seu plano estará ativo.",
+        "Nosso maior foco é na segurança de seus dados e do nosso aplicativo.",
     },
     {
-      title: "Ligações internacionais",
+      title: "Gerencie Seus Planos",
       content:
-        "Benefícios de voz/sms não são válidos para ligações internacionais (DDI).",
+        "Nosso maior foco é na segurança de seus dados e do nosso aplicativo.",
     }
   ];
 
   const infosRight = [
     {
-      title: "Renovação automática",
+      title: "Faturas",
       content:
-        "A renovação ocorre automaticamente a cada 30 dias via Pix, boleto ou cartão. Pode ser desativada no app.",
+        "Com o aplicativo da AIVA você consegue renovar o seu plano com um só clique.",
     },
     {
-      title: "Sem taxa de adesão",
+      title: "Acumulo de Gigas",
       content:
-        "Ative o chip pelo app e faça a primeira recarga. Confirmação enviada por SMS e app."
+        "Gerêncie os seus Gigas acumulados"
     }
   ];
 

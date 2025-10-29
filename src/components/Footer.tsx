@@ -46,8 +46,8 @@ export default function Footer() {
       <FooterBottom>
         <Copyright>© 2025 Zyber. Todos os direitos reservados.</Copyright>
         <SocialLinks>
-          <SocialIcon href="#" aria-label="Facebook">📘</SocialIcon>
-          <SocialIcon href="#" aria-label="Instagram">📷</SocialIcon>
+          <SocialIcon href="https://wa.me/qr/5ZQKIH3R6PAUB1" aria-label="Facebook">📘</SocialIcon>
+          <SocialIcon href="https://www.instagram.com/zyber_fibra/profilecard/?igsh=am80ZGF6c2prcGxq" aria-label="Instagram">📷</SocialIcon>
           <SocialIcon href="#" aria-label="LinkedIn">💼</SocialIcon>
         </SocialLinks>
       </FooterBottom>

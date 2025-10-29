@@ -5,8 +5,7 @@ import Footer from "./components/Footer";
 import "./index.css";
 import Icons from "./components/Icons"
 import Diferenciais from "./components/diferenciais";
-
-import AboutUs from "./AboutUs";
+import AboutUs from "./components/AboutUs";
 import InfoSection from "./components/InfoSection";
 import CookieConsent from "./components/Accept.Cookies";
 
@@ -17,10 +16,10 @@ function App() {
       <Navbar />
       <Hero />
       <InfoSection />
-      <Diferenciais />
       <PlanosCarousel />
       <AboutUs />
       <Icons />
+      <Diferenciais />
       <Footer />
       <CookieConsent />
     </>

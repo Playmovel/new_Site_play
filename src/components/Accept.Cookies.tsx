@@ -340,7 +340,7 @@ const CookieLink = styled.a`
   }
 
   &:hover {
-    color: #ffe501;
+    color: #000000ff;
 
     &::after {
       transform: scaleX(1);

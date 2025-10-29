@@ -22,7 +22,7 @@ export default function Navbar() {
               key={item}
               $active={activeItem === item}
               onClick={() => setActiveItem(item)}
-              style={{ "--index": index }}
+              style={{ "--index": index } as any} // necessário para evitar TS em CSS variável
             >
               {item}
               <ItemUnderline $active={activeItem === item} />
@@ -66,6 +66,21 @@ export default function Navbar() {
   );
 }
 
+/* --- Tipos das props customizadas --- */
+interface ActiveProps {
+  $active: boolean;
+}
+
+interface OpenProps {
+  $isOpen: boolean;
+}
+
+interface IndicatorProps {
+  $index: number;
+  $totalItems: number;
+}
+
+/* --- Styled Components --- */
 const NavContainer = styled.header`
   width: 100%;
   position: sticky;
@@ -149,8 +164,8 @@ const DesktopMenu = styled.nav`
   }
 `;
 
-const NavItem = styled.div`
-  color: ${props => props.$active ? '#1a1a1a' : 'rgba(255, 255, 255, 0.9)'};
+const NavItem = styled.div<ActiveProps>`
+  color: ${props => (props.$active ? '#1a1a1a' : 'rgba(255, 255, 255, 0.9)')};
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -162,28 +177,28 @@ const NavItem = styled.div`
   white-space: nowrap;
 
   &:hover {
-    color: ${props => props.$active ? '#1a1a1a' : '#ffffff'};
+    color: ${props => (props.$active ? '#1a1a1a' : '#ffffff')};
     transform: translateY(-1px);
   }
 `;
 
-const ItemUnderline = styled.div`
+const ItemUnderline = styled.div<ActiveProps>`
   position: absolute;
   bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  width: ${props => props.$active ? '0' : '0'};
+  width: 0;
   height: 2px;
   background: #ffffff;
   border-radius: 2px;
   transition: width 0.3s ease;
 
   ${NavItem}:hover & {
-    width: ${props => props.$active ? '0' : '60%'};
+    width: ${props => (props.$active ? '0' : '60%')};
   }
 `;
 
-const ActiveIndicator = styled.div`
+const ActiveIndicator = styled.div<IndicatorProps>`
   position: absolute;
   top: 0.5rem;
   left: ${props => `calc(${props.$index} * (100% / ${props.$totalItems}) + 0.5rem)`};
@@ -242,7 +257,7 @@ const MobileMenuButton = styled.button`
   }
 `;
 
-const MenuIcon = styled.div`
+const MenuIcon = styled.div<OpenProps>`
   width: 28px;
   height: 24px;
   position: relative;
@@ -272,9 +287,9 @@ const MenuIcon = styled.div`
   }
 `;
 
-const MobileMenu = styled.div`
+const MobileMenu = styled.div<OpenProps>`
   display: none;
-  
+
   @media (max-width: 968px) {
     display: flex;
     flex-direction: column;
@@ -294,15 +309,15 @@ const MobileMenu = styled.div`
   }
 `;
 
-const MobileNavItem = styled.div`
-  color: ${props => props.$active ? '#ffffff' : 'rgba(255, 255, 255, 0.8)'};
-  font-weight: ${props => props.$active ? '700' : '600'};
+const MobileNavItem = styled.div<ActiveProps>`
+  color: ${props => (props.$active ? '#ffffff' : 'rgba(255, 255, 255, 0.8)')};
+  font-weight: ${props => (props.$active ? '700' : '600')};
   font-size: 1rem;
   cursor: pointer;
   padding: 1rem;
   border-radius: 12px;
   transition: all 0.3s ease;
-  background: ${props => props.$active ? 'rgba(255, 255, 255, 0.15)' : 'transparent'};
+  background: ${props => (props.$active ? 'rgba(255, 255, 255, 0.15)' : 'transparent')};
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);

@@ -1,452 +1,202 @@
-import { useRef, useState } from "react";
-import styled from "styled-components";
+import { Box } from "@mui/material";
+import React, { useState } from "react";
+import { FaMobileAlt, FaWhatsapp } from "react-icons/fa";
+import { TbWorldWww } from "react-icons/tb";
+import { TiChevronLeftOutline, TiChevronRightOutline } from "react-icons/ti";
+import { useSwipe } from "../hooks/useSwipe";
+import useWindowSize from "../hooks/useWindowSize";
+import TypographyCustom from "./TypographCustom";
+import "../global.css";
 
-export default function PlanosCarousel() {
-  const carouselRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+const MAX_VISIBILITY = 3;
 
-  const planos = [
-    {
-      nome: "Básico",
-      preco: "49,90",
-      descricao: "Ideal para uso doméstico.",
-      velocidade: "100 Mbps",
-      destaque: false,
-    },
-    {
-      nome: "Intermediário",
-      preco: "79,90",
-      descricao: "Mais velocidade e estabilidade.",
-      velocidade: "200 Mbps",
-      destaque: false,
-    },
-    {
-      nome: "Premium",
-      preco: "119,90",
-      descricao: "Perfeito para gamers e streamers.",
-      velocidade: "500 Mbps",
-      destaque: true,
-    },
-    {
-      nome: "Empresarial",
-      preco: "199,90",
-      descricao: "Alta performance para empresas.",
-      velocidade: "1 Gbps",
-      destaque: false,
-    },
-    {
-      nome: "Sócio",
-      preco: "30,00",
-      descricao: "Plano especial de apoio para associados.",
-      velocidade: "50 Mbps",
-      destaque: false,
-    },
-  ];
+const mockPlanos = [
+  { description: "(Start) 2Gb + 100 Minutos + 30 sms", gigas: "2", min: "100", value: "28,80", mostraApp: true },
+  { description: "(Start) 6Gb + 100 Minutos + 60 sms", gigas: "6", min: "100", value: "39,05", mostraApp: true },
+  { description: "(Start) 8Gb + Minutos Ilimitados + 60 sms + 1 Gb", gigas: "8", min: "999", value: "42,65", mostraApp: true },
+  { description: "(Start) 14Gb + Minutos Ilimitados + 100 sms + 1 G", gigas: "14", min: "999", value: "52,33", mostraApp: true },
+  { description: "(Start) 21Gb +  Minutos Ilimitados + 100 sms + 1 Gb Portabilidade", gigas: "21", min: "999", value: "68,65", mostraApp: true },
+  { description: "(Turbo) 29Gb +  Minutos Ilimitados + 100 sms + 1 Gb Portabilidade", gigas: "29", min: "999", value: "79,55", mostraApp: true },
+  { description: "(Turbo) 39Gb +  Minutos Ilimitados + 100 sms + 1 Gb Portabilidade", gigas: "39", min: "999", value: "101,95", mostraApp: true },
+  { description: "(Turbo) 44Gb + Minutos Ilimitados + 100 sms + 1 Gb de Portabilidade", gigas: "44", min: "999", value: "111,55", mostraApp: true },
+];
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    (e.preventDefault());
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const scroll = (direction) => {
-    const container = carouselRef.current;
-    const scrollAmount = 320;
-    if (direction === "left") {
-      container.scrollLeft -= scrollAmount;
-    } else {
-      container.scrollLeft += scrollAmount;
-    }
-  };
-
-  return (
-    <Section id="planos">
-      <Container>
-        <Header>
-          <Title>Escolha Seu Plano</Title>
-          <Subtitle>Soluções sob medida para todas as necessidades</Subtitle>
-        </Header>
-
-        <CarouselContainer>
-          <NavButton onClick={() => scroll("left")} position="left">
-            ←
-          </NavButton>
-
-          <Carousel
-            ref={carouselRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          >
-            {planos.map((plano, index) => (
-              <Card key={index} $destaque={plano.destaque}>
-                {plano.destaque && <Badge>Mais Popular</Badge>}
-
-                <CardHeader>
-                  <PlanName>{plano.nome}</PlanName>
-                  <Velocidade>{plano.velocidade}</Velocidade>
-                </CardHeader>
-
-                <PriceContainer>
-                  <Currency>R$</Currency>
-                  <Price>{plano.preco}</Price>
-                  <Period>/mês</Period>
-                </PriceContainer>
-
-                <Description>{plano.descricao}</Description>
-
-                <Features>
-                  <Feature>✓ Wi-Fi grátis</Feature>
-                  <Feature>✓ Instalação incluída</Feature>
-                  <Feature>✓ Suporte 24/7</Feature>
-                </Features>
-
-                <SubscribeButton $destaque={plano.destaque}>
-                  Assinar Agora
-                </SubscribeButton>
-              </Card>
-            ))}
-          </Carousel>
-
-          <NavButton onClick={() => scroll("right")} position="right">
-            →
-          </NavButton>
-        </CarouselContainer>
-
-        <ProgressIndicator>
-          <ProgressBar />
-        </ProgressIndicator>
-      </Container>
-    </Section >
-  );
+interface CardProps {
+  title: string;
+  gigas: string;
+  minutos: string;
+  valuePlan: string;
 }
 
-/* ====== ESTILOS ====== */
-const Section = styled.section`
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
-  padding: 5rem 0;
-  position: relative;
-  overflow: hidden;
+const Card: React.FC<CardProps> = ({ title, gigas, minutos, valuePlan }) => (
+  <Box
+    className="card"
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "space-between",
+      textAlign: "center",
+      backgroundColor: "#fff",
+      p: 3,
+      borderRadius: 3,
+      minWidth: 250,
+      maxWidth: 320,
+      boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+    }}
+  >
+    <TypographyCustom variant="h2" color="var(--primary_main)">
+      {title}
+    </TypographyCustom>
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 300px;
-    background: radial-gradient(circle at 50% 0%, rgba(164, 25, 2, 0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
-`;
+    <Box sx={{ width: "100%", my: 2 }}>
+      <TypographyCustom variant="h5" color="var(--primary_main)">
+        <TbWorldWww /> {gigas} GB
+      </TypographyCustom>
+      <TypographyCustom variant="h5" color="var(--primary_main)">
+        <FaWhatsapp /> Whatsapp Grátis
+      </TypographyCustom>
+      <TypographyCustom variant="h5" color="var(--primary_main)">
+        <FaMobileAlt /> {minutos}
+      </TypographyCustom>
+    </Box>
 
-const Container = styled.div`
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
-`;
+    <Box
+      sx={{
+        background: "linear-gradient(135deg, #a41902, #c41f03)",
+        px: 4,
+        py: 1.5,
+        borderRadius: "30px",
+      }}
+    >
+      <TypographyCustom
+        variant="h5"
+        color="#fff"
+        fontWeight="900"
+      >
+        R$ {valuePlan}
+      </TypographyCustom>
+    </Box>
+  </Box>
+);
 
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 3.5rem;
-`;
+const Carousel: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [active, setActive] = useState(0);
+  const count = React.Children.count(children);
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: () => {
+      if (count > 1 && active < count - 1) setActive((i) => i + 1);
+    },
+    onSwipeRight: () => {
+      if (count > 1 && active > 0) setActive((i) => i - 1);
+    },
+  });
 
-const Title = styled.h2`
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 0.8rem;
-  letter-spacing: -0.5px;
+  const { isMobile } = useWindowSize();
 
-  @media (max-width: 768px) {
-    font-size: 2.2rem;
-  }
-`;
+  return (
+    <div className="carousel" {...swipeHandlers}>
+      {count > 1 && active > 0 && !isMobile && (
+        <button className="nav left" onClick={() => setActive(i => i - 1)}>
+          <TiChevronLeftOutline />
+        </button>
+      )}
 
-const Subtitle = styled.p`
-  font-size: 1.15rem;
-  color: #666;
-  font-weight: 400;
-`;
+      {React.Children.map(children, (child, i) => (
+        <div
+          className="card-container"
+          style={{
+            //@ts-ignore
+            "--active": i === active ? 1 : 0,
+            "--offset": (active - i) / 2,
+            "--direction": Math.sign(active - i),
+            "--abs-offset": Math.abs(active - i) / 3,
+            pointerEvents: active === i ? "auto" : "none",
+            opacity: Math.abs(active - i) >= MAX_VISIBILITY ? "0" : "1",
+            display: Math.abs(active - i) > MAX_VISIBILITY ? "none" : "block",
+          }}
+        >
+          {child}
+        </div>
+      ))}
 
-const CarouselContainer = styled.div`
-  position: relative;
-  padding: 0 3rem;
-
-  @media (max-width: 768px) {
-    padding: 0 2rem;
-  }
-`;
-
-const Carousel = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 2rem 0;
-  cursor: grab;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  &:active {
-    cursor: grabbing;
-  }
-`;
-
-const Card = styled.div`
-  flex: 0 0 300px;
-  background: ${props => props.$destaque ?
-    'linear-gradient(135deg, #a41902 0%, #c41f03 100%)' :
-    '#ffffff'};
-  border-radius: 24px;
-  padding: 2.5rem 2rem;
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: ${props => props.$destaque ?
-    '0 20px 60px rgba(164, 25, 2, 0.25)' :
-    '0 4px 20px rgba(0, 0, 0, 0.08)'};
-  border: ${props => props.$destaque ?
-    '2px solid rgba(255, 255, 255, 0.3)' :
-    '2px solid #f0f0f0'};
-  transform: ${props => props.$destaque ? 'scale(1.05)' : 'scale(1)'};
-
-  &:hover {
-    transform: ${props => props.$destaque ?
-    'scale(1.08) translateY(-8px)' :
-    'scale(1.03) translateY(-8px)'};
-    box-shadow: ${props => props.$destaque ?
-    '0 30px 80px rgba(164, 25, 2, 0.35)' :
-    '0 12px 40px rgba(0, 0, 0, 0.15)'};
-  }
-
-  @media (max-width: 768px) {
-    flex: 0 0 280px;
-    padding: 2rem 1.5rem;
-  }
-`;
-
-const Badge = styled.div`
-  position: absolute;
-  top: -12px;
-  right: 20px;
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  color: #1a1a1a;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-`;
-
-const CardHeader = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const PlanName = styled.h3`
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: ${props => props.theme?.destaque ? '#ffffff' : '#1a1a1a'};
-  margin-bottom: 0.5rem;
-`;
-
-const Velocidade = styled.div`
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: ${props => props.theme?.destaque ? 'rgba(255, 255, 255, 0.9)' : '#a41902'};
-  text-transform: uppercase;
-  letter-spacing: 1px;
-`;
-
-const PriceContainer = styled.div`
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  gap: 0.3rem;
-`;
-
-const Currency = styled.span`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: ${props => props.theme?.destaque ? 'rgba(255, 255, 255, 0.9)' : '#666'};
-`;
-
-const Price = styled.div`
-  font-size: 3rem;
-  font-weight: 800;
-  color: ${props => props.theme?.destaque ? '#ffffff' : '#1a1a1a'};
-  line-height: 1;
-`;
-
-const Period = styled.span`
-  font-size: 1rem;
-  color: ${props => props.theme?.destaque ? 'rgba(255, 255, 255, 0.8)' : '#666'};
-  font-weight: 500;
-`;
-
-const Description = styled.p`
-  color: ${props => props.theme?.destaque ? 'rgba(255, 255, 255, 0.95)' : '#555'};
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  min-height: 45px;
-`;
-
-const Features = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-`;
-
-const Feature = styled.li`
-  color: ${props => props.theme?.destaque ? 'rgba(255, 255, 255, 0.9)' : '#444'};
-  font-size: 0.9rem;
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &::before {
-    font-weight: bold;
-  }
-`;
-
-const SubscribeButton = styled.button`
-  width: 100%;
-  padding: 1rem 2rem;
-  background: ${props => props.$destaque ?
-    '#ffffff' :
-    'linear-gradient(135deg, #a41902 0%, #c41f03 100%)'};
-  color: ${props => props.$destaque ? '#a41902' : '#ffffff'};
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: ${props => props.$destaque ?
-    '0 4px 15px rgba(255, 255, 255, 0.3)' :
-    '0 4px 15px rgba(164, 25, 2, 0.3)'};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${props => props.$destaque ?
-    '0 6px 20px rgba(255, 255, 255, 0.4)' :
-    '0 6px 20px rgba(164, 25, 2, 0.4)'};
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
-const NavButton = styled.button`
-  position: absolute;
-  top: 50%;
-  ${props => props.position}: 0;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #e0e0e0;
-  color: #a41902;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    background: #a41902;
-    color: #ffffff;
-    border-color: #a41902;
-    transform: translateY(-50%) scale(1.1);
-  }
-
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-`;
-
-const ProgressIndicator = styled.div`
-  width: 200px;
-  height: 4px;
-  background: #e0e0e0;
-  border-radius: 2px;
-  margin: 2rem auto 0;
-  overflow: hidden;
-`;
-
-const ProgressBar = styled.div`
-  height: 100%;
-  width: 30%;
-  background: linear-gradient(90deg, #a41902 0%, #c41f03 100%);
-  border-radius: 2px;
-  animation: progress 3s ease-in-out infinite;
-
-  @keyframes progress {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(233%); }
-  }
-`;
-
-Card.defaultProps = {
-  theme: { destaque: false }
+      {count > 1 && active < count - 1 && !isMobile && (
+        <button className="nav right" onClick={() => setActive(i => i + 1)}>
+          <TiChevronRightOutline />
+        </button>
+      )}
+    </div>
+  );
 };
 
-PlanName.defaultProps = {
-  theme: { destaque: false }
-};
+export default function CardSlider() {
+  const [res] = useState(mockPlanos);
+  const [active, setActive] = useState(0);
 
-Velocidade.defaultProps = {
-  theme: { destaque: false }
-};
+  const activePlan = res.filter(p => p.mostraApp)[active];
 
-Currency.defaultProps = {
-  theme: { destaque: false }
-};
+  const whatsappLink = `https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0AQuero+assinar+o+plano:+${encodeURIComponent(
+    activePlan.description
+  )}`;
 
-Price.defaultProps = {
-  theme: { destaque: false }
-};
+  return (
+    <Box className="container" sx={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      {res.length > 0 ? (
+        <>
+          <Carousel>
+            {res
+              .filter(p => p.mostraApp)
+              .map((infoPlanos, index) => (
+                <Card
+                  key={index}
+                  title={infoPlanos.description}
+                  gigas={infoPlanos.gigas}
+                  minutos={
+                    infoPlanos.min === "999"
+                      ? "Ligações ilimitadas para qualquer DDD"
+                      : `${infoPlanos.min} Minutos`
+                  }
+                  valuePlan={infoPlanos.value}
+                />
+              ))}
+          </Carousel>
 
-Period.defaultProps = {
-  theme: { destaque: false }
-};
-
-Description.defaultProps = {
-  theme: { destaque: false }
-};
-
-Feature.defaultProps = {
-  theme: { destaque: false }
-};
+          {/* Botão centralizado com cor Zyber */}
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <Box
+                sx={{
+                  background: "linear-gradient(135deg, #a41902, #c41f03)",
+                  color: "#fff",
+                  px: { xs: 6, md: 10 },
+                  py: { xs: 1.5, md: 2 },
+                  borderRadius: "14px",
+                  fontWeight: 700,
+                  fontSize: { xs: "1rem", md: "1.2rem" },
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 8px 25px rgba(164,25,2,0.35)",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    opacity: 0.9,
+                  },
+                }}
+              >
+                Assinar Agora
+              </Box>
+            </a>
+          </Box>
+        </>
+      ) : (
+        <TypographyCustom color="#fff" variant="h4" fontWeight="900">
+          Em breve!
+        </TypographyCustom>
+      )}
+    </Box>
+  );
+}

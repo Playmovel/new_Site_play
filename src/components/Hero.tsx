@@ -1,5 +1,5 @@
 import Banner from "../assets/background.webp";
-import "../styles/Button.css"; 
+import "../styles/Button.css";
 
 export default function Hero() {
   return (
@@ -14,6 +14,9 @@ export default function Hero() {
         minHeight: "60vh",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem",
+        textAlign: "center",
       }}
     >
       <div
@@ -23,24 +26,25 @@ export default function Hero() {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
           zIndex: 0,
         }}
       ></div>
+
       <div
         style={{
           position: "relative",
           zIndex: 1,
           color: "white",
-          padding: "0 10%",
           maxWidth: "600px",
-          textAlign: "left",
+          wordBreak: "break-word",
+          whiteSpace: "normal",
         }}
       >
         <h1
           style={{
-            fontSize: "5rem",
-            marginBottom: "0.9rem",
+            fontSize: "clamp(2rem, 5vw, 3.5rem)", // ajusta automaticamente entre mobile e desktop
+            marginBottom: "1rem",
             lineHeight: 1.2,
             color: "#252525ff",
           }}
@@ -48,10 +52,11 @@ export default function Hero() {
           <span style={{ color: "#fff" }}>A ERA DIGITAL CHEGOU, VOCÊ ESTÁ </span>
           <span style={{ color: "#FF5733" }}>PRONTO?</span>
         </h1>
+
         <p
           style={{
-            fontSize: "2rem",
-            marginBottom: "1rem",
+            fontSize: "clamp(1rem, 3.5vw, 1.5rem)", // responsivo também
+            marginBottom: "1.5rem",
             color: "#f2f2f2",
           }}
         >
@@ -62,6 +67,7 @@ export default function Hero() {
           className="app-buttons"
           style={{
             display: "flex",
+            justifyContent: "center",
             gap: "1rem",
             flexWrap: "wrap",
           }}
@@ -92,11 +98,13 @@ export default function Hero() {
                   </svg>
                 </span>
                 <p>
-                  {["P","e","d","ir"," ","C","h","i","p"].map((letter, i) => (
-                    <span key={i} style={{ "--i": i } as React.CSSProperties}>
-                      {letter}
-                    </span>
-                  ))}
+                  {["P", "e", "d", "ir", " ", "C", "h", "i", "p"].map(
+                    (letter, i) => (
+                      <span key={i} style={{ "--i": i } as React.CSSProperties}>
+                        {letter}
+                      </span>
+                    )
+                  )}
                 </p>
               </span>
 
@@ -129,14 +137,6 @@ export default function Hero() {
                 </p>
               </span>
             </button>
-          </a>
-
-          <a
-            href="https://atendimento.operadora.app.br/?companyId=362"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {/* Aqui você pode adicionar outro botão animado ou deixar vazio */}
           </a>
         </div>
       </div>

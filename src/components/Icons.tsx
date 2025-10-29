@@ -27,7 +27,7 @@ export default function SobreZyber() {
       <Container>
         <SectionTitle>Sobre a Zyber</SectionTitle>
         <Subtitle>Conectando você ao que realmente importa</Subtitle>
-        
+
         <FeaturesGrid>
           {features.map((feature) => (
             <FeatureCard key={feature.id}>
@@ -39,19 +39,19 @@ export default function SobreZyber() {
             </FeatureCard>
           ))}
         </FeaturesGrid>
-        
 
 
-        
+
+
       </Container>
     </Section>
   );
 }
 
-  const Section = styled.section`
+const Section = styled.section`
   width: 100%;
   padding: 5rem 2rem;
-  background: linear-gradient(135deg, #f9f9f9 0%, #e8e8e8 100%);
+  background: linear-gradient(135deg, #ffffffff 0%, #ffffffff 100%);
   position: relative;
   overflow: hidden;
   &::before {
@@ -61,15 +61,14 @@ export default function SobreZyber() {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 50%, rgba(164, 25, 2, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(255, 183, 3, 0.05) 0%, transparent 50%);
+    
     pointer-events: none;
   }
 `;
 
 
 
-  const Container = styled.div`
+const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
