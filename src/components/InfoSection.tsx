@@ -1,47 +1,127 @@
-import centralImagem from "../assets/cell.webp"
-import button1 from "../assets/botao_apple.svg"
-import button2 from "../assets/botao_google.svg"
+import { useState } from 'react';
+
+interface InfoItem {
+  title: string;
+  content: string;
+  icon: string;
+}
+
+interface CardProps {
+  info: InfoItem;
+  index: number;
+  side: 'left' | 'right';
+}
 
 export default function InfoSection() {
-  const InfosLeft = [
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
+  const InfosLeft: InfoItem[] = [
     {
       title: "Segurança",
-      content:
-        "Nosso maior foco é na segurança de seus dados e do nosso aplicativo.",
+      content: "Nosso maior foco é na segurança de seus dados e do nosso aplicativo.",
+      icon: "🔒",
     },
     {
       title: "Gerencie Seus Planos",
-      content:
-        "Nosso maior foco é na segurança de seus dados e do nosso aplicativo.",
-    }
+      content: "Controle seus planos com facilidade e segurança direto pelo app.",
+      icon: "⚡",
+    },
   ];
 
-  const infosRight = [
+  const infosRight: InfoItem[] = [
     {
       title: "Faturas",
-      content:
-        "Com o aplicativo da AIVA você consegue renovar o seu plano com um só clique.",
+      content: "Com o aplicativo da Zyber você consegue renovar o seu plano com um só clique.",
+      icon: "💳",
     },
     {
-      title: "Acumulo de Gigas",
-      content:
-        "Gerêncie os seus Gigas acumulados"
-    }
+      title: "Acúmulo de Gigas",
+      content: "Gerencie e acompanhe seus gigas acumulados em tempo real.",
+      icon: "📊",
+    },
   ];
 
-  const cardStyle = {
-    backgroundColor: "#fff",
-    padding: "1.5rem",
-    borderRadius: "16px",
-    boxShadow: "0 4px 20px rgba(164, 25, 2, 0.08)",
-    transition: "all 0.3s ease",
-    border: "1px solid rgba(164, 25, 2, 0.1)",
-  };
+  const CardComponent = ({ info, index, side }: CardProps) => (
+    <div
+      onMouseEnter={() => setHoveredCard(`${side}-${index}`)}
+      onMouseLeave={() => setHoveredCard(null)}
+      style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(10px)',
+        padding: '2rem',
+        borderRadius: '20px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: hoveredCard === `${side}-${index}`
+          ? '0 8px 32px rgba(255, 87, 51, 0.3)'
+          : '0 4px 16px rgba(0, 0, 0, 0.2)',
+        textAlign: 'left',
+        transition: 'all 0.3s ease',
+        transform: hoveredCard === `${side}-${index}` ? 'translateY(-8px)' : 'translateY(0)',
+        cursor: 'pointer',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Glow effect no hover */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at center, rgba(255,87,51,0.1) 0%, transparent 70%)',
+          opacity: hoveredCard === `${side}-${index}` ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          pointerEvents: 'none'
+        }}
+      />
 
-  const cardHoverStyle = {
-    transform: "translateY(-4px)",
-    boxShadow: "0 8px 30px rgba(164, 25, 2, 0.15)",
-  };
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{
+          fontSize: '2rem',
+          marginBottom: '1rem',
+          filter: 'grayscale(0.3)',
+        }}>
+          {info.icon}
+        </div>
+
+        <h3
+          style={{
+            color: '#FF5733',
+            marginBottom: '0.75rem',
+            fontSize: '1.35rem',
+            fontWeight: '700',
+            letterSpacing: '-0.5px'
+          }}
+        >
+          {info.title}
+        </h3>
+
+        <p
+          style={{
+            color: '#b0b0b0',
+            lineHeight: 1.7,
+            fontSize: '0.95rem',
+          }}
+        >
+          {info.content}
+        </p>
+      </div>
+
+      {/* Corner accent */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '60px',
+        height: '60px',
+        background: 'linear-gradient(135deg, transparent 50%, rgba(255,87,51,0.1) 50%)',
+        transition: 'all 0.3s ease',
+        opacity: hoveredCard === `${side}-${index}` ? 1 : 0
+      }} />
+    </div>
+  );
 
   return (
     <section
@@ -51,11 +131,28 @@ export default function InfoSection() {
         justifyContent: "center",
         alignItems: "flex-start",
         gap: "2.5rem",
-        padding: "4rem 2rem",
-        backgroundColor: "#fafafa",
-        minHeight: "600px",
+        padding: "5rem 2rem",
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
+      {/* Grid de fundo sutil */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `
+          linear-gradient(rgba(255, 87, 51, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 87, 51, 0.03) 1px, transparent 1px)
+        `,
+        backgroundSize: '50px 50px',
+        opacity: 0.5,
+        pointerEvents: 'none'
+      }} />
+
       {/* Coluna Esquerda */}
       <div
         style={{
@@ -63,38 +160,13 @@ export default function InfoSection() {
           maxWidth: "350px",
           display: "flex",
           flexDirection: "column",
-          gap: "1.5rem"
+          gap: "1.5rem",
+          position: 'relative',
+          zIndex: 1
         }}
       >
         {InfosLeft.map((info, index) => (
-          <div
-            key={index}
-            style={cardStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = cardHoverStyle.transform;
-              e.currentTarget.style.boxShadow = cardHoverStyle.boxShadow;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = cardStyle.boxShadow;
-            }}
-          >
-            <h3 style={{
-              color: "#a41902",
-              marginBottom: "0.75rem",
-              fontSize: "1.25rem",
-              fontWeight: "600"
-            }}>
-              {info.title}
-            </h3>
-            <p style={{
-              color: "#555",
-              lineHeight: 1.6,
-              fontSize: "0.95rem"
-            }}>
-              {info.content}
-            </p>
-          </div>
+          <CardComponent key={index} info={info} index={index} side="left" />
         ))}
       </div>
 
@@ -106,104 +178,143 @@ export default function InfoSection() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "4rem"
+          gap: "3rem",
+          position: 'relative',
+          zIndex: 1
         }}
       >
-        <div style={{
-          position: "relative",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center"
-        }}>
-          <img
-            src={centralImagem}
-            alt="Aplicativo Zyber"
-            style={{
-              width: "100%",
-              maxWidth: "900px",
-              height: "auto",
-              borderRadius: "50px",
-              transition: "transform 0.1s ease",
-              // background: "#ff0000ff"
-            }}
-          // onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
-          // onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-          />
+        {/* Badge superior */}
+        <div
+          style={{
+            display: 'inline-block',
+            padding: '0.5rem 1.5rem',
+            background: 'rgba(255, 87, 51, 0.1)',
+            border: '1px solid rgba(255, 87, 51, 0.3)',
+            borderRadius: '50px',
+            fontSize: '0.875rem',
+            color: '#FF5733',
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            marginBottom: '-1rem'
+          }}
+        >
+          📱 Baixe o App
         </div>
 
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {/* Glow effect atrás da imagem */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            height: '80%',
+            background: 'radial-gradient(circle, rgba(255,87,51,0.2) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+            zIndex: 0
+          }} />
+
+          <div style={{
+            position: 'relative',
+            padding: '2rem',
+            background: 'rgba(255, 255, 255, 0.02)',
+            backdropFilter: 'blur(5px)',
+            borderRadius: '50px',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+          }}>
+            <div style={{
+              width: '100%',
+              maxWidth: '400px',
+              height: '500px',
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
+              borderRadius: '40px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px solid rgba(255, 87, 51, 0.2)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              {/* Placeholder para imagem do celular */}
+              <div style={{
+                textAlign: 'center',
+                color: '#666',
+                padding: '2rem'
+              }}>
+                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📱</div>
+                <p style={{ fontSize: '1rem', color: '#888' }}>App Zyber</p>
+                <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
+                  Insira sua imagem aqui
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Botões */}
         <div
           style={{
             display: "flex",
             gap: "1rem",
             justifyContent: "center",
-            flexWrap: "wrap"
+            flexWrap: "wrap",
           }}
         >
-          {/* App Store */}
-          <a
-            href="https://apps.apple.com/us/app/zyber/id6746278691"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              transition: "transform 0.3s ease, filter 0.3s ease",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.08)";
-              e.currentTarget.style.filter = "brightness(1.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.filter = "brightness(1)";
-            }}
-          >
-            <img
-              src={button1}
-              alt="Baixar na App Store"
-              style={{
-                width: "160px",
-                height: "auto",
-                display: "block"
-              }}
-            />
-          </a>
-
-          {/* Google Play */}
-          <a
-            href="https://play.google.com/store/apps/details?id=app.mobile.zyber"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              transition: "transform 0.3s ease, filter 0.3s ease",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.08)";
-              e.currentTarget.style.filter = "brightness(1.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.filter = "brightness(1)";
-            }}
-          >
-            <img
-              src={button2}
-              alt="Baixar na Google Play"
-              style={{
-                width: "160px",
-                height: "auto",
-                display: "block"
-              }}
-            />
-          </a>
+          {[
+            { text: "App Store", href: "https://apps.apple.com/us/app/zyber/id6746278691", icon: "" },
+            { text: "Google Play", href: "https://play.google.com/store/apps/details?id=app.mobile.zyber", icon: "" }
+          ].map((btn, i) => (
+            <a
+              key={i}
+              href={btn.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              <button
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 87, 51, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 87, 51, 0.2)';
+                }}
+                style={{
+                  padding: '1rem 2rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  color: '#fff',
+                  background: i === 0
+                    ? 'linear-gradient(135deg, #333 0%, #444 100%)'
+                    : 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(255, 87, 51, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  minWidth: '180px',
+                  justifyContent: 'center'
+                }}
+              >
+                <span>{btn.icon}</span>
+                <span>{btn.text}</span>
+              </button>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -214,38 +325,13 @@ export default function InfoSection() {
           maxWidth: "350px",
           display: "flex",
           flexDirection: "column",
-          gap: "1.5rem"
+          gap: "1.5rem",
+          position: 'relative',
+          zIndex: 1
         }}
       >
         {infosRight.map((info, index) => (
-          <div
-            key={index}
-            style={cardStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = cardHoverStyle.transform;
-              e.currentTarget.style.boxShadow = cardHoverStyle.boxShadow;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = cardStyle.boxShadow;
-            }}
-          >
-            <h3 style={{
-              color: "#a41902",
-              marginBottom: "0.75rem",
-              fontSize: "1.25rem",
-              fontWeight: "600"
-            }}>
-              {info.title}
-            </h3>
-            <p style={{
-              color: "#555",
-              lineHeight: 1.6,
-              fontSize: "0.95rem"
-            }}>
-              {info.content}
-            </p>
-          </div>
+          <CardComponent key={index} info={info} index={index} side="right" />
         ))}
       </div>
     </section>
