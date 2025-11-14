@@ -31,11 +31,20 @@ export default function CardSlider() {
     setActive(i => (i - 1 + res.length) % res.length);
   };
 
-  const Card = ({ plan, index }: { plan: any; index: number }) => {
+
+  interface Plano {
+    description: string;
+    gigas: string;
+    min: string;
+    value: string;
+    mostraApp: boolean;
+  }
+  const Card = ({ plan, index }: { plan: Plano; index: number }) => {
     const isTurbo = plan.description.includes('Turbo');
     const isActive = index === active;
     const offset = ((index - active + res.length) % res.length);
     const normalizedOffset = offset > res.length / 2 ? offset - res.length : offset;
+
 
     return (
       <div
@@ -336,11 +345,11 @@ export default function CardSlider() {
 
   return (
     <div style={{
-      padding: '6rem 2rem',
+      padding: '3rem 1rem',
       background: 'linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%)',
       position: 'relative',
       overflow: 'hidden',
-      minHeight: '100vh'
+      minHeight: 'auto'
     }}>
       {/* Animated grid background */}
       <div style={{
@@ -387,7 +396,7 @@ export default function CardSlider() {
       {/* Header */}
       <div style={{
         textAlign: 'center',
-        marginBottom: '5rem',
+        marginBottom: '2rem',
         position: 'relative',
         zIndex: 1
       }}>
@@ -437,7 +446,7 @@ export default function CardSlider() {
       <div style={{
         position: 'relative',
         height: '600px',
-        marginBottom: '4rem',
+        marginBottom: '2rem',
         perspective: '2000px'
       }}>
         {res.map((plan, index) => (

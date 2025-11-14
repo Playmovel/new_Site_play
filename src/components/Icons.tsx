@@ -42,8 +42,8 @@ export default function SobreZyber() {
             <FeatureCard
               as={motion.div}
               key={feature.id}
-              whileHover={{ y: -8, scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 200, damping: 12 }}
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 180, damping: 14 }}
             >
               <IconWrapper>{feature.icon}</IconWrapper>
               <CardTitle>{feature.titulo}</CardTitle>
@@ -66,41 +66,52 @@ export default function SobreZyber() {
 
 const Section = styled.section`
   width: 100%;
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 6rem 1.5rem;
+  background: radial-gradient(circle at top left, #0f172a, #020617 80%);
   color: #fff;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box; /* 🔹 Evita ultrapassar a tela */
 
-  &::before {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
-    top: -100px;
-    left: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(164, 25, 2, 0.4), transparent 70%);
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255, 56, 92, 0.15), transparent 70%);
+    filter: blur(100px);
     z-index: 0;
-    filter: blur(80px);
+  }
+
+  &::before {
+    top: -80px;
+    left: -80px;
+  }
+
+  &::after {
+    bottom: -80px;
+    right: -80px;
   }
 `;
 
 const Container = styled.div`
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  overflow-x: hidden; /* 🔹 Garante que o conteúdo não quebre lateralmente */
 `;
 
 const TextContainer = styled.div`
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   font-weight: 700;
-  color: #ffffff;
   margin-bottom: 1rem;
   background: linear-gradient(90deg, #ff3b3f, #ff8a00);
   -webkit-background-clip: text;
@@ -108,69 +119,77 @@ const SectionTitle = styled.h2`
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.25rem;
-  color: #e2e8f0;
-  max-width: 700px;
+  font-size: 1.1rem;
+  color: #cbd5e1;
+  max-width: 650px;
   margin: 0 auto;
   line-height: 1.6;
 `;
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
   width: 100%;
+  box-sizing: border-box;
 `;
 
 const FeatureCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
   text-align: center;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
   transition: all 0.3s ease;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+  }
 `;
 
 const IconWrapper = styled.div`
-  font-size: 3rem;
+  font-size: 2.6rem;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   color: #ff784e;
 `;
 
 const CardDescription = styled.p`
   font-size: 1rem;
   color: #cbd5e1;
-  line-height: 1.6;
+  line-height: 1.5;
 `;
 
 const CallToAction = styled.div`
   text-align: center;
-  margin-top: 5rem;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 3rem 2rem;
-  border-radius: 24px;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+  margin-top: 4rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2.5rem 1.5rem;
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
+  box-sizing: border-box;
 
   h3 {
-    font-size: 2rem;
-    color: #ffffff;
+    font-size: 1.9rem;
     margin-bottom: 1rem;
+    color: #fff;
   }
 
   p {
     color: #cbd5e1;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
+    margin-bottom: 1.8rem;
+    font-size: 1rem;
   }
 `;
 
@@ -179,15 +198,15 @@ const Button = styled.button`
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 0.9rem 2rem;
-  font-size: 1.1rem;
+  padding: 0.8rem 2rem;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(255, 122, 0, 0.3);
+  box-shadow: 0 6px 18px rgba(255, 122, 0, 0.35);
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(255, 122, 0, 0.4);
+    box-shadow: 0 10px 22px rgba(255, 122, 0, 0.45);
   }
 `;

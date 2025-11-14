@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import imagem from '../assets/cell.webp';
+import Botaoapple from '../assets/botao_apple.svg';
+import BotaoAndroid from '../assets/botao_google.svg'
+
+// import { Container } from '@mui/material';
 
 interface InfoItem {
   title: string;
@@ -216,10 +221,10 @@ export default function InfoSection() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '80%',
-            height: '80%',
+            width: '120%',
+            height: '120%',
             background: 'radial-gradient(circle, rgba(255,87,51,0.2) 0%, transparent 70%)',
-            filter: 'blur(60px)',
+            filter: 'blur(80px)',
             zIndex: 0
           }} />
 
@@ -235,7 +240,6 @@ export default function InfoSection() {
               width: '100%',
               maxWidth: '400px',
               height: '500px',
-              background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
               borderRadius: '40px',
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
               display: 'flex',
@@ -249,13 +253,19 @@ export default function InfoSection() {
               <div style={{
                 textAlign: 'center',
                 color: '#666',
-                padding: '2rem'
+                padding: '6rem'
               }}>
-                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📱</div>
-                <p style={{ fontSize: '1rem', color: '#888' }}>App Zyber</p>
-                <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-                  Insira sua imagem aqui
-                </p>
+                <img src={imagem}
+                  style={{
+                    width: '801px',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    borderRadius: '20px',
+                    alignItems: 'center'
+                  }}
+
+                >
+                </img>
               </div>
             </div>
           </div>
@@ -271,8 +281,8 @@ export default function InfoSection() {
           }}
         >
           {[
-            { text: "App Store", href: "https://apps.apple.com/us/app/zyber/id6746278691", icon: "" },
-            { text: "Google Play", href: "https://play.google.com/store/apps/details?id=app.mobile.zyber", icon: "" }
+            { text: "App Store", href: "https://apps.apple.com/us/app/zyber/id6746278691", icon: Botaoapple },
+            { text: "Google Play", href: "https://play.google.com/store/apps/details?id=app.mobile.zyber", icon: BotaoAndroid }
           ].map((btn, i) => (
             <a
               key={i}
@@ -284,11 +294,11 @@ export default function InfoSection() {
               <button
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 87, 51, 0.4)';
+                  e.currentTarget.style.boxShadow = '0 6px 25px rgba(250, 55, 12, 0.4)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 87, 51, 0.2)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(250, 55, 12, 0.4)';
                 }}
                 style={{
                   padding: '1rem 2rem',
@@ -296,8 +306,8 @@ export default function InfoSection() {
                   fontWeight: '600',
                   color: '#fff',
                   background: i === 0
-                    ? 'linear-gradient(135deg, #333 0%, #444 100%)'
-                    : 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)',
+                    ? 'linear-gradient(135deg, #FF5733 0%, #444 100%)'
+                    : 'linear-gradient(135deg, #FF5733 0%, #444 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
                   cursor: 'pointer',
@@ -305,13 +315,20 @@ export default function InfoSection() {
                   boxShadow: '0 4px 15px rgba(255, 87, 51, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  minWidth: '180px',
-                  justifyContent: 'center'
+                  gap: '1rem',
+                  minWidth: '50px',
+                  justifyContent: 'center',
+                  maxWidth: '150px',
+                  height: '50px',
+                  justifyItems: 'revert'
                 }}
               >
-                <span>{btn.icon}</span>
-                <span>{btn.text}</span>
+                <img
+                  src={btn.icon}
+                  alt={btn.text}
+                  style={{ height: '50px', width: 'auto', display: 'block' }}
+                />
+
               </button>
             </a>
           ))}

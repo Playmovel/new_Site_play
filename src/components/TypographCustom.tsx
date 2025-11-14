@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import type { CSSProperties } from "@mui/styled-engine-sc";
 
 interface ITypographyCustom {
-    variant?: any;
+    // variant?: any;
     color: string;
     fontWeight?: string;
     children: React.ReactNode | string;
@@ -11,22 +11,22 @@ interface ITypographyCustom {
 }
 
 export default function TypographyCustom({
-    variant,
+    // variant,
     color,
     children,
     fontWeight,
     fontSize,
-    textAlign,
+    // textAlign,
 }: ITypographyCustom) {
     const stylesCustom: CSSProperties = {
         fontFamily: "QuickSand, sans-serif",
         fontSize: `${fontSize}`,
-        //@ts-ignore
-        textAlign: `${textAlign}`,
+        // // @ts-ignore
+        // textAlign: `${textAlign}`,
     };
     return (
         <Typography
-            variant={variant}
+            // variant={variant}
             color={color}
             fontWeight={fontWeight}
             sx={stylesCustom}
