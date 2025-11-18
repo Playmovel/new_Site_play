@@ -142,19 +142,31 @@ export default function InfoSection() {
         overflow: 'hidden'
       }}
     >
-      {/* Grid de fundo sutil */}
+      {/* Glow superior esquerdo - conecta com container anterior */}
       <div style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: `
-          linear-gradient(var(--primary-alpha-02) 1px, transparent 1px),
-          linear-gradient(90deg, var(--primary-alpha-02) 1px, transparent 1px)
-        `,
-        backgroundSize: '50px 50px',
-        opacity: 0.5,
+        top: '-10%',
+        left: '-5%',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
+        borderRadius: '50%',
+        filter: 'var(--blur-xl)',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      {/* Glow inferior direito - conecta com próximo container */}
+      <div style={{
+        position: 'absolute',
+        bottom: '-10%',
+        right: '-5%',
+        width: '350px',
+        height: '350px',
+        background: 'radial-gradient(circle, var(--secondary-blue-alpha-12) 0%, transparent 70%)',
+        borderRadius: '50%',
+        filter: 'var(--blur-xl)',
+        zIndex: 0,
         pointerEvents: 'none'
       }} />
 

@@ -58,22 +58,35 @@ export default function Footer() {
 /* ===== ESTILOS ===== */
 
 const FooterContainer = styled.footer`
-  background: var(--gradient-red);
+  background: var(--gradient-bg-alt);
   color: var(--text-primary);
   padding: 4rem 2rem 2rem;
   position: relative;
   overflow: hidden;
 
-  &::before {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 30% 50%, var(--yellow-alpha-08) 0%, transparent 50%),
-                radial-gradient(circle at 70% 50%, var(--yellow-alpha-08) 0%, transparent 50%);
+    border-radius: 50%;
     pointer-events: none;
+    filter: var(--blur-xl);
+  }
+
+  &::before {
+    top: -10%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%);
+  }
+
+  &::after {
+    bottom: -10%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, var(--secondary-blue-alpha-12) 0%, transparent 70%);
   }
 
   @media (max-width: 768px) {

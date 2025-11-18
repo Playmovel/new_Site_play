@@ -37,6 +37,48 @@ export default function FAQ() {
 
   return (
     <Section id="faq">
+      {/* Animated grid background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `
+          linear-gradient(var(--primary-alpha-10) 1px, transparent 1px),
+          linear-gradient(90deg, var(--primary-alpha-10) 1px, transparent 1px)
+        `,
+        backgroundSize: '60px 60px',
+        opacity: 0.6,
+        pointerEvents: 'none',
+        animation: 'gridMove 20s linear infinite'
+      }} />
+
+      {/* Floating orbs */}
+      <div style={{
+        position: 'absolute',
+        top: '15%',
+        right: '10%',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
+        borderRadius: '50%',
+        filter: 'var(--blur-xl)',
+        animation: 'float 8s ease-in-out infinite'
+      }} />
+
+      <div style={{
+        position: 'absolute',
+        bottom: '20%',
+        left: '5%',
+        width: '350px',
+        height: '350px',
+        background: 'radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)',
+        borderRadius: '50%',
+        filter: 'var(--blur-xl)',
+        animation: 'float 10s ease-in-out infinite reverse'
+      }} />
+
       <Container>
         <SectionTitle>Perguntas Frequentes</SectionTitle>
         <Subtitle>Tire suas dúvidas sobre nossos serviços</Subtitle>
@@ -59,6 +101,18 @@ export default function FAQ() {
           ))}
         </FAQGrid>
       </Container>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-30px); }
+        }
+
+        @keyframes gridMove {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(60px); }
+        }
+      `}</style>
     </Section>
   )
 }
@@ -72,40 +126,10 @@ interface ToggleProps {
 const Section = styled.section`
   width: 100%;
   padding: 6rem 1.5rem;
-  background-color: var(--bg-dark-1);
+  background: var(--gradient-bg);
   position: relative;
-  overflow-x: hidden; /* evita quebra lateral */
-  overflow-y: hidden;
+  overflow: hidden;
   box-sizing: border-box;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    z-index: 0;
-    background: radial-gradient(
-      circle,
-      var(--red-alpha-08) 0%,
-      transparent 70%
-    );
-  }
-
-  &::before {
-    top: -100px;
-    right: -100px;
-  }
-
-  &::after {
-    bottom: -100px;
-    left: -100px;
-    background: radial-gradient(
-      circle,
-      var(--yellow-alpha-10) 0%,
-      transparent 70%
-    );
-  }
 `
 
 const Container = styled.div`
@@ -121,9 +145,12 @@ const Container = styled.div`
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 0.5rem;
+  background: var(--gradient-text-white);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -132,7 +159,7 @@ const SectionTitle = styled.h2`
 
 const Subtitle = styled.p`
   font-size: 1.2rem;
-  color: var(--text-dark-secondary);
+  color: var(--text-secondary);
   text-align: center;
   margin-bottom: 4rem;
 
@@ -151,17 +178,18 @@ const FAQGrid = styled.div`
 `
 
 const FAQItem = styled.div`
-  background: var(--bg-light-2);
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: var(--transition-medium);
-  box-shadow: 0 4px 20px var(--gray-alpha-06);
-  border: var(--border-light);
+  box-shadow: var(--shadow-dark-lg);
+  border: var(--border-white-subtle);
+  backdrop-filter: var(--blur-sm);
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 35px var(--red-alpha-12);
-    border-color: var(--red-alpha-20);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-alpha-30);
   }
 `
 
@@ -172,7 +200,7 @@ const FAQQuestion = styled.div<ToggleProps>`
   align-items: center;
   cursor: pointer;
   background: ${(props) =>
-    props.isOpen ? 'var(--gradient-red)' : 'var(--bg-light-2)'};
+    props.isOpen ? 'var(--bg-card-active)' : 'transparent'};
   transition: var(--transition-medium);
   position: relative;
 
@@ -184,15 +212,15 @@ const FAQQuestion = styled.div<ToggleProps>`
     bottom: 0;
     width: 4px;
     background: ${(props) =>
-      props.isOpen ? 'var(--color-yellow)' : 'var(--color-red-primary)'};
+      props.isOpen ? 'var(--color-primary)' : 'transparent'};
     transition: var(--transition-medium);
   }
 
   &:hover {
     background: ${(props) =>
       props.isOpen
-        ? 'linear-gradient(135deg, var(--color-red-dark) 0%, var(--color-red-darker) 100%)'
-        : 'var(--bg-light-3)'};
+        ? 'var(--bg-card-active)'
+        : 'var(--white-alpha-05)'};
   }
 
   @media (max-width: 768px) {
@@ -204,7 +232,7 @@ const QuestionText = styled.h3<ToggleProps>`
   font-size: 1.15rem;
   font-weight: 600;
   color: ${(props) =>
-    props.isOpen ? 'var(--text-primary)' : 'var(--text-dark-primary)'};
+    props.isOpen ? 'var(--text-primary)' : 'var(--text-primary)'};
   margin: 0;
   transition: var(--transition-fast);
   line-height: 1.5;
@@ -212,7 +240,7 @@ const QuestionText = styled.h3<ToggleProps>`
 
   ${FAQQuestion}:hover & {
     color: ${(props) =>
-      props.isOpen ? 'var(--text-primary)' : 'var(--color-red-primary)'};
+      props.isOpen ? 'var(--text-primary)' : 'var(--color-yellow)'};
   }
 
   @media (max-width: 768px) {
@@ -223,7 +251,7 @@ const QuestionText = styled.h3<ToggleProps>`
 const Arrow = styled.span<ToggleProps>`
   font-size: 1rem;
   color: ${(props) =>
-    props.isOpen ? 'var(--color-yellow)' : 'var(--color-red-primary)'};
+    props.isOpen ? 'var(--color-yellow)' : 'var(--color-primary)'};
   transition: var(--transition-medium);
   transform: ${(props) => (props.isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   display: inline-flex;
@@ -233,7 +261,7 @@ const Arrow = styled.span<ToggleProps>`
   width: 24px;
   height: 24px;
   background: ${(props) =>
-    props.isOpen ? 'var(--yellow-alpha-20)' : 'var(--red-alpha-10)'};
+    props.isOpen ? 'var(--yellow-alpha-20)' : 'var(--primary-alpha-10)'};
 `
 
 const FAQAnswer = styled.div<ToggleProps>`
@@ -246,14 +274,14 @@ const AnswerText = styled.p`
   padding: 2rem;
   margin: 0;
   font-size: 1rem;
-  color: var(--text-dark-secondary);
+  color: var(--text-secondary);
   line-height: 1.8;
   background: linear-gradient(
     to bottom,
-    var(--bg-light-3) 0%,
-    var(--bg-light-2) 100%
+    var(--white-alpha-05) 0%,
+    var(--white-alpha-02) 100%
   );
-  border-top: var(--border-light);
+  border-top: var(--border-white-subtle);
 
   @media (max-width: 768px) {
     padding: 1.5rem;

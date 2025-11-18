@@ -116,28 +116,29 @@ export default function Hero() {
         }}
       />
 
-      {/* Círculos decorativos */}
+      {/* Círculos decorativos - Glow superior direito */}
       <div
         style={{
           position: 'absolute',
-          top: '10%',
-          right: '10%',
-          width: '300px',
-          height: '300px',
+          top: '-5%',
+          right: '5%',
+          width: '400px',
+          height: '400px',
           background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
           borderRadius: '50%',
-          filter: 'var(--blur-lg)',
+          filter: 'var(--blur-xl)',
           zIndex: 0,
         }}
       />
+      {/* Glow inferior esquerdo - conecta com próximo container */}
       <div
         style={{
           position: 'absolute',
-          bottom: '10%',
-          left: '10%',
-          width: '250px',
-          height: '250px',
-          background: 'radial-gradient(circle, rgba(51,150,255,0.15) 0%, transparent 70%)',
+          bottom: '-10%',
+          left: '5%',
+          width: '350px',
+          height: '350px',
+          background: 'radial-gradient(circle, var(--secondary-blue-alpha-15) 0%, transparent 70%)',
           borderRadius: '50%',
           filter: 'var(--blur-lg)',
           zIndex: 0,

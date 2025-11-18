@@ -33,7 +33,7 @@ export default function AboutUs() {
 /* ----------------------------- STYLED COMPONENTS ----------------------------- */
 
 const Section = styled.section`
-  background: var(--gradient-red-reverse);
+  background: var(--gradient-bg-alt);
   padding: 6rem 2rem;
   color: var(--text-primary);
   position: relative;
@@ -42,11 +42,23 @@ const Section = styled.section`
   &::before {
     content: "";
     position: absolute;
-    top: -100px;
-    right: -100px;
+    top: -10%;
+    left: -5%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, var(--yellow-alpha-15), transparent 70%);
+    background: radial-gradient(circle, var(--primary-alpha-15), transparent 70%);
+    filter: var(--blur-xl);
+    z-index: 0;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -10%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, var(--secondary-blue-alpha-12), transparent 70%);
     filter: var(--blur-xl);
     z-index: 0;
   }
