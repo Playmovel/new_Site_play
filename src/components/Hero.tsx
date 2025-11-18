@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
+import useWindowSize from '../hooks/useWindowSize';
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { isMobile } = useWindowSize();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -45,7 +47,7 @@ export default function Hero() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Desenha grid
-      ctx.strokeStyle = 'rgba(255, 87, 51, 0.1)';
+      ctx.strokeStyle = 'var(--primary-alpha-10)';
       ctx.lineWidth = 1;
 
       for (let i = 0; i < canvas.width; i += 50) {
@@ -93,13 +95,12 @@ export default function Hero() {
     <section
       style={{
         position: 'relative',
-        minHeight: '60vh',
+        minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
-        textAlign: 'center',
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+        padding: isMobile ? '3rem 1.5rem' : '4rem 2rem',
+        background: 'var(--gradient-bg-alt)',
         overflow: 'hidden',
       }}
     >
@@ -123,9 +124,9 @@ export default function Hero() {
           right: '10%',
           width: '300px',
           height: '300px',
-          background: 'radial-gradient(circle, rgba(255,87,51,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
           borderRadius: '50%',
-          filter: 'blur(60px)',
+          filter: 'var(--blur-lg)',
           zIndex: 0,
         }}
       />
@@ -138,147 +139,347 @@ export default function Hero() {
           height: '250px',
           background: 'radial-gradient(circle, rgba(51,150,255,0.15) 0%, transparent 70%)',
           borderRadius: '50%',
-          filter: 'blur(60px)',
+          filter: 'var(--blur-lg)',
           zIndex: 0,
         }}
       />
 
-      {/* Conteúdo principal */}
+      {/* Container principal */}
       <div
         style={{
           position: 'relative',
           zIndex: 1,
-          maxWidth: '700px',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '24px',
-          padding: '3rem 2rem',
-          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          maxWidth: '1200px',
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '2rem' : '4rem',
+          alignItems: 'center',
         }}
       >
+        {/* Conteúdo de texto - Esquerda */}
         <div
           style={{
-            display: 'inline-block',
-            padding: '0.5rem 1rem',
-            background: 'rgba(255, 87, 51, 0.1)',
-            border: '1px solid rgba(255, 87, 51, 0.3)',
-            borderRadius: '50px',
-            marginBottom: '1.5rem',
-            fontSize: '0.875rem',
-            color: '#FF5733',
-            fontWeight: '600',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
+            textAlign: isMobile ? 'center' : 'left',
           }}
         >
-          🚀 Nova Era Digital
-        </div>
-
-        <h1
-          style={{
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            marginBottom: '1rem',
-            lineHeight: 1.2,
-            fontWeight: '800',
-            background: 'linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          A ERA DIGITAL CHEGOU,{' '}
-          <span
+          <div
             style={{
-              background: 'linear-gradient(135deg, #FF5733 0%, #ff8c66 100%)',
+              display: 'inline-block',
+              padding: '0.5rem 1rem',
+              background: 'var(--primary-alpha-10)',
+              border: 'var(--border-primary)',
+              borderRadius: 'var(--radius-full)',
+              marginBottom: '1.5rem',
+              fontSize: '0.875rem',
+              color: 'var(--color-primary)',
+              fontWeight: '600',
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+            }}
+          >
+            🚀 Nova Era Digital
+          </div>
+
+          <h1
+            style={{
+              fontSize: isMobile ? 'clamp(2rem, 8vw, 2.5rem)' : 'clamp(2.5rem, 5vw, 4rem)',
+              marginBottom: '1.5rem',
+              lineHeight: 1.2,
+              fontWeight: '800',
+              background: 'var(--gradient-text-white)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              display: 'inline-block',
-              animation: 'pulse 2s ease-in-out infinite',
+              backgroundClip: 'text',
             }}
           >
-            VOCÊ ESTÁ PRONTO?
-          </span>
-        </h1>
-
-        <p
-          style={{
-            fontSize: 'clamp(1rem, 3.5vw, 1.25rem)',
-            color: '#b0b0b0',
-            lineHeight: 1.6,
-            maxWidth: '550px',
-            margin: '0 auto 2rem',
-          }}
-        >
-          Conheça os planos da{' '}
-          <strong style={{ color: '#FF5733' }}>Zyber</strong> e aproveite liberdade total, com internet rápida, chamadas ilimitadas e muito mais.
-        </p>
-
-        <a
-          href="https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0APoderia+me+ajudar%3F&type=phone_number&app_absent=0"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none' }}
-        >
-          <button
-            style={{
-              padding: '1rem 2.5rem',
-              fontSize: '1.125rem',
-              fontWeight: '600',
-              color: '#fff',
-              background: 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)',
-              border: 'none',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 15px rgba(255, 87, 51, 0.4)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 87, 51, 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 87, 51, 0.4)';
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-              Pedir Chip
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 12H19M19 12L12 5M19 12L12 19"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            A ERA DIGITAL CHEGOU,{' '}
+            <span
+              style={{
+                background: 'var(--gradient-text-primary)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                display: 'inline-block',
+                animation: 'pulse 2s ease-in-out infinite',
+              }}
+            >
+              VOCÊ ESTÁ PRONTO?
             </span>
-          </button>
-        </a>
+          </h1>
 
-        <div
-          style={{
-            marginTop: '2rem',
-            display: 'flex',
-            gap: '2rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            fontSize: '0.875rem',
-            color: '#808080',
-          }}
-        >
-          {['Internet Ultra Rápida', 'Chamadas Ilimitadas', 'Suporte 24/7'].map((item) => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#FF5733' }}>✓</span> {item}
-            </div>
-          ))}
+          <p
+            style={{
+              fontSize: isMobile ? '1rem' : 'clamp(1rem, 3.5vw, 1.25rem)',
+              color: 'var(--text-secondary)',
+              lineHeight: 1.6,
+              maxWidth: isMobile ? '100%' : '550px',
+              margin: isMobile ? '0 auto 2rem' : '0 0 2rem',
+            }}
+          >
+            Conheça os planos da{' '}
+            <strong style={{ color: 'var(--color-primary)' }}>Zyber</strong> e aproveite liberdade total, com internet rápida, chamadas ilimitadas e muito mais.
+          </p>
+
+          <a
+            href="https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0APoderia+me+ajudar%3F&type=phone_number&app_absent=0"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none' }}
+          >
+            <button
+              style={{
+                padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
+                fontSize: isMobile ? '1rem' : '1.125rem',
+                fontWeight: '600',
+                color: 'var(--text-primary)',
+                background: 'var(--gradient-primary)',
+                border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                transition: 'var(--transition-fast)',
+                boxShadow: 'var(--shadow-md)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+                Pedir Chip
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M5 12H19M19 12L12 5M19 12L12 19"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+          </a>
+
+          <div
+            style={{
+              marginTop: '2rem',
+              display: 'flex',
+              gap: isMobile ? '1.5rem' : '2rem',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              flexWrap: 'wrap',
+              fontSize: '0.875rem',
+              color: 'var(--text-muted)',
+            }}
+          >
+            {['Internet Ultra Rápida', 'Chamadas Ilimitadas', 'Suporte 24/7'].map((item) => (
+              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--color-primary)' }}>✓</span> {item}
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* SVG Ilustração - Direita */}
+        {!isMobile && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              animation: 'float 6s ease-in-out infinite',
+            }}
+          >
+            <svg
+              width="500"
+              height="500"
+              viewBox="0 0 500 500"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                filter: 'drop-shadow(0 10px 40px rgba(255, 87, 51, 0.3))',
+              }}
+            >
+              {/* Círculo de fundo com gradiente */}
+              <circle cx="250" cy="250" r="200" fill="url(#bgGradient)" opacity="0.1" />
+
+              {/* Anel externo */}
+              <circle
+                cx="250"
+                cy="250"
+                r="180"
+                stroke="url(#ringGradient)"
+                strokeWidth="2"
+                fill="none"
+                opacity="0.6"
+                strokeDasharray="20 10"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="0 250 250"
+                  to="360 250 250"
+                  dur="20s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+
+              {/* Anel médio */}
+              <circle
+                cx="250"
+                cy="250"
+                r="150"
+                stroke="url(#ringGradient2)"
+                strokeWidth="3"
+                fill="none"
+                opacity="0.4"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="360 250 250"
+                  to="0 250 250"
+                  dur="15s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+
+              {/* Smartphone central */}
+              <g transform="translate(180, 150)">
+                {/* Corpo do smartphone */}
+                <rect
+                  x="0"
+                  y="0"
+                  width="140"
+                  height="200"
+                  rx="20"
+                  fill="url(#phoneGradient)"
+                  stroke="url(#phoneStroke)"
+                  strokeWidth="2"
+                />
+
+                {/* Tela */}
+                <rect
+                  x="10"
+                  y="20"
+                  width="120"
+                  height="160"
+                  rx="10"
+                  fill="#1a1a1a"
+                  opacity="0.9"
+                />
+
+                {/* Ícones na tela */}
+                <g opacity="0.8">
+                  {/* WiFi icon */}
+                  <path
+                    d="M50 60 Q70 50, 90 60"
+                    stroke="var(--color-primary)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M45 70 Q70 55, 95 70"
+                    stroke="var(--color-primary)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity="0.6"
+                  />
+                  <circle cx="70" cy="80" r="4" fill="var(--color-primary)" />
+
+                  {/* 5G badge */}
+                  <text x="50" y="120" fontSize="24" fontWeight="bold" fill="url(#textGradient)">5G</text>
+
+                  {/* Signal bars */}
+                  <rect x="30" y="140" width="8" height="20" rx="2" fill="var(--color-primary)" opacity="0.3">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="42" y="135" width="8" height="25" rx="2" fill="var(--color-primary)" opacity="0.4">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.2s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="54" y="130" width="8" height="30" rx="2" fill="var(--color-primary)" opacity="0.5">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.4s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="66" y="125" width="8" height="35" rx="2" fill="var(--color-primary)">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.6s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="78" y="120" width="8" height="40" rx="2" fill="var(--color-primary)">
+                    <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" begin="0.8s" repeatCount="indefinite" />
+                  </rect>
+                </g>
+
+                {/* Botão home */}
+                <circle cx="70" cy="185" r="6" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+              </g>
+
+              {/* Partículas orbitando */}
+              <circle cx="100" cy="250" r="8" fill="var(--color-primary)" opacity="0.8">
+                <animateMotion
+                  path="M 0,0 a 150,150 0 1,0 300,0 a 150,150 0 1,0 -300,0"
+                  dur="8s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle cx="400" cy="250" r="6" fill="var(--color-secondary)" opacity="0.6">
+                <animateMotion
+                  path="M 0,0 a 180,180 0 1,1 360,0 a 180,180 0 1,1 -360,0"
+                  dur="10s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+
+              {/* Gradientes */}
+              <defs>
+                <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                </linearGradient>
+                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--color-secondary-blue)' }} />
+                </linearGradient>
+                <linearGradient id="ringGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: 'var(--color-secondary-blue)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--color-primary)' }} />
+                </linearGradient>
+                <linearGradient id="phoneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'var(--primary-alpha-20)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--secondary-blue-alpha-20)' }} />
+                </linearGradient>
+                <linearGradient id="phoneStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                </linearGradient>
+                <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        )}
       </div>
 
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.8; }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
         }
       `}</style>
     </section>

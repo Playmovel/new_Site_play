@@ -67,8 +67,8 @@ export default function SobreZyber() {
 const Section = styled.section`
   width: 100%;
   padding: 6rem 1.5rem;
-  background: radial-gradient(circle at top left, #0f172a, #020617 80%);
-  color: #fff;
+  background: var(--gradient-radial-dark);
+  color: var(--text-primary);
   position: relative;
   overflow: hidden;
   box-sizing: border-box; /* 🔹 Evita ultrapassar a tela */
@@ -79,8 +79,8 @@ const Section = styled.section`
     position: absolute;
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, rgba(255, 56, 92, 0.15), transparent 70%);
-    filter: blur(100px);
+    background: radial-gradient(circle, var(--primary-alpha-15), transparent 70%);
+    filter: var(--blur-2xl);
     z-index: 0;
   }
 
@@ -113,14 +113,14 @@ const SectionTitle = styled.h2`
   font-size: 2.4rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #ff3b3f, #ff8a00);
+  background: var(--gradient-primary-horizontal);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
 
 const Subtitle = styled.p`
   font-size: 1.1rem;
-  color: #cbd5e1;
+  color: var(--text-light-blue);
   max-width: 650px;
   margin: 0 auto;
   line-height: 1.6;
@@ -135,18 +135,18 @@ const FeaturesGrid = styled.div`
 `;
 
 const FeatureCard = styled.div`
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  background: var(--white-alpha-04);
+  border: var(--border-white-subtle);
+  border-radius: var(--radius-md);
   padding: 2rem 1.5rem;
   text-align: center;
-  backdrop-filter: blur(14px);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+  backdrop-filter: var(--blur-md);
+  transition: var(--transition-fast);
+  box-shadow: 0 0 25px var(--white-alpha-05);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--white-alpha-08);
+    border-color: var(--white-alpha-20);
     transform: translateY(-5px);
   }
 `;
@@ -154,59 +154,59 @@ const FeatureCard = styled.div`
 const IconWrapper = styled.div`
   font-size: 2.6rem;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
+  filter: drop-shadow(0 0 8px var(--white-alpha-25));
 `;
 
 const CardTitle = styled.h3`
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 0.6rem;
-  color: #ff784e;
+  color: var(--color-primary-light);
 `;
 
 const CardDescription = styled.p`
   font-size: 1rem;
-  color: #cbd5e1;
+  color: var(--text-light-blue);
   line-height: 1.5;
 `;
 
 const CallToAction = styled.div`
   text-align: center;
   margin-top: 4rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--white-alpha-05);
   padding: 2.5rem 1.5rem;
-  border-radius: 20px;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--blur-md);
+  box-shadow: 0 0 30px var(--white-alpha-04);
   box-sizing: border-box;
 
   h3 {
     font-size: 1.9rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: var(--text-primary);
   }
 
   p {
-    color: #cbd5e1;
+    color: var(--text-light-blue);
     margin-bottom: 1.8rem;
     font-size: 1rem;
   }
 `;
 
 const Button = styled.button`
-  background: linear-gradient(90deg, #ff3b3f, #ff8a00);
-  color: #fff;
+  background: var(--gradient-primary-horizontal);
+  color: var(--text-primary);
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   padding: 0.8rem 2rem;
   font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 18px rgba(255, 122, 0, 0.35);
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-md);
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 22px rgba(255, 122, 0, 0.45);
+    box-shadow: var(--shadow-lg);
   }
 `;

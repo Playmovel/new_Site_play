@@ -51,16 +51,16 @@ export default function InfoSection() {
       onMouseEnter={() => setHoveredCard(`${side}-${index}`)}
       onMouseLeave={() => setHoveredCard(null)}
       style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        backdropFilter: 'blur(10px)',
+        background: 'var(--white-alpha-05)',
+        backdropFilter: 'var(--blur-sm)',
         padding: '2rem',
-        borderRadius: '20px',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 'var(--radius-lg)',
+        border: 'var(--border-white-medium)',
         boxShadow: hoveredCard === `${side}-${index}`
-          ? '0 8px 32px rgba(255, 87, 51, 0.3)'
+          ? '0 8px 32px var(--primary-alpha-30)'
           : '0 4px 16px rgba(0, 0, 0, 0.2)',
         textAlign: 'left',
-        transition: 'all 0.3s ease',
+        transition: 'var(--transition-fast)',
         transform: hoveredCard === `${side}-${index}` ? 'translateY(-8px)' : 'translateY(0)',
         cursor: 'pointer',
         position: 'relative',
@@ -75,9 +75,9 @@ export default function InfoSection() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at center, rgba(255,87,51,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, var(--primary-alpha-10) 0%, transparent 70%)',
           opacity: hoveredCard === `${side}-${index}` ? 1 : 0,
-          transition: 'opacity 0.3s ease',
+          transition: 'var(--transition-fast)',
           pointerEvents: 'none'
         }}
       />
@@ -93,7 +93,7 @@ export default function InfoSection() {
 
         <h3
           style={{
-            color: '#FF5733',
+            color: 'var(--color-primary)',
             marginBottom: '0.75rem',
             fontSize: '1.35rem',
             fontWeight: '700',
@@ -105,7 +105,7 @@ export default function InfoSection() {
 
         <p
           style={{
-            color: '#b0b0b0',
+            color: 'var(--text-secondary)',
             lineHeight: 1.7,
             fontSize: '0.95rem',
           }}
@@ -121,8 +121,8 @@ export default function InfoSection() {
         right: 0,
         width: '60px',
         height: '60px',
-        background: 'linear-gradient(135deg, transparent 50%, rgba(255,87,51,0.1) 50%)',
-        transition: 'all 0.3s ease',
+        background: 'linear-gradient(135deg, transparent 50%, var(--primary-alpha-10) 50%)',
+        transition: 'var(--transition-fast)',
         opacity: hoveredCard === `${side}-${index}` ? 1 : 0
       }} />
     </div>
@@ -137,7 +137,7 @@ export default function InfoSection() {
         alignItems: "flex-start",
         gap: "2.5rem",
         padding: "5rem 2rem",
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+        background: 'var(--gradient-bg-alt)',
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -150,8 +150,8 @@ export default function InfoSection() {
         right: 0,
         bottom: 0,
         backgroundImage: `
-          linear-gradient(rgba(255, 87, 51, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 87, 51, 0.03) 1px, transparent 1px)
+          linear-gradient(var(--primary-alpha-02) 1px, transparent 1px),
+          linear-gradient(90deg, var(--primary-alpha-02) 1px, transparent 1px)
         `,
         backgroundSize: '50px 50px',
         opacity: 0.5,
@@ -193,11 +193,11 @@ export default function InfoSection() {
           style={{
             display: 'inline-block',
             padding: '0.5rem 1.5rem',
-            background: 'rgba(255, 87, 51, 0.1)',
-            border: '1px solid rgba(255, 87, 51, 0.3)',
-            borderRadius: '50px',
+            background: 'var(--primary-alpha-10)',
+            border: 'var(--border-primary)',
+            borderRadius: 'var(--radius-full)',
             fontSize: '0.875rem',
-            color: '#FF5733',
+            color: 'var(--color-primary)',
             fontWeight: '600',
             letterSpacing: '1px',
             textTransform: 'uppercase',
@@ -223,36 +223,36 @@ export default function InfoSection() {
             transform: 'translate(-50%, -50%)',
             width: '120%',
             height: '120%',
-            background: 'radial-gradient(circle, rgba(255,87,51,0.2) 0%, transparent 70%)',
-            filter: 'blur(80px)',
+            background: 'radial-gradient(circle, var(--primary-alpha-20) 0%, transparent 70%)',
+            filter: 'var(--blur-xl)',
             zIndex: 0
           }} />
 
           <div style={{
             position: 'relative',
             padding: '2rem',
-            background: 'rgba(255, 255, 255, 0.02)',
-            backdropFilter: 'blur(5px)',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'var(--white-alpha-02)',
+            backdropFilter: 'var(--blur-sm)',
+            borderRadius: 'var(--radius-full)',
+            border: 'var(--border-white-subtle)',
           }}>
             <div style={{
               width: '100%',
               maxWidth: '400px',
               height: '500px',
-              borderRadius: '40px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              borderRadius: 'var(--radius-xl)',
+              boxShadow: 'var(--shadow-dark-md)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2px solid rgba(255, 87, 51, 0.2)',
+              border: 'var(--border-primary-strong)',
               position: 'relative',
               overflow: 'hidden'
             }}>
               {/* Placeholder para imagem do celular */}
               <div style={{
                 textAlign: 'center',
-                color: '#666',
+                color: 'var(--text-muted)',
                 padding: '6rem'
               }}>
                 <img src={imagem}
@@ -260,7 +260,7 @@ export default function InfoSection() {
                     width: '801px',
                     height: 'auto',
                     objectFit: 'contain',
-                    borderRadius: '20px',
+                    borderRadius: 'var(--radius-lg)',
                     alignItems: 'center'
                   }}
 
@@ -294,25 +294,23 @@ export default function InfoSection() {
               <button
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 25px rgba(250, 55, 12, 0.4)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(250, 55, 12, 0.4)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
                 }}
                 style={{
                   padding: '1rem 2rem',
                   fontSize: '1rem',
                   fontWeight: '600',
-                  color: '#fff',
-                  background: i === 0
-                    ? 'linear-gradient(135deg, #FF5733 0%, #444 100%)'
-                    : 'linear-gradient(135deg, #FF5733 0%, #444 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
+                  color: 'var(--text-primary)',
+                  background: 'var(--gradient-primary)',
+                  border: 'var(--border-white-subtle)',
+                  borderRadius: 'var(--radius-sm)',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(255, 87, 51, 0.2)',
+                  transition: 'var(--transition-fast)',
+                  boxShadow: 'var(--shadow-md)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '1rem',

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSwipe } from '../hooks/useSwipe';
+import useWindowSize from '../hooks/useWindowSize';
 
 const mockPlanos = [
   { description: "(Start) 2Gb + 100 Minutos + 30 sms", gigas: "2", min: "100", value: "28,80", mostraApp: true },
@@ -14,7 +16,14 @@ const mockPlanos = [
 export default function CardSlider() {
   const [active, setActive] = useState(0);
   const [hoveredButton, setHoveredButton] = useState(false);
-  const [, setDirection] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [previousActive, setPreviousActive] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState(0);
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  const { isMobile, windowSize } = useWindowSize();
 
   const res = mockPlanos.filter(p => p.mostraApp);
   const activePlan = res[active];
@@ -22,15 +31,75 @@ export default function CardSlider() {
   const whatsappLink = `https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0AQuero+assinar+o+plano:+${encodeURIComponent(activePlan.description)}`;
 
   const handleNext = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setPreviousActive(active);
     setDirection(1);
     setActive(i => (i + 1) % res.length);
+    setTimeout(() => setIsTransitioning(false), 800);
   };
 
   const handlePrev = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setPreviousActive(active);
     setDirection(-1);
     setActive(i => (i - 1 + res.length) % res.length);
+    setTimeout(() => setIsTransitioning(false), 800);
   };
 
+  const swipeRef = useSwipe({
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrev
+  });
+
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isTransitioning) return;
+    setIsDragging(true);
+    setDragStart(e.clientX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || isTransitioning) return;
+    const diff = dragStart - e.clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+      setIsDragging(false);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  // Suporte para navegação por teclado
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isTransitioning, active]);
+
+  // Valores responsivos
+  const cardWidth = isMobile ? (windowSize < 380 ? 280 : 300) : 320;
+  const cardSpacing = isMobile ? (windowSize < 380 ? 260 : 280) : 340;
+  const cardPadding = isMobile ? '2rem 1.5rem' : '2.5rem 2rem';
+  const cardMinHeight = isMobile ? '480px' : '520px';
 
   interface Plano {
     description: string;
@@ -42,16 +111,23 @@ export default function CardSlider() {
   const Card = ({ plan, index }: { plan: Plano; index: number }) => {
     const isTurbo = plan.description.includes('Turbo');
     const isActive = index === active;
+
     const offset = ((index - active + res.length) % res.length);
     const normalizedOffset = offset > res.length / 2 ? offset - res.length : offset;
 
+    // Efeito de wave durante transição - delay escalonado
+    const distanceFromChange = Math.abs(index - previousActive);
+    const waveDelay = isTransitioning ? distanceFromChange * 0.04 : 0;
 
     return (
       <div
         onClick={() => {
-          if (normalizedOffset !== 0) {
+          if (normalizedOffset !== 0 && !isTransitioning) {
+            setIsTransitioning(true);
+            setPreviousActive(active);
             setDirection(normalizedOffset > 0 ? 1 : -1);
             setActive(index);
+            setTimeout(() => setIsTransitioning(false), 800);
           }
         }}
         style={{
@@ -64,39 +140,48 @@ export default function CardSlider() {
           justifyContent: 'space-between',
           textAlign: 'center',
           background: isActive
-            ? 'linear-gradient(135deg, rgba(255, 87, 51, 0.08) 0%, rgba(255, 87, 51, 0.02) 100%)'
-            : 'rgba(20, 20, 20, 0.8)',
-          backdropFilter: 'blur(20px)',
-          padding: '2.5rem 2rem',
-          borderRadius: '28px',
-          width: '320px',
-          minHeight: '520px',
+            ? 'var(--bg-card-active)'
+            : 'var(--bg-card)',
+          backdropFilter: isActive ? 'var(--blur-md)' : 'var(--blur-sm)',
+          padding: cardPadding,
+          borderRadius: isMobile ? 'var(--radius-xl)' : 'var(--radius-2xl)',
+          width: `${cardWidth}px`,
+          minHeight: cardMinHeight,
           border: isActive
-            ? '2px solid rgba(255, 87, 51, 0.6)'
-            : '1px solid rgba(255, 255, 255, 0.08)',
+            ? 'var(--border-primary-strong)'
+            : 'var(--border-white-subtle)',
           boxShadow: isActive
-            ? '0 20px 60px rgba(255, 87, 51, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-            : '0 8px 32px rgba(0, 0, 0, 0.6)',
-          transition: isActive
-            ? 'transform 0.8s ease, opacity 0.8s ease'
-            : 'transform 0.6s ease, opacity 0.6s ease',
+            ? 'var(--shadow-2xl), var(--shadow-inset)'
+            : 'var(--shadow-dark-md)',
+          transition: `
+            transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${waveDelay}s,
+            opacity 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s,
+            filter 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s,
+            box-shadow 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s,
+            border 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s,
+            background 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s,
+            backdrop-filter 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) ${waveDelay}s
+          `,
           transform: `
             translate(-50%, -50%)
-            translateX(${normalizedOffset * 380}px)
-            scale(${isActive ? 1 : 0.85})
-            rotateY(${normalizedOffset * 15}deg)
-            ${isActive ? 'translateY(0)' : 'translateY(20px)'}
+            translateX(${normalizedOffset * cardSpacing}px)
+            scale(${isActive ? 1 : Math.max(0.75, 1 - Math.abs(normalizedOffset) * 0.12)})
+            rotateY(${normalizedOffset * (isMobile ? 8 : 10)}deg)
+            rotateZ(${isActive ? 0 : normalizedOffset * 1}deg)
+            translateY(${isActive ? 0 : Math.abs(normalizedOffset) * 12}px)
           `,
-
-          opacity: isActive ? 1 : 0.3,
-          animation: isActive ? 'popIn 0.8s ease' : 'none',
-
+          filter: `
+            blur(${isActive ? 0 : Math.abs(normalizedOffset) * 0.6}px)
+            brightness(${isActive ? 1 : Math.max(0.6, 1 - Math.abs(normalizedOffset) * 0.15)})
+          `,
+          opacity: Math.max(0.2, 1 - Math.abs(normalizedOffset) * 0.25),
           transformStyle: 'preserve-3d',
-          // opacity: Math.abs(normalizedOffset) > 2 ? 0 : (isActive ? 1 : 0.4),
           cursor: isActive ? 'default' : 'pointer',
           zIndex: isActive ? 100 : 100 - Math.abs(normalizedOffset),
           overflow: 'hidden',
-          pointerEvents: Math.abs(normalizedOffset) > 2 ? 'none' : 'auto'
+          pointerEvents: Math.abs(normalizedOffset) > 3 ? 'none' : 'auto',
+          willChange: isTransitioning ? 'transform, opacity, filter' : 'auto',
+          visibility: Math.abs(normalizedOffset) > 3 ? 'hidden' : 'visible'
         }}
       >
         {/* Animated gradient background */}
@@ -106,10 +191,40 @@ export default function CardSlider() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at 30% 50%, rgba(0, 0, 0, 0.15) 0%, transparent 50%)',
+          background: 'radial-gradient(circle at 30% 50%, var(--primary-alpha-15) 0%, transparent 70%)',
           opacity: isActive ? 1 : 0,
-          transition: 'opacity 0.6s ease',
+          transition: 'var(--transition-slow)',
+          pointerEvents: 'none',
+          animation: isActive ? 'pulseGlow 3s ease-in-out infinite' : 'none'
+        }} />
+
+        {/* Shimmer effect on active card */}
+        <div style={{
+          position: 'absolute',
+          top: '-100%',
+          left: '-100%',
+          right: '-100%',
+          bottom: '-100%',
+          background: 'linear-gradient(45deg, transparent 30%, var(--white-alpha-08) 50%, transparent 70%)',
+          animation: isActive ? 'shimmer 4s ease-in-out infinite' : 'none',
+          opacity: isActive ? 1 : 0,
+          transition: 'var(--transition-slow)',
           pointerEvents: 'none'
+        }} />
+
+        {/* Glow ring on active card */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '100%',
+          height: '100%',
+          borderRadius: 'var(--radius-2xl)',
+          opacity: isActive ? 1 : 0,
+          transition: `opacity var(--transition-slow) ${waveDelay}s`,
+          pointerEvents: 'none',
+          boxShadow: isActive ? '0 0 40px var(--primary-alpha-40), inset 0 0 40px var(--primary-alpha-10)' : 'none'
         }} />
 
 
@@ -120,14 +235,14 @@ export default function CardSlider() {
             position: 'absolute',
             top: '24px',
             right: '-35px',
-            background: 'linear-gradient(135deg, #FF5733 0%, #ff2a00 100%)',
-            color: '#fff',
+            background: 'var(--color-turbo-badge)',
+            color: 'var(--text-primary)',
             padding: '0.5rem 3.5rem',
             fontSize: '0.7rem',
             fontWeight: '800',
             letterSpacing: '2px',
             transform: 'rotate(45deg)',
-            boxShadow: '0 4px 15px rgba(255, 87, 51, 0.6)',
+            boxShadow: '0 4px 15px var(--primary-alpha-60)',
             textTransform: 'uppercase'
           }}>
             ⚡ Turbo
@@ -142,10 +257,10 @@ export default function CardSlider() {
           width: '30px',
           height: '30px',
           clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-          background: 'rgba(255, 87, 51, 0.2)',
-          border: '1px solid rgba(255, 87, 51, 0.4)',
+          background: 'var(--primary-alpha-20)',
+          border: '1px solid var(--primary-alpha-40)',
           opacity: isActive ? 1 : 0.3,
-          transition: 'opacity 0.3s ease'
+          transition: 'var(--transition-fast)'
         }} />
 
         <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
@@ -154,12 +269,12 @@ export default function CardSlider() {
             display: 'inline-block',
             padding: '0.4rem 1rem',
             background: isTurbo
-              ? 'linear-gradient(135deg, rgba(255, 87, 51, 0.2) 0%, rgba(255, 87, 51, 0.1) 100%)'
+              ? 'linear-gradient(135deg, var(--primary-alpha-20) 0%, var(--primary-alpha-10) 100%)'
               : 'rgba(100, 100, 255, 0.1)',
-            border: `1px solid ${isTurbo ? 'rgba(255, 87, 51, 0.4)' : 'rgba(100, 100, 255, 0.3)'}`,
-            borderRadius: '20px',
+            border: `1px solid ${isTurbo ? 'var(--primary-alpha-40)' : 'rgba(100, 100, 255, 0.3)'}`,
+            borderRadius: 'var(--radius-lg)',
             fontSize: '0.7rem',
-            color: isTurbo ? '#FF5733' : '#6464ff',
+            color: isTurbo ? 'var(--color-primary)' : 'var(--color-secondary)',
             fontWeight: '700',
             letterSpacing: '1.5px',
             textTransform: 'uppercase',
@@ -170,12 +285,12 @@ export default function CardSlider() {
 
           {/* Título do plano */}
           <h3 style={{
-            fontSize: '0.85rem',
+            fontSize: isMobile ? '0.75rem' : '0.85rem',
             fontWeight: '500',
-            color: '#909090',
-            marginBottom: '2rem',
+            color: 'var(--text-tertiary)',
+            marginBottom: isMobile ? '1.5rem' : '2rem',
             lineHeight: 1.5,
-            minHeight: '40px',
+            minHeight: isMobile ? '35px' : '40px',
             fontFamily: 'monospace',
             letterSpacing: '0.5px'
           }}>
@@ -196,9 +311,9 @@ export default function CardSlider() {
               alignItems: 'center',
               gap: '1rem',
               padding: '1rem',
-              background: 'linear-gradient(135deg, rgba(255, 87, 51, 0.08) 0%, rgba(255, 87, 51, 0.02) 100%)',
-              borderRadius: '16px',
-              border: '1px solid rgba(255, 87, 51, 0.2)',
+              background: 'var(--bg-card-active)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--primary-alpha-20)',
               overflow: 'hidden'
             }}>
               <div style={{
@@ -207,25 +322,25 @@ export default function CardSlider() {
                 top: 0,
                 bottom: 0,
                 width: '4px',
-                background: 'linear-gradient(180deg, #FF5733 0%, transparent 100%)'
+                background: 'linear-gradient(180deg, var(--color-primary) 0%, transparent 100%)'
               }} />
               <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '12px',
-                background: 'rgba(255, 87, 51, 0.15)',
+                width: isMobile ? '36px' : '40px',
+                height: isMobile ? '36px' : '40px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--primary-alpha-15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.3rem'
+                fontSize: isMobile ? '1.1rem' : '1.3rem'
               }}>
                 🌐
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <div style={{ fontSize: '1.8rem', fontWeight: '800', color: '#FF5733', lineHeight: 1 }}>
-                  {plan.gigas}<span style={{ fontSize: '1rem', fontWeight: '600', marginLeft: '4px' }}>GB</span>
+                <div style={{ fontSize: isMobile ? '1.6rem' : '1.8rem', fontWeight: '800', color: 'var(--color-primary)', lineHeight: 1 }}>
+                  {plan.gigas}<span style={{ fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '600', marginLeft: '4px' }}>GB</span>
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#707070', marginTop: '2px', letterSpacing: '1px' }}>INTERNET 5G</div>
+                <div style={{ fontSize: isMobile ? '0.65rem' : '0.7rem', color: 'var(--text-dark)', marginTop: '2px', letterSpacing: '1px' }}>INTERNET 5G</div>
               </div>
             </div>
 
@@ -236,13 +351,13 @@ export default function CardSlider() {
               gap: '1rem',
               padding: '0.9rem 1rem',
               background: 'linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(37, 211, 102, 0.02) 100%)',
-              borderRadius: '16px',
+              borderRadius: 'var(--radius-md)',
               border: '1px solid rgba(37, 211, 102, 0.2)'
             }}>
               <div style={{
                 width: '36px',
                 height: '36px',
-                borderRadius: '10px',
+                borderRadius: 'var(--radius-sm)',
                 background: 'rgba(37, 211, 102, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
@@ -252,10 +367,10 @@ export default function CardSlider() {
                 💬
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#25D366' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--color-whatsapp)' }}>
                   WhatsApp Ilimitado
                 </div>
-                <div style={{ fontSize: '0.65rem', color: '#707070', marginTop: '2px' }}>Sem descontar da franquia</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dark)', marginTop: '2px' }}>Sem descontar da franquia</div>
               </div>
             </div>
 
@@ -266,13 +381,13 @@ export default function CardSlider() {
               gap: '1rem',
               padding: '0.9rem 1rem',
               background: 'rgba(255, 255, 255, 0.02)',
-              borderRadius: '16px',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
+              borderRadius: 'var(--radius-md)',
+              border: 'var(--border-white-subtle)'
             }}>
               <div style={{
                 width: '36px',
                 height: '36px',
-                borderRadius: '10px',
+                borderRadius: 'var(--radius-sm)',
                 background: 'rgba(100, 100, 255, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -285,7 +400,7 @@ export default function CardSlider() {
                 <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#d0d0d0' }}>
                   {plan.min === "999" ? "Chamadas Ilimitadas" : `${plan.min} Minutos`}
                 </div>
-                <div style={{ fontSize: '0.65rem', color: '#707070', marginTop: '2px' }}>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dark)', marginTop: '2px' }}>
                   {plan.min === "999" ? "Para todo Brasil" : "Para qualquer operadora"}
                 </div>
               </div>
@@ -295,11 +410,11 @@ export default function CardSlider() {
           {/* Preço com design futurista */}
           <div style={{
             position: 'relative',
-            background: 'linear-gradient(135deg, #FF5733 0%, #ff4520 100%)',
-            padding: '1.5rem',
-            borderRadius: '20px',
+            background: 'var(--gradient-primary-reverse)',
+            padding: isMobile ? '1.2rem' : '1.5rem',
+            borderRadius: isMobile ? 'var(--radius-md)' : 'var(--radius-lg)',
             marginTop: 'auto',
-            boxShadow: '0 8px 30px rgba(255, 87, 51, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+            boxShadow: 'var(--shadow-lg), var(--shadow-inset-strong)',
             overflow: 'hidden'
           }}>
             <div style={{
@@ -308,12 +423,12 @@ export default function CardSlider() {
               right: 0,
               width: '100px',
               height: '100px',
-              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, var(--white-alpha-10) 0%, transparent 70%)',
               borderRadius: '50%',
               transform: 'translate(30%, -30%)'
             }} />
             <div style={{
-              fontSize: '0.7rem',
+              fontSize: isMobile ? '0.65rem' : '0.7rem',
               color: 'rgba(255,255,255,0.7)',
               marginBottom: '0.5rem',
               letterSpacing: '2px',
@@ -328,14 +443,14 @@ export default function CardSlider() {
               justifyContent: 'center',
               gap: '0.3rem'
             }}>
-              <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#fff' }}>R$</span>
-              <span style={{ fontSize: '3rem', fontWeight: '900', color: '#fff', lineHeight: 1, letterSpacing: '-2px' }}>
+              <span style={{ fontSize: isMobile ? '1.3rem' : '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>R$</span>
+              <span style={{ fontSize: isMobile ? '2.5rem' : '3rem', fontWeight: '900', color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-2px' }}>
                 {plan.value.split(',')[0]}
               </span>
-              <span style={{ fontSize: '1.8rem', fontWeight: '700', color: 'rgba(255,255,255,0.9)' }}>
+              <span style={{ fontSize: isMobile ? '1.5rem' : '1.8rem', fontWeight: '700', color: 'rgba(255,255,255,0.9)' }}>
                 ,{plan.value.split(',')[1]}
               </span>
-              <span style={{ fontSize: '1rem', fontWeight: '500', color: 'rgba(255,255,255,0.8)', marginLeft: '0.2rem' }}>/mês</span>
+              <span style={{ fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '500', color: 'rgba(255,255,255,0.8)', marginLeft: '0.2rem' }}>/mês</span>
             </div>
           </div>
         </div>
@@ -345,8 +460,8 @@ export default function CardSlider() {
 
   return (
     <div style={{
-      padding: '3rem 1rem',
-      background: 'linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%)',
+      padding: '3rem 0',
+      background: 'var(--gradient-bg)',
       position: 'relative',
       overflow: 'hidden',
       minHeight: 'auto'
@@ -359,8 +474,8 @@ export default function CardSlider() {
         right: 0,
         bottom: 0,
         backgroundImage: `
-          linear-gradient(rgba(255, 87, 51, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 87, 51, 0.04) 1px, transparent 1px)
+          linear-gradient(var(--primary-alpha-10) 1px, transparent 1px),
+          linear-gradient(90deg, var(--primary-alpha-10) 1px, transparent 1px)
         `,
         backgroundSize: '60px 60px',
         opacity: 0.6,
@@ -375,9 +490,9 @@ export default function CardSlider() {
         right: '10%',
         width: '400px',
         height: '400px',
-        background: 'radial-gradient(circle, rgba(255,87,51,0.15) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
         borderRadius: '50%',
-        filter: 'blur(80px)',
+        filter: 'var(--blur-xl)',
         animation: 'float 8s ease-in-out infinite'
       }} />
 
@@ -389,7 +504,7 @@ export default function CardSlider() {
         height: '350px',
         background: 'radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)',
         borderRadius: '50%',
-        filter: 'blur(80px)',
+        filter: 'var(--blur-xl)',
         animation: 'float 10s ease-in-out infinite reverse'
       }} />
 
@@ -398,21 +513,22 @@ export default function CardSlider() {
         textAlign: 'center',
         marginBottom: '2rem',
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        padding: '0 1rem'
       }}>
         <div style={{
           display: 'inline-block',
           padding: '0.6rem 1.8rem',
-          background: 'rgba(255, 87, 51, 0.1)',
-          border: '1px solid rgba(255, 87, 51, 0.3)',
-          borderRadius: '50px',
+          background: 'var(--primary-alpha-10)',
+          border: 'var(--border-primary)',
+          borderRadius: 'var(--radius-full)',
           fontSize: '0.8rem',
-          color: '#FF5733',
+          color: 'var(--color-primary)',
           fontWeight: '700',
           letterSpacing: '2px',
           textTransform: 'uppercase',
           marginBottom: '2rem',
-          boxShadow: '0 4px 15px rgba(255, 87, 51, 0.2)',
+          boxShadow: '0 4px 15px var(--primary-alpha-20)',
         }}>
           <span style={{ marginRight: '8px' }}>💎</span>
           Planos Premium
@@ -421,7 +537,7 @@ export default function CardSlider() {
         <h2 style={{
           fontSize: 'clamp(2.5rem, 5vw, 4rem)',
           fontWeight: '900',
-          background: 'linear-gradient(135deg, #ffffff 0%, #808080 100%)',
+          background: 'var(--gradient-text-white)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -433,7 +549,7 @@ export default function CardSlider() {
 
         <p style={{
           fontSize: '1.2rem',
-          color: '#909090',
+          color: 'var(--text-tertiary)',
           maxWidth: '650px',
           margin: '0 auto',
           lineHeight: 1.7
@@ -443,12 +559,39 @@ export default function CardSlider() {
       </div>
 
       {/* Carousel */}
-      <div style={{
-        position: 'relative',
-        height: '600px',
-        marginBottom: '2rem',
-        perspective: '2000px'
-      }}>
+      <div
+        ref={swipeRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          position: 'relative',
+          height: isMobile ? '560px' : '620px',
+          marginBottom: '2rem',
+          perspective: isMobile ? '2000px' : '2500px',
+          overflow: 'visible',
+          touchAction: 'pan-y',
+          cursor: isDragging ? 'grabbing' : 'grab',
+          userSelect: 'none'
+        }}
+      >
+        {/* Subtle background pulse during transition */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: isTransitioning ? '600px' : '0',
+          height: isTransitioning ? '600px' : '0',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, var(--primary-alpha-05) 0%, transparent 70%)',
+          opacity: isTransitioning ? 1 : 0,
+          transition: 'var(--transition-slow)',
+          zIndex: 1,
+          pointerEvents: 'none'
+        }} />
+
         {res.map((plan, index) => (
           <Card key={index} plan={plan} index={index} />
         ))}
@@ -466,30 +609,30 @@ export default function CardSlider() {
         <button
           onClick={handlePrev}
           style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'var(--white-alpha-05)',
+            backdropFilter: 'var(--blur-sm)',
+            border: 'var(--border-white-medium)',
             borderRadius: '50%',
-            width: '60px',
-            height: '60px',
+            width: isMobile ? '50px' : '60px',
+            height: isMobile ? '50px' : '60px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            color: '#fff',
-            fontSize: '1.8rem',
+            transition: 'var(--transition-fast)',
+            color: 'var(--text-primary)',
+            fontSize: isMobile ? '1.5rem' : '1.8rem',
             fontWeight: '300',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+            boxShadow: 'var(--shadow-dark-lg)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 87, 51, 0.2)';
-            e.currentTarget.style.borderColor = 'rgba(255, 87, 51, 0.5)';
+            e.currentTarget.style.background = 'var(--primary-alpha-20)';
+            e.currentTarget.style.borderColor = 'var(--primary-alpha-50)';
             e.currentTarget.style.transform = 'scale(1.1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            e.currentTarget.style.background = 'var(--white-alpha-05)';
+            e.currentTarget.style.borderColor = 'var(--white-alpha-10)';
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
@@ -499,30 +642,30 @@ export default function CardSlider() {
         <button
           onClick={handleNext}
           style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'var(--white-alpha-05)',
+            backdropFilter: 'var(--blur-sm)',
+            border: 'var(--border-white-medium)',
             borderRadius: '50%',
-            width: '60px',
-            height: '60px',
+            width: isMobile ? '50px' : '60px',
+            height: isMobile ? '50px' : '60px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            color: '#fff',
-            fontSize: '1.8rem',
+            transition: 'var(--transition-fast)',
+            color: 'var(--text-primary)',
+            fontSize: isMobile ? '1.5rem' : '1.8rem',
             fontWeight: '300',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+            boxShadow: 'var(--shadow-dark-lg)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 87, 51, 0.2)';
-            e.currentTarget.style.borderColor = 'rgba(255, 87, 51, 0.5)';
+            e.currentTarget.style.background = 'var(--primary-alpha-20)';
+            e.currentTarget.style.borderColor = 'var(--primary-alpha-50)';
             e.currentTarget.style.transform = 'scale(1.1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            e.currentTarget.style.background = 'var(--white-alpha-05)';
+            e.currentTarget.style.borderColor = 'var(--white-alpha-10)';
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
@@ -543,20 +686,26 @@ export default function CardSlider() {
           <button
             key={index}
             onClick={() => {
+              if (isTransitioning || index === active) return;
+              setIsTransitioning(true);
+              setPreviousActive(active);
               setDirection(index > active ? 1 : -1);
               setActive(index);
+              setTimeout(() => setIsTransitioning(false), 800);
             }}
             style={{
               width: active === index ? '40px' : '12px',
               height: '12px',
               borderRadius: '6px',
               background: active === index
-                ? 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)'
-                : 'rgba(255, 255, 255, 0.15)',
-              border: active === index ? '1px solid rgba(255, 87, 51, 0.5)' : 'none',
+                ? 'var(--gradient-primary)'
+                : 'var(--white-alpha-15)',
+              border: active === index ? '1px solid var(--primary-alpha-50)' : 'none',
               cursor: 'pointer',
-              transition: 'all 0.4s ease',
-              boxShadow: active === index ? '0 2px 10px rgba(255, 87, 51, 0.4)' : 'none'
+              transition: 'var(--transition-bounce)',
+              boxShadow: active === index ? 'var(--shadow-sm)' : 'none',
+              animation: active === index ? 'indicatorPop var(--transition-bounce)' : 'none',
+              transform: active === index ? 'scale(1)' : 'scale(0.9)'
             }}
           />
         ))}
@@ -574,32 +723,32 @@ export default function CardSlider() {
             onMouseEnter={() => setHoveredButton(true)}
             onMouseLeave={() => setHoveredButton(false)}
             style={{
-              padding: '1.5rem 4rem',
-              fontSize: '1.3rem',
+              padding: isMobile ? '1.2rem 2.5rem' : '1.5rem 4rem',
+              fontSize: isMobile ? '1.1rem' : '1.3rem',
               fontWeight: '800',
-              color: '#fff',
-              background: 'linear-gradient(135deg, #FF5733 0%, #ff4520 100%)',
-              border: '2px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
+              color: 'var(--text-primary)',
+              background: 'var(--gradient-primary-reverse)',
+              border: '2px solid var(--white-alpha-10)',
+              borderRadius: isMobile ? 'var(--radius-md)' : 'var(--radius-lg)',
               cursor: 'pointer',
-              transition: 'all 0.4s ease',
+              transition: 'var(--transition-medium)',
               boxShadow: hoveredButton
-                ? '0 12px 40px rgba(255, 87, 51, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-                : '0 8px 30px rgba(255, 87, 51, 0.4)',
+                ? 'var(--shadow-xl), var(--shadow-inset-strong)'
+                : 'var(--shadow-lg)',
               transform: hoveredButton ? 'translateY(-4px) scale(1.05)' : 'translateY(0)',
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem',
+              gap: isMobile ? '0.7rem' : '1rem',
               letterSpacing: '0.5px',
               textTransform: 'uppercase',
               position: 'relative',
               overflow: 'hidden'
             }}
           >
-            <span style={{ position: 'relative', zIndex: 1 }}>Assinar Agora</span>
+            <span style={{ position: 'relative', zIndex: 1 }}>{isMobile ? 'Assinar' : 'Assinar Agora'}</span>
             <svg
-              width="24"
-              height="24"
+              width={isMobile ? "20" : "24"}
+              height={isMobile ? "20" : "24"}
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -625,7 +774,7 @@ export default function CardSlider() {
               width: '0',
               height: '0',
               borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.3)',
+              background: 'var(--white-alpha-20)',
               transform: 'translate(-50%, -50%)',
               transition: 'width 0.6s ease, height 0.6s ease',
               ...(hoveredButton && { width: '300px', height: '300px' })
@@ -635,28 +784,45 @@ export default function CardSlider() {
       </div>
 
       <style>{`
-        @keyframes scan {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(500px); }
-        }
-        
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-30px); }
         }
-        
+
         @keyframes gridMove {
           0% { transform: translateY(0); }
           100% { transform: translateY(60px); }
         }
-        @keyframes popIn {
+
+        @keyframes pulseGlow {
+          0%, 100% {
+            opacity: 0.5;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+          }
+        }
+
+        @keyframes shimmer {
           0% {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.95) translateY(30px);
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
           }
           100% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1) translateY(0);
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+          }
+        }
+
+        @keyframes indicatorPop {
+          0% {
+            transform: scale(0.8);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
           }
         }
 

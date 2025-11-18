@@ -26,12 +26,12 @@ export default function Navbar() {
                     background: scrolled
                         ? 'rgba(10, 10, 10, 0.85)'
                         : 'rgba(10, 10, 10, 0.7)',
-                    backdropFilter: 'blur(20px)',
-                    borderBottom: '1px solid rgba(255, 87, 51, 0.1)',
+                    backdropFilter: 'var(--blur-md)',
+                    borderBottom: 'var(--border-primary)',
                     boxShadow: scrolled
-                        ? '0 4px 30px rgba(0, 0, 0, 0.5)'
-                        : '0 2px 20px rgba(0, 0, 0, 0.3)',
-                    transition: 'all 0.4s ease'
+                        ? 'var(--shadow-dark-md)'
+                        : 'var(--shadow-dark-lg)',
+                    transition: 'var(--transition-medium)'
                 }}
             >
                 {/* Scan line effect */}
@@ -41,7 +41,7 @@ export default function Navbar() {
                     left: 0,
                     right: 0,
                     height: '1px',
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 87, 51, 0.8), transparent)',
+                    background: 'linear-gradient(90deg, transparent, var(--primary-alpha-80), transparent)',
                     animation: 'scanHorizontal 3s ease-in-out infinite'
                 }} />
 
@@ -81,16 +81,16 @@ export default function Navbar() {
                                 width: '100%',
                                 height: '100%',
                                 clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                                background: 'linear-gradient(135deg, rgba(255, 87, 51, 0.3) 0%, rgba(255, 87, 51, 0.1) 100%)',
-                                border: '2px solid rgba(255, 87, 51, 0.5)',
+                                background: 'linear-gradient(135deg, var(--primary-alpha-30) 0%, var(--primary-alpha-10) 100%)',
+                                border: '2px solid var(--primary-alpha-50)',
                                 animation: 'pulse 3s ease-in-out infinite'
                             }} />
                             <div style={{
                                 position: 'relative',
                                 fontSize: '1.5rem',
                                 fontWeight: '900',
-                                color: '#FF5733',
-                                textShadow: '0 0 10px rgba(255, 87, 51, 0.5)'
+                                color: 'var(--color-primary)',
+                                textShadow: '0 0 10px var(--primary-alpha-50)'
                             }}>
                                 Z
                             </div>
@@ -99,7 +99,7 @@ export default function Navbar() {
                         <div style={{
                             fontSize: '1.4rem',
                             fontWeight: '800',
-                            background: 'linear-gradient(135deg, #ffffff 0%, #FF5733 100%)',
+                            background: 'linear-gradient(135deg, var(--text-primary) 0%, var(--color-primary) 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text',
@@ -115,12 +115,12 @@ export default function Navbar() {
                         alignItems: 'center',
                         gap: '0.5rem',
                         position: 'relative',
-                        background: 'rgba(255, 255, 255, 0.03)',
+                        background: 'var(--white-alpha-02)',
                         padding: '0.5rem',
-                        borderRadius: '16px',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                        backdropFilter: 'blur(10px)',
-                        boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.3)'
+                        borderRadius: 'var(--radius-md)',
+                        border: 'var(--border-white-subtle)',
+                        backdropFilter: 'var(--blur-sm)',
+                        boxShadow: 'inset 0 2px 8px var(--black-alpha-30)'
                     }}
                         className="desktop-menu"
                     >
@@ -131,33 +131,33 @@ export default function Navbar() {
                                     key={item}
                                     onClick={() => setActiveItem(item)}
                                     style={{
-                                        color: isActive ? '#0a0a0a' : 'rgba(255, 255, 255, 0.8)',
+                                        color: isActive ? 'var(--bg-dark-1)' : 'var(--white-alpha-80)',
                                         fontWeight: '600',
                                         fontSize: '0.95rem',
                                         cursor: 'pointer',
                                         position: 'relative',
                                         padding: '0.75rem 1.5rem',
-                                        borderRadius: '12px',
-                                        transition: 'all 0.3s ease',
+                                        borderRadius: 'var(--radius-sm)',
+                                        transition: 'var(--transition-fast)',
                                         zIndex: 2,
                                         whiteSpace: 'nowrap',
                                         background: isActive
-                                            ? 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)'
+                                            ? 'var(--gradient-primary)'
                                             : 'transparent',
                                         boxShadow: isActive
-                                            ? '0 4px 15px rgba(255, 87, 51, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+                                            ? 'var(--shadow-md), var(--shadow-inset-strong)'
                                             : 'none'
                                     }}
                                     onMouseEnter={(e) => {
                                         if (!isActive) {
-                                            e.currentTarget.style.color = '#ffffff';
-                                            e.currentTarget.style.background = 'rgba(255, 87, 51, 0.1)';
+                                            e.currentTarget.style.color = 'var(--text-primary)';
+                                            e.currentTarget.style.background = 'var(--primary-alpha-10)';
                                             e.currentTarget.style.transform = 'translateY(-2px)';
                                         }
                                     }}
                                     onMouseLeave={(e) => {
                                         if (!isActive) {
-                                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                                            e.currentTarget.style.color = 'var(--white-alpha-80)';
                                             e.currentTarget.style.background = 'transparent';
                                             e.currentTarget.style.transform = 'translateY(0)';
                                         }
@@ -174,9 +174,9 @@ export default function Navbar() {
                                             transform: 'translateX(-50%)',
                                             width: '0',
                                             height: '2px',
-                                            background: '#FF5733',
+                                            background: 'var(--color-primary)',
                                             borderRadius: '2px',
-                                            transition: 'width 0.3s ease'
+                                            transition: 'var(--transition-fast)'
                                         }}
                                             className="underline"
                                         />
@@ -191,26 +191,26 @@ export default function Navbar() {
                         <button
                             style={{
                                 padding: '0.75rem 1.8rem',
-                                background: 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)',
-                                color: '#fff',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                borderRadius: '12px',
+                                background: 'var(--gradient-primary)',
+                                color: 'var(--text-primary)',
+                                border: 'var(--border-white-subtle)',
+                                borderRadius: 'var(--radius-sm)',
                                 fontSize: '0.95rem',
                                 fontWeight: '700',
                                 cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                boxShadow: '0 4px 15px rgba(255, 87, 51, 0.3)',
+                                transition: 'var(--transition-fast)',
+                                boxShadow: 'var(--shadow-md)',
                                 whiteSpace: 'nowrap',
                                 position: 'relative',
                                 overflow: 'hidden'
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 87, 51, 0.5)';
+                                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 87, 51, 0.3)';
+                                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
                             }}
                         >
                             <span style={{ position: 'relative', zIndex: 1 }}>Fale Conosco</span>
@@ -220,7 +220,7 @@ export default function Navbar() {
                                 left: '-100%',
                                 width: '100%',
                                 height: '100%',
-                                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                                background: 'linear-gradient(90deg, transparent, var(--white-alpha-20), transparent)',
                                 animation: 'shimmer 2s infinite'
                             }} />
                         </button>
@@ -231,12 +231,12 @@ export default function Navbar() {
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         style={{
                             display: 'none',
-                            background: 'rgba(255, 87, 51, 0.1)',
-                            border: '1px solid rgba(255, 87, 51, 0.3)',
+                            background: 'var(--primary-alpha-10)',
+                            border: 'var(--border-primary)',
                             borderRadius: '8px',
                             cursor: 'pointer',
                             padding: '0.6rem',
-                            transition: 'all 0.3s ease'
+                            transition: 'var(--transition-fast)'
                         }}
                         className="mobile-menu-btn"
                     >
@@ -252,27 +252,27 @@ export default function Navbar() {
                                 display: 'block',
                                 width: '100%',
                                 height: '3px',
-                                background: '#FF5733',
+                                background: 'var(--color-primary)',
                                 borderRadius: '3px',
-                                transition: 'all 0.3s ease',
+                                transition: 'var(--transition-fast)',
                                 transform: isMobileMenuOpen ? 'rotate(45deg) translate(8px, 8px)' : 'rotate(0)'
                             }} />
                             <span style={{
                                 display: 'block',
                                 width: '100%',
                                 height: '3px',
-                                background: '#FF5733',
+                                background: 'var(--color-primary)',
                                 borderRadius: '3px',
-                                transition: 'all 0.3s ease',
+                                transition: 'var(--transition-fast)',
                                 opacity: isMobileMenuOpen ? 0 : 1
                             }} />
                             <span style={{
                                 display: 'block',
                                 width: '100%',
                                 height: '3px',
-                                background: '#FF5733',
+                                background: 'var(--color-primary)',
                                 borderRadius: '3px',
-                                transition: 'all 0.3s ease',
+                                transition: 'var(--transition-fast)',
                                 transform: isMobileMenuOpen ? 'rotate(-45deg) translate(8px, -8px)' : 'rotate(0)'
                             }} />
                         </div>
@@ -289,13 +289,13 @@ export default function Navbar() {
                         left: 0,
                         right: 0,
                         background: 'rgba(10, 10, 10, 0.95)',
-                        backdropFilter: 'blur(20px)',
+                        backdropFilter: 'var(--blur-md)',
                         padding: isMobileMenuOpen ? '1.5rem 2rem' : '0 2rem',
                         maxHeight: isMobileMenuOpen ? '500px' : '0',
                         overflow: 'hidden',
-                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                        borderBottom: isMobileMenuOpen ? '1px solid rgba(255, 87, 51, 0.2)' : 'none',
-                        boxShadow: isMobileMenuOpen ? '0 8px 30px rgba(0, 0, 0, 0.5)' : 'none',
+                        transition: 'var(--transition-smooth)',
+                        borderBottom: isMobileMenuOpen ? 'var(--border-primary)' : 'none',
+                        boxShadow: isMobileMenuOpen ? 'var(--shadow-dark-md)' : 'none',
                         gap: '0.5rem'
                     }}
                     className="mobile-menu"
@@ -310,29 +310,29 @@ export default function Navbar() {
                                     setIsMobileMenuOpen(false);
                                 }}
                                 style={{
-                                    color: isActive ? '#FF5733' : 'rgba(255, 255, 255, 0.8)',
+                                    color: isActive ? 'var(--color-primary)' : 'var(--white-alpha-80)',
                                     fontWeight: isActive ? '700' : '600',
                                     fontSize: '1rem',
                                     cursor: 'pointer',
                                     padding: '1rem',
-                                    borderRadius: '12px',
-                                    transition: 'all 0.3s ease',
+                                    borderRadius: 'var(--radius-sm)',
+                                    transition: 'var(--transition-fast)',
                                     background: isActive
-                                        ? 'rgba(255, 87, 51, 0.15)'
+                                        ? 'var(--primary-alpha-15)'
                                         : 'transparent',
                                     border: isActive
-                                        ? '1px solid rgba(255, 87, 51, 0.3)'
+                                        ? 'var(--border-primary)'
                                         : '1px solid transparent'
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = 'rgba(255, 87, 51, 0.15)';
-                                    e.currentTarget.style.color = '#FF5733';
+                                    e.currentTarget.style.background = 'var(--primary-alpha-15)';
+                                    e.currentTarget.style.color = 'var(--color-primary)';
                                     e.currentTarget.style.transform = 'translateX(8px)';
                                 }}
                                 onMouseLeave={(e) => {
                                     if (!isActive) {
                                         e.currentTarget.style.background = 'transparent';
-                                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                                        e.currentTarget.style.color = 'var(--white-alpha-80)';
                                     }
                                     e.currentTarget.style.transform = 'translateX(0)';
                                 }}
@@ -346,15 +346,15 @@ export default function Navbar() {
                         style={{
                             padding: '1rem',
                             marginTop: '1rem',
-                            background: 'linear-gradient(135deg, #FF5733 0%, #ff7a5c 100%)',
-                            color: '#fff',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '12px',
+                            background: 'var(--gradient-primary)',
+                            color: 'var(--text-primary)',
+                            border: 'var(--border-white-subtle)',
+                            borderRadius: 'var(--radius-sm)',
                             fontSize: '1rem',
                             fontWeight: '700',
                             cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            boxShadow: '0 4px 15px rgba(255, 87, 51, 0.3)'
+                            transition: 'var(--transition-fast)',
+                            boxShadow: 'var(--shadow-md)'
                         }}
                         onMouseDown={(e) => {
                             e.currentTarget.style.transform = 'scale(0.98)';

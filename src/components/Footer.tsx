@@ -58,8 +58,8 @@ export default function Footer() {
 /* ===== ESTILOS ===== */
 
 const FooterContainer = styled.footer`
-  background: linear-gradient(135deg, #a41902 0%, #8a1502 100%);
-  color: #fff;
+  background: var(--gradient-red);
+  color: var(--text-primary);
   padding: 4rem 2rem 2rem;
   position: relative;
   overflow: hidden;
@@ -71,8 +71,8 @@ const FooterContainer = styled.footer`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 30% 50%, rgba(255, 229, 1, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 70% 50%, rgba(255, 229, 1, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 50%, var(--yellow-alpha-08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, var(--yellow-alpha-08) 0%, transparent 50%);
     pointer-events: none;
   }
 
@@ -121,7 +121,7 @@ const FooterColumn = styled.div`
 `;
 
 const ColumnTitle = styled.h3`
-  color: #ffe501;
+  color: var(--color-yellow);
   font-size: 1.3rem;
   margin-bottom: 1rem;
   text-transform: uppercase;
@@ -137,7 +137,7 @@ const ColumnTitle = styled.h3`
     left: 0;
     width: 40px;
     height: 3px;
-    background: linear-gradient(90deg, #ffe501, transparent);
+    background: var(--gradient-yellow);
     border-radius: 2px;
   }
 
@@ -147,11 +147,11 @@ const ColumnTitle = styled.h3`
 `;
 
 const FooterLink = styled.a`
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--white-alpha-90);
   text-decoration: none;
   font-weight: 400;
   font-size: 0.95rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-fast);
   padding: 0.3rem 0;
   position: relative;
   display: inline-block;
@@ -161,14 +161,14 @@ const FooterLink = styled.a`
     position: absolute;
     left: -20px;
     opacity: 0;
-    transition: all 0.3s ease;
-    color: #ffe501;
+    transition: var(--transition-fast);
+    color: var(--color-yellow);
   }
 
   &:hover {
-    color: #ffe501;
+    color: var(--color-yellow);
     padding-left: 20px;
-    
+
     &::before {
       opacity: 1;
       left: 0;
@@ -186,7 +186,7 @@ const Divider = styled.div`
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 229, 1, 0.3),
+    var(--yellow-alpha-30),
     transparent
   );
   margin: 2.5rem 0 1.5rem;

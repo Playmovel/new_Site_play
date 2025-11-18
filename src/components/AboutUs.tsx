@@ -33,9 +33,9 @@ export default function AboutUs() {
 /* ----------------------------- STYLED COMPONENTS ----------------------------- */
 
 const Section = styled.section`
-  background: linear-gradient(135deg, #a41902, #7a1000);
+  background: var(--gradient-red-reverse);
   padding: 6rem 2rem;
-  color: #fff;
+  color: var(--text-primary);
   position: relative;
   overflow: hidden;
 
@@ -46,8 +46,8 @@ const Section = styled.section`
     right: -100px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(255, 229, 1, 0.15), transparent 70%);
-    filter: blur(80px);
+    background: radial-gradient(circle, var(--yellow-alpha-15), transparent 70%);
+    filter: var(--blur-xl);
     z-index: 0;
   }
 `;
@@ -69,7 +69,7 @@ const TextContainer = styled.div`
 `;
 
 const Subtitle = styled.h4`
-  color: #ffe501;
+  color: var(--color-yellow);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -80,7 +80,7 @@ const Subtitle = styled.h4`
 const Title = styled.h2`
   font-size: 3rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   line-height: 1.2;
   margin-bottom: 2rem;
 
@@ -92,7 +92,7 @@ const Title = styled.h2`
 const Paragraph = styled.p`
   font-size: 1.15rem;
   line-height: 1.8;
-  color: #f8f8f8;
+  color: var(--text-light-primary);
   max-width: 600px;
 
   @media (max-width: 768px) {
@@ -101,7 +101,7 @@ const Paragraph = styled.p`
 `;
 
 const Highlight = styled.span`
-  color: #ffe501;
+  color: var(--color-yellow);
   font-weight: 600;
 `;
 
@@ -114,20 +114,20 @@ const ImageWrapper = styled.div`
 
 const ImageContainer = styled.div`
   position: relative;
-  border-radius: 24px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(255, 229, 1, 0.3);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 10px 30px var(--yellow-alpha-30);
+  transition: var(--transition-medium);
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(255, 229, 1, 0.4);
+    box-shadow: 0 15px 40px var(--yellow-alpha-30);
   }
 
   img {
     width: 100%;
     max-width: 420px;
-    border-radius: 24px;
+    border-radius: var(--radius-xl);
     display: block;
   }
 `;
@@ -135,7 +135,7 @@ const ImageContainer = styled.div`
 const Glow = styled.div`
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, rgba(255, 229, 1, 0.15), transparent 60%);
+  background: radial-gradient(circle, var(--yellow-alpha-15), transparent 60%);
   pointer-events: none;
   mix-blend-mode: screen;
 `;
