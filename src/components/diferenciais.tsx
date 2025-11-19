@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
+import { constants } from '../constants/contants'
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
@@ -19,9 +21,8 @@ export default function FAQ() {
     },
     {
       id: 3,
-      pergunta: 'Como faço a portabilidade para a Zyber?',
-      resposta:
-        'O titular da conta utiliza o seu Aplicativo ou o CHAT para solicitar. Serão solicitadas as seguintes informações: Nome e CPF, número que deseja manter, operadora antiga. *As linhas precisam estar no mesmo CPF e DDD. Pronto! Em até 5 dias úteis o seu Plano Zyber estará disponível no seu número.',
+      pergunta: `Como faço a portabilidade para a ${constants.nameEmpresa}?`,
+      resposta: `O titular da conta utiliza o seu Aplicativo ou o CHAT para solicitar. Serão solicitadas as seguintes informações: Nome e CPF, número que deseja manter, operadora antiga. *As linhas precisam estar no mesmo CPF e DDD. Pronto! Em até 5 dias úteis o seu Plano ${constants.nameEmpresa} estará disponível no seu número.`,
     },
     {
       id: 4,
@@ -38,53 +39,68 @@ export default function FAQ() {
   return (
     <Section id="faq">
       {/* Animated grid background */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: `
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
           linear-gradient(var(--primary-alpha-10) 1px, transparent 1px),
           linear-gradient(90deg, var(--primary-alpha-10) 1px, transparent 1px)
         `,
-        backgroundSize: '60px 60px',
-        opacity: 0.6,
-        pointerEvents: 'none',
-        animation: 'gridMove 20s linear infinite'
-      }} />
+          backgroundSize: '60px 60px',
+          opacity: 0.6,
+          pointerEvents: 'none',
+          animation: 'gridMove 20s linear infinite',
+        }}
+      />
 
       {/* Floating orbs */}
-      <div style={{
-        position: 'absolute',
-        top: '15%',
-        right: '10%',
-        width: '400px',
-        height: '400px',
-        background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'var(--blur-xl)',
-        animation: 'float 8s ease-in-out infinite'
-      }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: '15%',
+          right: '10%',
+          width: '400px',
+          height: '400px',
+          background:
+            'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'var(--blur-xl)',
+          animation: 'float 8s ease-in-out infinite',
+        }}
+      />
 
-      <div style={{
-        position: 'absolute',
-        bottom: '20%',
-        left: '5%',
-        width: '350px',
-        height: '350px',
-        background: 'radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'var(--blur-xl)',
-        animation: 'float 10s ease-in-out infinite reverse'
-      }} />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '5%',
+          width: '350px',
+          height: '350px',
+          background:
+            'radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'var(--blur-xl)',
+          animation: 'float 10s ease-in-out infinite reverse',
+        }}
+      />
 
       <Container>
         <SectionTitle>Perguntas Frequentes</SectionTitle>
         <Subtitle>Tire suas dúvidas sobre nossos serviços</Subtitle>
         <FAQGrid>
           {faqs.map((faq, index) => (
-            <FAQItem key={faq.id}>
+            <FAQItem
+              key={faq.id}
+              as={motion.div}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
               <FAQQuestion
                 onClick={() => toggleFAQ(index)}
                 isOpen={openIndex === index}
@@ -218,9 +234,7 @@ const FAQQuestion = styled.div<ToggleProps>`
 
   &:hover {
     background: ${(props) =>
-      props.isOpen
-        ? 'var(--bg-card-active)'
-        : 'var(--white-alpha-05)'};
+      props.isOpen ? 'var(--bg-card-active)' : 'var(--white-alpha-05)'};
   }
 
   @media (max-width: 768px) {

@@ -1,34 +1,47 @@
-import { useEffect, useRef } from 'react';
-import useWindowSize from '../hooks/useWindowSize';
+import { useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import useWindowSize from '../hooks/useWindowSize'
+import { constants } from '../constants/contants'
 
 export default function Hero() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { isMobile } = useWindowSize();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const sectionRef = useRef<HTMLDivElement | null>(null)
+  const { isMobile } = useWindowSize()
+
+  // Scroll animations
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  })
+
+  const yGlow1 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+  const yGlow2 = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
     const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
 
-    setCanvasSize();
+    setCanvasSize()
 
     const particles: {
-      x: number;
-      y: number;
-      radius: number;
-      vx: number;
-      vy: number;
-      opacity: number;
-    }[] = [];
+      x: number
+      y: number
+      radius: number
+      vx: number
+      vy: number
+      opacity: number
+    }[] = []
 
-    const particleCount = 50;
+    const particleCount = 50
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -37,62 +50,64 @@ export default function Hero() {
         radius: Math.random() * 2 + 1,
         vx: Math.random() * 0.5 - 0.25,
         vy: Math.random() * 0.5 - 0.25,
-        opacity: Math.random() * 0.5 + 0.2
-      });
+        opacity: Math.random() * 0.5 + 0.2,
+      })
     }
 
-    let animationId: number;
+    let animationId: number
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       // Desenha grid
-      ctx.strokeStyle = 'var(--primary-alpha-10)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'var(--primary-alpha-10)'
+      ctx.lineWidth = 1
 
       for (let i = 0; i < canvas.width; i += 50) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvas.height);
-        ctx.stroke();
+        ctx.beginPath()
+        ctx.moveTo(i, 0)
+        ctx.lineTo(i, canvas.height)
+        ctx.stroke()
       }
 
       for (let i = 0; i < canvas.height; i += 50) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(canvas.width, i);
-        ctx.stroke();
+        ctx.beginPath()
+        ctx.moveTo(0, i)
+        ctx.lineTo(canvas.width, i)
+        ctx.stroke()
       }
 
       // Anima partículas
       for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 87, 51, ${p.opacity})`;
-        ctx.fill();
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255, 87, 51, ${p.opacity})`
+        ctx.fill()
 
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx
+        p.y += p.vy
 
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1
       }
 
-      animationId = requestAnimationFrame(animate);
-    };
+      animationId = requestAnimationFrame(animate)
+    }
 
-    animate();
+    animate()
 
-    window.addEventListener('resize', setCanvasSize);
+    window.addEventListener('resize', setCanvasSize)
 
     return () => {
-      window.removeEventListener('resize', setCanvasSize);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
+      window.removeEventListener('resize', setCanvasSize)
+      cancelAnimationFrame(animationId)
+    }
+  }, [])
 
   return (
     <section
+      id="hero"
+      ref={sectionRef}
       style={{
         position: 'relative',
         minHeight: '80vh',
@@ -116,37 +131,41 @@ export default function Hero() {
         }}
       />
 
-      {/* Círculos decorativos - Glow superior direito */}
-      <div
+      {/* Círculos decorativos - Glow superior direito com parallax */}
+      <motion.div
         style={{
           position: 'absolute',
           top: '-5%',
           right: '5%',
           width: '400px',
           height: '400px',
-          background: 'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
+          background:
+            'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
           borderRadius: '50%',
           filter: 'var(--blur-xl)',
           zIndex: 0,
+          y: yGlow1,
         }}
       />
-      {/* Glow inferior esquerdo - conecta com próximo container */}
-      <div
+      {/* Glow inferior esquerdo com parallax */}
+      <motion.div
         style={{
           position: 'absolute',
           bottom: '-10%',
           left: '5%',
           width: '350px',
           height: '350px',
-          background: 'radial-gradient(circle, var(--secondary-blue-alpha-15) 0%, transparent 70%)',
+          background:
+            'radial-gradient(circle, var(--secondary-blue-alpha-15) 0%, transparent 70%)',
           borderRadius: '50%',
           filter: 'var(--blur-lg)',
           zIndex: 0,
+          y: yGlow2,
         }}
       />
 
       {/* Container principal */}
-      <div
+      <motion.div
         style={{
           position: 'relative',
           zIndex: 1,
@@ -156,10 +175,15 @@ export default function Hero() {
           gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: isMobile ? '2rem' : '4rem',
           alignItems: 'center',
+          opacity,
         }}
       >
         {/* Conteúdo de texto - Esquerda */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
             textAlign: isMobile ? 'center' : 'left',
           }}
@@ -184,7 +208,9 @@ export default function Hero() {
 
           <h1
             style={{
-              fontSize: isMobile ? 'clamp(2rem, 8vw, 2.5rem)' : 'clamp(2.5rem, 5vw, 4rem)',
+              fontSize: isMobile
+                ? 'clamp(2rem, 8vw, 2.5rem)'
+                : 'clamp(2.5rem, 5vw, 4rem)',
               marginBottom: '1.5rem',
               lineHeight: 1.2,
               fontWeight: '800',
@@ -219,7 +245,11 @@ export default function Hero() {
             }}
           >
             Conheça os planos da{' '}
-            <strong style={{ color: 'var(--color-primary)' }}>Zyber</strong> e aproveite liberdade total, com internet rápida, chamadas ilimitadas e muito mais.
+            <strong style={{ color: 'var(--color-primary)' }}>
+              {constants.nameEmpresa}
+            </strong>{' '}
+            e aproveite liberdade total, com internet rápida, chamadas
+            ilimitadas e muito mais.
           </p>
 
           <a
@@ -242,15 +272,22 @@ export default function Hero() {
                 boxShadow: 'var(--shadow-md)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = 'var(--shadow-lg)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)'
               }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  justifyContent: 'center',
+                }}
+              >
                 Pedir Chip
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path
@@ -276,13 +313,20 @@ export default function Hero() {
               color: 'var(--text-muted)',
             }}
           >
-            {['Internet Ultra Rápida', 'Chamadas Ilimitadas', 'Suporte 24/7'].map((item) => (
-              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {[
+              'Internet Ultra Rápida',
+              'Chamadas Ilimitadas',
+              'Suporte 24/7',
+            ].map((item) => (
+              <div
+                key={item}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
                 <span style={{ color: 'var(--color-primary)' }}>✓</span> {item}
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* SVG Ilustração - Direita */}
         {!isMobile && (
@@ -305,7 +349,13 @@ export default function Hero() {
               }}
             >
               {/* Círculo de fundo com gradiente */}
-              <circle cx="250" cy="250" r="200" fill="url(#bgGradient)" opacity="0.1" />
+              <circle
+                cx="250"
+                cy="250"
+                r="200"
+                fill="url(#bgGradient)"
+                opacity="0.1"
+              />
 
               {/* Anel externo */}
               <circle
@@ -396,39 +446,133 @@ export default function Hero() {
                   <circle cx="70" cy="80" r="4" fill="var(--color-primary)" />
 
                   {/* 5G badge */}
-                  <text x="50" y="120" fontSize="24" fontWeight="bold" fill="url(#textGradient)">5G</text>
+                  <text
+                    x="50"
+                    y="120"
+                    fontSize="24"
+                    fontWeight="bold"
+                    fill="url(#textGradient)"
+                  >
+                    5G
+                  </text>
 
                   {/* Signal bars */}
-                  <rect x="30" y="140" width="8" height="20" rx="2" fill="var(--color-primary)" opacity="0.3">
-                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+                  <rect
+                    x="30"
+                    y="140"
+                    width="8"
+                    height="20"
+                    rx="2"
+                    fill="var(--color-primary)"
+                    opacity="0.3"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.3;1;0.3"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
                   </rect>
-                  <rect x="42" y="135" width="8" height="25" rx="2" fill="var(--color-primary)" opacity="0.4">
-                    <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.2s" repeatCount="indefinite" />
+                  <rect
+                    x="42"
+                    y="135"
+                    width="8"
+                    height="25"
+                    rx="2"
+                    fill="var(--color-primary)"
+                    opacity="0.4"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.4;1;0.4"
+                      dur="2s"
+                      begin="0.2s"
+                      repeatCount="indefinite"
+                    />
                   </rect>
-                  <rect x="54" y="130" width="8" height="30" rx="2" fill="var(--color-primary)" opacity="0.5">
-                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.4s" repeatCount="indefinite" />
+                  <rect
+                    x="54"
+                    y="130"
+                    width="8"
+                    height="30"
+                    rx="2"
+                    fill="var(--color-primary)"
+                    opacity="0.5"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.5;1;0.5"
+                      dur="2s"
+                      begin="0.4s"
+                      repeatCount="indefinite"
+                    />
                   </rect>
-                  <rect x="66" y="125" width="8" height="35" rx="2" fill="var(--color-primary)">
-                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.6s" repeatCount="indefinite" />
+                  <rect
+                    x="66"
+                    y="125"
+                    width="8"
+                    height="35"
+                    rx="2"
+                    fill="var(--color-primary)"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.6;1;0.6"
+                      dur="2s"
+                      begin="0.6s"
+                      repeatCount="indefinite"
+                    />
                   </rect>
-                  <rect x="78" y="120" width="8" height="40" rx="2" fill="var(--color-primary)">
-                    <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" begin="0.8s" repeatCount="indefinite" />
+                  <rect
+                    x="78"
+                    y="120"
+                    width="8"
+                    height="40"
+                    rx="2"
+                    fill="var(--color-primary)"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.7;1;0.7"
+                      dur="2s"
+                      begin="0.8s"
+                      repeatCount="indefinite"
+                    />
                   </rect>
                 </g>
 
                 {/* Botão home */}
-                <circle cx="70" cy="185" r="6" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+                <circle
+                  cx="70"
+                  cy="185"
+                  r="6"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="1.5"
+                />
               </g>
 
               {/* Partículas orbitando */}
-              <circle cx="100" cy="250" r="8" fill="var(--color-primary)" opacity="0.8">
+              <circle
+                cx="100"
+                cy="250"
+                r="8"
+                fill="var(--color-primary)"
+                opacity="0.8"
+              >
                 <animateMotion
                   path="M 0,0 a 150,150 0 1,0 300,0 a 150,150 0 1,0 -300,0"
                   dur="8s"
                   repeatCount="indefinite"
                 />
               </circle>
-              <circle cx="400" cy="250" r="6" fill="var(--color-secondary)" opacity="0.6">
+              <circle
+                cx="400"
+                cy="250"
+                r="6"
+                fill="var(--color-secondary)"
+                opacity="0.6"
+              >
                 <animateMotion
                   path="M 0,0 a 180,180 0 1,1 360,0 a 180,180 0 1,1 -360,0"
                   dur="10s"
@@ -438,35 +582,107 @@ export default function Hero() {
 
               {/* Gradientes */}
               <defs>
-                <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                <linearGradient
+                  id="bgGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--color-primary)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--color-primary-light)' }}
+                  />
                 </linearGradient>
-                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--color-secondary-blue)' }} />
+                <linearGradient
+                  id="ringGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--color-primary)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--color-secondary-blue)' }}
+                  />
                 </linearGradient>
-                <linearGradient id="ringGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style={{ stopColor: 'var(--color-secondary-blue)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--color-primary)' }} />
+                <linearGradient
+                  id="ringGradient2"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--color-secondary-blue)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--color-primary)' }}
+                  />
                 </linearGradient>
-                <linearGradient id="phoneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--primary-alpha-20)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--secondary-blue-alpha-20)' }} />
+                <linearGradient
+                  id="phoneGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--primary-alpha-20)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--secondary-blue-alpha-20)' }}
+                  />
                 </linearGradient>
-                <linearGradient id="phoneStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                <linearGradient
+                  id="phoneStroke"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--color-primary)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--color-primary-light)' }}
+                  />
                 </linearGradient>
-                <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style={{ stopColor: 'var(--color-primary)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--color-primary-light)' }} />
+                <linearGradient
+                  id="textGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: 'var(--color-primary)' }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: 'var(--color-primary-light)' }}
+                  />
                 </linearGradient>
               </defs>
             </svg>
           </div>
         )}
-      </div>
+      </motion.div>
 
       <style>{`
         @keyframes pulse {
@@ -484,5 +700,5 @@ export default function Hero() {
         }
       `}</style>
     </section>
-  );
+  )
 }

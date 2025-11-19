@@ -1,7 +1,43 @@
+/* ===== SMOOTH SCROLL ===== */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
+body {
+  overflow-x: hidden;
+}
+
+/* Estilo personalizado da scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff5733 0%, #ff9933 100%);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff6844 0%, #ffaa44 100%);
+}
 
 * {
   box-sizing: border-box;
+}
+
+/* Info Card Hover Effect */
+.info-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.info-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 8px 32px var(--primary-alpha-30) !important;
 }
 
 .carousel {

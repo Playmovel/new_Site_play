@@ -1,11 +1,18 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 import aboutImage from "../assets/favicon.png";
 
 export default function AboutUs() {
   return (
     <Section>
       <Container>
-        <TextContainer>
+        <TextContainer
+          as={motion.div}
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <Subtitle>✨ Sobre Nós</Subtitle>
           <Title>Conectando Pessoas e Simplicidade</Title>
           <Paragraph>
@@ -19,7 +26,13 @@ export default function AboutUs() {
           </Paragraph>
         </TextContainer>
 
-        <ImageWrapper>
+        <ImageWrapper
+          as={motion.div}
+          initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+          whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        >
           <ImageContainer>
             <img src={aboutImage} alt="Sobre nós" />
             <Glow />
@@ -127,13 +140,15 @@ const ImageWrapper = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: 0 10px 30px var(--yellow-alpha-30);
+  overflow: visible;
   transition: var(--transition-medium);
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 15px 40px var(--yellow-alpha-30);
+
+    img {
+      filter: drop-shadow(0 15px 40px var(--yellow-alpha-30));
+    }
   }
 
   img {
@@ -141,6 +156,8 @@ const ImageContainer = styled.div`
     max-width: 420px;
     border-radius: var(--radius-xl);
     display: block;
+    filter: drop-shadow(0 10px 30px var(--yellow-alpha-30));
+    transition: var(--transition-medium);
   }
 `;
 

@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled from 'styled-components'
+import { constants } from '../constants/contants'
 
 export default function Footer() {
   return (
@@ -8,7 +9,9 @@ export default function Footer() {
         <FooterColumn>
           <ColumnTitle>Institucional</ColumnTitle>
           <FooterLink href="">Sobre nós</FooterLink>
-          <FooterLink href="#">Como comprar na Zyber</FooterLink>
+          <FooterLink href="#">
+            Como comprar na {constants.nameEmpresa}
+          </FooterLink>
           <FooterLink href="#">FAQ</FooterLink>
         </FooterColumn>
 
@@ -44,15 +47,29 @@ export default function Footer() {
       <Divider />
 
       <FooterBottom>
-        <Copyright>© 2025 Zyber. Todos os direitos reservados.</Copyright>
+        <Copyright>
+          © 2025 {constants.nameEmpresa}. Todos os direitos reservados.
+        </Copyright>
         <SocialLinks>
-          <SocialIcon href="https://wa.me/qr/5ZQKIH3R6PAUB1" aria-label="Facebook">📘</SocialIcon>
-          <SocialIcon href="https://www.instagram.com/zyber_fibra/profilecard/?igsh=am80ZGF6c2prcGxq" aria-label="Instagram">📷</SocialIcon>
-          <SocialIcon href="#" aria-label="LinkedIn">💼</SocialIcon>
+          <SocialIcon
+            href="https://wa.me/qr/5ZQKIH3R6PAUB1"
+            aria-label="Facebook"
+          >
+            📘
+          </SocialIcon>
+          <SocialIcon
+            href="https://www.instagram.com/zyber_fibra/profilecard/?igsh=am80ZGF6c2prcGxq"
+            aria-label="Instagram"
+          >
+            📷
+          </SocialIcon>
+          <SocialIcon href="#" aria-label="LinkedIn">
+            💼
+          </SocialIcon>
         </SocialLinks>
       </FooterBottom>
     </FooterContainer>
-  );
+  )
 }
 
 /* ===== ESTILOS ===== */
@@ -78,7 +95,11 @@ const FooterContainer = styled.footer`
     left: -5%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--primary-alpha-15) 0%,
+      transparent 70%
+    );
   }
 
   &::after {
@@ -86,13 +107,17 @@ const FooterContainer = styled.footer`
     right: -5%;
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, var(--secondary-blue-alpha-12) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--secondary-blue-alpha-12) 0%,
+      transparent 70%
+    );
   }
 
   @media (max-width: 768px) {
     padding: 3rem 1.5rem 1.5rem;
   }
-`;
+`
 
 const FooterContent = styled.div`
   display: grid;
@@ -113,7 +138,7 @@ const FooterContent = styled.div`
     gap: 2rem;
     text-align: left;
   }
-`;
+`
 
 const FooterColumn = styled.div`
   display: flex;
@@ -131,7 +156,7 @@ const FooterColumn = styled.div`
       transform: translateY(0);
     }
   }
-`;
+`
 
 const ColumnTitle = styled.h3`
   color: var(--color-yellow);
@@ -157,7 +182,7 @@ const ColumnTitle = styled.h3`
   @media (max-width: 480px) {
     font-size: 1.1rem;
   }
-`;
+`
 
 const FooterLink = styled.a`
   color: var(--white-alpha-90);
@@ -191,7 +216,7 @@ const FooterLink = styled.a`
   @media (max-width: 480px) {
     font-size: 0.9rem;
   }
-`;
+`
 
 const Divider = styled.div`
   width: 100%;
@@ -205,7 +230,7 @@ const Divider = styled.div`
   margin: 2.5rem 0 1.5rem;
   position: relative;
   z-index: 1;
-`;
+`
 
 const FooterBottom = styled.div`
   display: flex;
@@ -223,7 +248,7 @@ const FooterBottom = styled.div`
     gap: 1rem;
     text-align: center;
   }
-`;
+`
 
 const Copyright = styled.p`
   opacity: 0.85;
@@ -232,12 +257,12 @@ const Copyright = styled.p`
   @media (max-width: 480px) {
     font-size: 0.85rem;
   }
-`;
+`
 
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
-`;
+`
 
 const SocialIcon = styled.a`
   font-size: 1.5rem;
@@ -253,4 +278,4 @@ const SocialIcon = styled.a`
   @media (max-width: 480px) {
     font-size: 1.3rem;
   }
-`;
+`

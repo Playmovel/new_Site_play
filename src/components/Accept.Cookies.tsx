@@ -1,35 +1,36 @@
-import { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { constants } from '../constants/contants'
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [visible, setVisible] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   const getCookie = (name: string): string | null => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()!.split(";").shift() || null;
-    return null;
-  };
+    const value = `; ${document.cookie}`
+    const parts = value.split(`; ${name}=`)
+    if (parts.length === 2) return parts.pop()!.split(';').shift() || null
+    return null
+  }
 
   useEffect(() => {
-    const accepted = getCookie("cookiesAccepted");
+    const accepted = getCookie('cookiesAccepted')
     if (!accepted) {
-      setTimeout(() => setVisible(true), 500);
+      setTimeout(() => setVisible(true), 500)
     }
-  }, []);
+  }, [])
 
   const handleAccept = () => {
-    const expirationDays = 365;
-    const date = new Date();
-    date.setTime(date.getTime() + expirationDays * 24 * 60 * 60 * 1000);
-    document.cookie = `cookiesAccepted=true; expires=${date.toUTCString()}; path=/; SameSite=Lax`;
+    const expirationDays = 365
+    const date = new Date()
+    date.setTime(date.getTime() + expirationDays * 24 * 60 * 60 * 1000)
+    document.cookie = `cookiesAccepted=true; expires=${date.toUTCString()}; path=/; SameSite=Lax`
 
-    setIsClosing(true);
-    setTimeout(() => setVisible(false), 400);
-  };
+    setIsClosing(true)
+    setTimeout(() => setVisible(false), 400)
+  }
 
-  if (!visible) return null;
+  if (!visible) return null
 
   return (
     <CookieWrapper>
@@ -45,17 +46,25 @@ export default function CookieConsent() {
             </CookieIconWrapper>
             <HeaderText>
               <CookieTitle>Experiência Personalizada</CookieTitle>
-              <CookieSubtitle>Cookies para melhorar sua navegação</CookieSubtitle>
+              <CookieSubtitle>
+                Cookies para melhorar sua navegação
+              </CookieSubtitle>
             </HeaderText>
           </CookieHeader>
 
           <CookieBody>
             <CookieText>
-              Usamos cookies essenciais e analíticos para garantir a melhor experiência no site da Zyber.
-              Seus dados estão seguros e protegidos conforme nossa{" "}
-              <CookieLink href="https://privacidade.operadora.app.br/#/Zyber" target="_blank" rel="noopener noreferrer">
+              Usamos cookies essenciais e analíticos para garantir a melhor
+              experiência no site da {constants.nameEmpresa}. Seus dados estão
+              seguros e protegidos conforme nossa
+              <CookieLink
+                href="https://privacidade.operadora.app.br/#/Zyber"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Política de Privacidade
-              </CookieLink>.
+              </CookieLink>
+              .
             </CookieText>
 
             <FeaturesList>
@@ -90,7 +99,7 @@ export default function CookieConsent() {
         </CookieCard>
       </CookieContainer>
     </CookieWrapper>
-  );
+  )
 }
 
 /* ===== ESTILOS ===== */
@@ -108,7 +117,7 @@ const CookieWrapper = styled.div`
   @media (max-width: 768px) {
     padding: 0 0.75rem 0.75rem;
   }
-`;
+`
 
 const CookieOverlay = styled.div<{ $isClosing: boolean }>`
   position: fixed;
@@ -116,18 +125,27 @@ const CookieOverlay = styled.div<{ $isClosing: boolean }>`
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
   pointer-events: auto;
-  animation: ${props => props.$isClosing ? 'fadeOut' : 'fadeIn'} 0.4s ease-out;
+  animation: ${(props) => (props.$isClosing ? 'fadeOut' : 'fadeIn')} 0.4s
+    ease-out;
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
-`;
+`
 
 const CookieContainer = styled.div<{ $isClosing: boolean }>`
   max-width: 650px;
@@ -135,7 +153,8 @@ const CookieContainer = styled.div<{ $isClosing: boolean }>`
   pointer-events: auto;
   position: relative;
   z-index: 1;
-  animation: ${props => props.$isClosing ? 'slideOut' : 'slideIn'} 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: ${(props) => (props.$isClosing ? 'slideOut' : 'slideIn')} 0.5s
+    cubic-bezier(0.34, 1.56, 0.64, 1);
 
   @keyframes slideIn {
     from {
@@ -158,7 +177,7 @@ const CookieContainer = styled.div<{ $isClosing: boolean }>`
       opacity: 0;
     }
   }
-`;
+`
 
 const CookieCard = styled.div`
   background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
@@ -166,9 +185,7 @@ const CookieCard = styled.div`
   padding: 2rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 20px 60px rgba(164, 25, 2, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.15),
+  box-shadow: 0 20px 60px rgba(164, 25, 2, 0.2), 0 8px 24px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 229, 1, 0.2);
 
@@ -180,7 +197,7 @@ const CookieCard = styled.div`
   @media (max-width: 480px) {
     padding: 1.25rem;
   }
-`;
+`
 
 const CardGlow = styled.div`
   position: absolute;
@@ -198,10 +215,14 @@ const CardGlow = styled.div`
   pointer-events: none;
 
   @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
-`;
+`
 
 const CookieHeader = styled.div`
   display: flex;
@@ -215,12 +236,12 @@ const CookieHeader = styled.div`
     gap: 1rem;
     margin-bottom: 1.25rem;
   }
-`;
+`
 
 const CookieIconWrapper = styled.div`
   position: relative;
   flex-shrink: 0;
-`;
+`
 
 const CookieIcon = styled.div`
   font-size: 3.5rem;
@@ -229,8 +250,13 @@ const CookieIcon = styled.div`
   animation: float 3s ease-in-out infinite;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(5deg); }
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-8px) rotate(5deg);
+    }
   }
 
   @media (max-width: 768px) {
@@ -240,7 +266,7 @@ const CookieIcon = styled.div`
   @media (max-width: 480px) {
     font-size: 2.5rem;
   }
-`;
+`
 
 const IconPulse = styled.div`
   position: absolute;
@@ -250,7 +276,8 @@ const IconPulse = styled.div`
   animation: pulse 2s ease-in-out infinite;
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(0.9);
       opacity: 0.5;
     }
@@ -259,13 +286,13 @@ const IconPulse = styled.div`
       opacity: 0.8;
     }
   }
-`;
+`
 
 const HeaderText = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-`;
+`
 
 const CookieTitle = styled.h3`
   font-size: 1.5rem;
@@ -284,7 +311,7 @@ const CookieTitle = styled.h3`
   @media (max-width: 480px) {
     font-size: 1.15rem;
   }
-`;
+`
 
 const CookieSubtitle = styled.p`
   font-size: 0.9rem;
@@ -295,13 +322,13 @@ const CookieSubtitle = styled.p`
   @media (max-width: 480px) {
     font-size: 0.85rem;
   }
-`;
+`
 
 const CookieBody = styled.div`
   position: relative;
   z-index: 1;
   margin-bottom: 1.5rem;
-`;
+`
 
 const CookieText = styled.p`
   font-size: 0.95rem;
@@ -317,7 +344,7 @@ const CookieText = styled.p`
     font-size: 0.875rem;
     line-height: 1.6;
   }
-`;
+`
 
 const CookieLink = styled.a`
   color: #a41902;
@@ -347,7 +374,7 @@ const CookieLink = styled.a`
       transform-origin: left;
     }
   }
-`;
+`
 
 const FeaturesList = styled.div`
   display: grid;
@@ -363,7 +390,7 @@ const FeaturesList = styled.div`
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
-`;
+`
 
 const Feature = styled.div`
   display: flex;
@@ -383,14 +410,14 @@ const Feature = styled.div`
   @media (max-width: 480px) {
     padding: 0.5rem 0.75rem;
   }
-`;
+`
 
 const FeatureIcon = styled.span`
   color: #a41902;
   font-weight: bold;
   font-size: 1rem;
   flex-shrink: 0;
-`;
+`
 
 const FeatureText = styled.span`
   font-size: 0.85rem;
@@ -400,12 +427,12 @@ const FeatureText = styled.span`
   @media (max-width: 480px) {
     font-size: 0.8rem;
   }
-`;
+`
 
 const ButtonGroup = styled.div`
   position: relative;
   z-index: 1;
-`;
+`
 
 const AcceptButton = styled.button`
   width: 100%;
@@ -419,15 +446,13 @@ const AcceptButton = styled.button`
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 8px 24px rgba(164, 25, 2, 0.4),
+  box-shadow: 0 8px 24px rgba(164, 25, 2, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 
-      0 12px 32px rgba(164, 25, 2, 0.5),
+    box-shadow: 0 12px 32px rgba(164, 25, 2, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
@@ -444,7 +469,7 @@ const AcceptButton = styled.button`
     font-size: 0.95rem;
     padding: 0.85rem 1.5rem;
   }
-`;
+`
 
 const ButtonContent = styled.div`
   display: flex;
@@ -453,27 +478,38 @@ const ButtonContent = styled.div`
   gap: 0.75rem;
   position: relative;
   z-index: 1;
-`;
+`
 
 const ButtonIcon = styled.span`
   font-size: 1.25rem;
   animation: shake 2s ease-in-out infinite;
 
   @keyframes shake {
-    0%, 100% { transform: rotate(0deg); }
-    10%, 30% { transform: rotate(-10deg); }
-    20%, 40% { transform: rotate(10deg); }
-    50% { transform: rotate(0deg); }
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    10%,
+    30% {
+      transform: rotate(-10deg);
+    }
+    20%,
+    40% {
+      transform: rotate(10deg);
+    }
+    50% {
+      transform: rotate(0deg);
+    }
   }
 
   @media (max-width: 480px) {
     font-size: 1.1rem;
   }
-`;
+`
 
 const ButtonText = styled.span`
   letter-spacing: 0.3px;
-`;
+`
 
 const ButtonShine = styled.div`
   position: absolute;
@@ -492,7 +528,7 @@ const ButtonShine = styled.div`
   ${AcceptButton}:hover & {
     left: 100%;
   }
-`;
+`
 
 const CloseButton = styled.button`
   position: absolute;
@@ -524,4 +560,4 @@ const CloseButton = styled.button`
     top: 0.75rem;
     right: 0.75rem;
   }
-`;
+`
