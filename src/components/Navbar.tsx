@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { constants } from '../constants/contants'
+
 import logo from '../assets/logo.png'
 
 export default function Navbar() {

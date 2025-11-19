@@ -1,6 +1,26 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useSwipe } from '../hooks/useSwipe'
 import useWindowSize from '../hooks/useWindowSize'
+import axios from 'axios'
+import { constants } from '../constants/contants'
+
+interface PlanoAPI {
+  id?: number
+  planid?: string
+  description: string
+  value: string
+  gigas: string
+  min: string
+  sms?: string
+  mostraApp?: boolean
+  rede?: string
+  modelo?: string
+}
+
+interface APIResponse {
+  Original: PlanoAPI[]
+  personalizado: PlanoAPI[]
+}
 
 const mockPlanos = [
   {
@@ -67,14 +87,59 @@ export default function CardSlider() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState(0)
+  const [planos, setPlanos] = useState<PlanoAPI[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const { isMobile, windowSize } = useWindowSize()
 
-  const res = mockPlanos.filter((p) => p.mostraApp)
+  // Fetch plans from API
+  useEffect(() => {
+    const fetchPlanos = async () => {
+      try {
+        setIsLoading(true)
+        const response = await axios.post<APIResponse>(
+          'https://sistema.playmovel.com.br/api/app/planos/visualizar',
+          {
+            companyid: `${constants.companyId}`,
+          },
+        )
+
+        const { Original, personalizado } = response.data
+
+        // Filter: all personalizado + Original where mostraApp === true
+        const filteredOriginal = Original.filter((p) => p.mostraApp === true)
+        const allPlans = [...personalizado, ...filteredOriginal]
+
+        // Sort by gigas (ascending - menor para maior)
+        const sortedPlans = allPlans.sort((a, b) => {
+          const gigasA = parseInt(a.gigas) || 0
+          const gigasB = parseInt(b.gigas) || 0
+          return gigasA - gigasB
+        })
+
+        setPlanos(sortedPlans)
+      } catch (error) {
+        console.error('Error fetching plans:', error)
+        // Fallback to mock data if API fails
+        setPlanos(mockPlanos)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchPlanos()
+  }, [])
+
+  const res =
+    planos.length > 0
+      ? planos.filter((p) => p.mostraApp !== false)
+      : mockPlanos.filter((p) => p.mostraApp)
   const activePlan = res[active]
 
-  const whatsappLink = `https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0AQuero+assinar+o+plano:+${encodeURIComponent(
-    activePlan.description,
-  )}`
+  const whatsappLink = activePlan
+    ? `https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0AQuero+assinar+o+plano:+${encodeURIComponent(
+        activePlan.description,
+      )}`
+    : '#'
 
   const handleNext = () => {
     if (isTransitioning) return
@@ -151,38 +216,34 @@ export default function CardSlider() {
   const cardPadding = isMobile ? '2rem 1.5rem' : '2.5rem 2rem'
   const cardMinHeight = isMobile ? '480px' : '520px'
 
-  interface Plano {
-    description: string
-    gigas: string
-    min: string
-    value: string
-    mostraApp: boolean
-  }
-  const Card = ({ plan, index }: { plan: Plano; index: number }) => {
-    const isTurbo = plan.description.includes('Turbo')
+  const Card = ({ plan, index }: { plan: PlanoAPI | null; index: number }) => {
+    const isTurbo = plan?.description.includes('TURBO')
     const isActive = index === active
-    const [isHovered, setIsHovered] = useState(false)
 
     // Calcular offset normalizado
     const offset = (index - active + res.length) % res.length
-    const normalizedOffset = offset > res.length / 2 ? offset - res.length : offset
+    const normalizedOffset =
+      offset > res.length / 2 ? offset - res.length : offset
 
     // Calcular valores de transformação
     const translateX = normalizedOffset * cardSpacing
     const translateY = isActive ? 0 : Math.abs(normalizedOffset) * 15
     const translateZ = isActive ? 20 : -Math.abs(normalizedOffset) * 10
-    const scale = isActive ? 1.02 : Math.max(0.7, 1 - Math.abs(normalizedOffset) * 0.15)
+    const scale = isActive
+      ? 1.02
+      : Math.max(0.7, 1 - Math.abs(normalizedOffset) * 0.15)
     const rotateY = normalizedOffset * (isMobile ? 12 : 15)
     const rotateX = isActive ? 0 : Math.abs(normalizedOffset) * 2
     const rotateZ = isActive ? 0 : normalizedOffset * 1.5
     const blur = isActive ? 0 : Math.abs(normalizedOffset) * 0.6
-    const brightness = isActive ? 1 : Math.max(0.6, 1 - Math.abs(normalizedOffset) * 0.15)
+    const brightness = isActive
+      ? 1
+      : Math.max(0.6, 1 - Math.abs(normalizedOffset) * 0.15)
     const opacity = Math.max(0.2, 1 - Math.abs(normalizedOffset) * 0.25)
 
     return (
       <div
-        onMouseEnter={() => !isActive && !isTransitioning && setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => !isActive && !isTransitioning}
         onClick={(e) => {
           e.stopPropagation()
           if (normalizedOffset !== 0 && !isTransitioning) {
@@ -336,15 +397,13 @@ export default function CardSlider() {
               padding: '0.4rem 1rem',
               background: isTurbo
                 ? 'linear-gradient(135deg, var(--primary-alpha-20) 0%, var(--primary-alpha-10) 100%)'
-                : 'rgba(100, 100, 255, 0.1)',
+                : 'rgba(255, 255, 255, 0.1)',
               border: `1px solid ${
-                isTurbo ? 'var(--primary-alpha-40)' : 'rgba(100, 100, 255, 0.3)'
+                isTurbo ? 'var(--primary-alpha-40)' : 'rgba(255, 255, 255, 0.3)'
               }`,
               borderRadius: 'var(--radius-lg)',
               fontSize: '0.7rem',
-              color: isTurbo
-                ? 'var(--color-primary)'
-                : 'var(--color-secondary)',
+              color: isTurbo ? 'var(--color-primary)' : 'var(--text-primary)',
               fontWeight: '700',
               letterSpacing: '1.5px',
               textTransform: 'uppercase',
@@ -367,7 +426,7 @@ export default function CardSlider() {
               letterSpacing: '0.5px',
             }}
           >
-            {plan.description}
+            {plan?.description}
           </h3>
 
           {/* Features com design tech */}
@@ -427,7 +486,7 @@ export default function CardSlider() {
                     lineHeight: 1,
                   }}
                 >
-                  {plan.gigas}
+                  {plan?.gigas}
                   <span
                     style={{
                       fontSize: isMobile ? '0.9rem' : '1rem',
@@ -534,9 +593,9 @@ export default function CardSlider() {
                     color: '#d0d0d0',
                   }}
                 >
-                  {plan.min === '999'
+                  {plan?.min === '999'
                     ? 'Chamadas Ilimitadas'
-                    : `${plan.min} Minutos`}
+                    : `${plan?.min} Minutos`}
                 </div>
                 <div
                   style={{
@@ -545,7 +604,7 @@ export default function CardSlider() {
                     marginTop: '2px',
                   }}
                 >
-                  {plan.min === '999'
+                  {plan?.min === '999'
                     ? 'Para todo Brasil'
                     : 'Para qualquer operadora'}
                 </div>
@@ -616,7 +675,7 @@ export default function CardSlider() {
                   letterSpacing: '-2px',
                 }}
               >
-                {plan.value.split(',')[0]}
+                {plan?.value.split(',')[0]}
               </span>
               <span
                 style={{
@@ -625,7 +684,7 @@ export default function CardSlider() {
                   color: 'rgba(255,255,255,0.9)',
                 }}
               >
-                ,{plan.value.split(',')[1]}
+                ,{plan?.value.split(',')[1]}
               </span>
               <span
                 style={{
@@ -763,260 +822,306 @@ export default function CardSlider() {
         </p>
       </div>
 
-      {/* Carousel */}
-      <div
-        ref={swipeRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          position: 'relative',
-          height: isMobile ? '560px' : '620px',
-          marginBottom: '2rem',
-          perspective: isMobile ? '2500px' : '3000px',
-          perspectiveOrigin: '50% 50%',
-          overflow: 'visible',
-          touchAction: 'pan-y',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          userSelect: 'none',
-        }}
-      >
-        {/* Subtle background pulse during transition */}
+      {/* Loading State */}
+      {isLoading ? (
         <div
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: isTransitioning ? '600px' : '0',
-            height: isTransitioning ? '600px' : '0',
-            borderRadius: '50%',
-            background:
-              'radial-gradient(circle, var(--primary-alpha-05) 0%, transparent 70%)',
-            opacity: isTransitioning ? 1 : 0,
-            transition: 'var(--transition-slow)',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        />
-
-        {res.map((plan, index) => (
-          <Card key={index} plan={plan} index={index} />
-        ))}
-      </div>
-
-      {/* Navigation buttons */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '1.5rem',
-          marginBottom: '3rem',
-          position: 'relative',
-          zIndex: 101,
-        }}
-      >
-        <button
-          onClick={handlePrev}
-          style={{
-            background: 'var(--white-alpha-05)',
-            backdropFilter: 'var(--blur-sm)',
-            border: 'var(--border-white-medium)',
-            borderRadius: '50%',
-            width: isMobile ? '50px' : '60px',
-            height: isMobile ? '50px' : '60px',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'var(--transition-fast)',
-            color: 'var(--text-primary)',
-            fontSize: isMobile ? '1.5rem' : '1.8rem',
-            fontWeight: '300',
-            boxShadow: 'var(--shadow-dark-lg)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--primary-alpha-20)'
-            e.currentTarget.style.borderColor = 'var(--primary-alpha-50)'
-            e.currentTarget.style.transform = 'scale(1.1)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'var(--white-alpha-05)'
-            e.currentTarget.style.borderColor = 'var(--white-alpha-10)'
-            e.currentTarget.style.transform = 'scale(1)'
+            height: isMobile ? '560px' : '620px',
+            gap: '1rem',
           }}
         >
-          ‹
-        </button>
-
-        <button
-          onClick={handleNext}
-          style={{
-            background: 'var(--white-alpha-05)',
-            backdropFilter: 'var(--blur-sm)',
-            border: 'var(--border-white-medium)',
-            borderRadius: '50%',
-            width: isMobile ? '50px' : '60px',
-            height: isMobile ? '50px' : '60px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'var(--transition-fast)',
-            color: 'var(--text-primary)',
-            fontSize: isMobile ? '1.5rem' : '1.8rem',
-            fontWeight: '300',
-            boxShadow: 'var(--shadow-dark-lg)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--primary-alpha-20)'
-            e.currentTarget.style.borderColor = 'var(--primary-alpha-50)'
-            e.currentTarget.style.transform = 'scale(1.1)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'var(--white-alpha-05)'
-            e.currentTarget.style.borderColor = 'var(--white-alpha-10)'
-            e.currentTarget.style.transform = 'scale(1)'
-          }}
-        >
-          ›
-        </button>
-      </div>
-
-      {/* Indicators */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '0.6rem',
-          marginBottom: '4rem',
-          position: 'relative',
-          zIndex: 101,
-        }}
-      >
-        {res.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              if (isTransitioning || index === active) return
-
-              setIsTransitioning(true)
-              setActive(index)
-
-              setTimeout(() => {
-                setIsTransitioning(false)
-              }, 600)
-            }}
+          <div
             style={{
-              width: active === index ? '40px' : '12px',
-              height: '12px',
-              borderRadius: '6px',
-              background:
-                active === index
-                  ? 'var(--gradient-primary)'
-                  : 'var(--white-alpha-15)',
-              border:
-                active === index ? '1px solid var(--primary-alpha-50)' : 'none',
-              cursor: 'pointer',
-              transition: 'var(--transition-bounce)',
-              boxShadow: active === index ? 'var(--shadow-sm)' : 'none',
-              animation:
-                active === index
-                  ? 'indicatorPop var(--transition-bounce)'
-                  : 'none',
-              transform: active === index ? 'scale(1)' : 'scale(0.9)',
+              width: '60px',
+              height: '60px',
+              border: '4px solid var(--primary-alpha-20)',
+              borderTop: '4px solid var(--color-primary)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
             }}
           />
-        ))}
-      </div>
-
-      {/* CTA Button */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          position: 'relative',
-          zIndex: 101,
-        }}
-      >
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none' }}
-        >
-          <button
-            onMouseEnter={() => setHoveredButton(true)}
-            onMouseLeave={() => setHoveredButton(false)}
+          <p
             style={{
-              padding: isMobile ? '1.2rem 2.5rem' : '1.5rem 4rem',
-              fontSize: isMobile ? '1.1rem' : '1.3rem',
-              fontWeight: '800',
-              color: 'var(--text-primary)',
-              background: 'var(--gradient-primary-reverse)',
-              border: '2px solid var(--white-alpha-10)',
-              borderRadius: isMobile ? 'var(--radius-md)' : 'var(--radius-lg)',
-              cursor: 'pointer',
-              transition: 'var(--transition-medium)',
-              boxShadow: hoveredButton
-                ? 'var(--shadow-xl), var(--shadow-inset-strong)'
-                : 'var(--shadow-lg)',
-              transform: hoveredButton
-                ? 'translateY(-4px) scale(1.05)'
-                : 'translateY(0)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: isMobile ? '0.7rem' : '1rem',
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              position: 'relative',
-              overflow: 'hidden',
+              color: 'var(--text-secondary)',
+              fontSize: '1rem',
+              fontWeight: '600',
             }}
           >
-            <span style={{ position: 'relative', zIndex: 1 }}>
-              {isMobile ? 'Assinar' : 'Assinar Agora'}
-            </span>
-            <svg
-              width={isMobile ? '20' : '24'}
-              height={isMobile ? '20' : '24'}
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{
-                position: 'relative',
-                zIndex: 1,
-                transition: 'transform 0.3s ease',
-                transform: hoveredButton ? 'translateX(5px)' : 'translateX(0)',
-              }}
-            >
-              <path
-                d="M5 12H19M19 12L12 5M19 12L12 19"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            Carregando planos...
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Carousel */}
+          <div
+            ref={swipeRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              position: 'relative',
+              height: isMobile ? '560px' : '620px',
+              marginBottom: '2rem',
+              perspective: isMobile ? '2500px' : '3000px',
+              perspectiveOrigin: '50% 50%',
+              overflow: 'visible',
+              touchAction: 'pan-y',
+              cursor: isDragging ? 'grabbing' : 'grab',
+              userSelect: 'none',
+            }}
+          >
+            {/* Subtle background pulse during transition */}
             <div
               style={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                width: '0',
-                height: '0',
-                borderRadius: '50%',
-                background: 'var(--white-alpha-20)',
                 transform: 'translate(-50%, -50%)',
-                transition: 'width 0.6s ease, height 0.6s ease',
-                ...(hoveredButton && { width: '300px', height: '300px' }),
+                width: isTransitioning ? '600px' : '0',
+                height: isTransitioning ? '600px' : '0',
+                borderRadius: '50%',
+                background:
+                  'radial-gradient(circle, var(--primary-alpha-05) 0%, transparent 70%)',
+                opacity: isTransitioning ? 1 : 0,
+                transition: 'var(--transition-slow)',
+                zIndex: 1,
+                pointerEvents: 'none',
               }}
             />
-          </button>
-        </a>
-      </div>
+
+            {res.map((plan, index) => (
+              <Card key={index} plan={plan ? plan : null} index={index} />
+            ))}
+          </div>
+
+          {/* Navigation buttons */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '1.5rem',
+              marginBottom: '3rem',
+              position: 'relative',
+              zIndex: 101,
+            }}
+          >
+            <button
+              onClick={handlePrev}
+              style={{
+                background: 'var(--white-alpha-05)',
+                backdropFilter: 'var(--blur-sm)',
+                border: 'var(--border-white-medium)',
+                borderRadius: '50%',
+                width: isMobile ? '50px' : '60px',
+                height: isMobile ? '50px' : '60px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'var(--transition-fast)',
+                color: 'var(--text-primary)',
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                fontWeight: '300',
+                boxShadow: 'var(--shadow-dark-lg)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--primary-alpha-20)'
+                e.currentTarget.style.borderColor = 'var(--primary-alpha-50)'
+                e.currentTarget.style.transform = 'scale(1.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--white-alpha-05)'
+                e.currentTarget.style.borderColor = 'var(--white-alpha-10)'
+                e.currentTarget.style.transform = 'scale(1)'
+              }}
+            >
+              ‹
+            </button>
+
+            <button
+              onClick={handleNext}
+              style={{
+                background: 'var(--white-alpha-05)',
+                backdropFilter: 'var(--blur-sm)',
+                border: 'var(--border-white-medium)',
+                borderRadius: '50%',
+                width: isMobile ? '50px' : '60px',
+                height: isMobile ? '50px' : '60px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'var(--transition-fast)',
+                color: 'var(--text-primary)',
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                fontWeight: '300',
+                boxShadow: 'var(--shadow-dark-lg)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--primary-alpha-20)'
+                e.currentTarget.style.borderColor = 'var(--primary-alpha-50)'
+                e.currentTarget.style.transform = 'scale(1.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--white-alpha-05)'
+                e.currentTarget.style.borderColor = 'var(--white-alpha-10)'
+                e.currentTarget.style.transform = 'scale(1)'
+              }}
+            >
+              ›
+            </button>
+          </div>
+
+          {/* Indicators */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '0.6rem',
+              marginBottom: '4rem',
+              position: 'relative',
+              zIndex: 101,
+            }}
+          >
+            {res.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (isTransitioning || index === active) return
+
+                  setIsTransitioning(true)
+                  setActive(index)
+
+                  setTimeout(() => {
+                    setIsTransitioning(false)
+                  }, 600)
+                }}
+                style={{
+                  width: active === index ? '40px' : '12px',
+                  height: '12px',
+                  borderRadius: '6px',
+                  background:
+                    active === index
+                      ? 'var(--gradient-primary)'
+                      : 'var(--white-alpha-15)',
+                  border:
+                    active === index
+                      ? '1px solid var(--primary-alpha-50)'
+                      : 'none',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-bounce)',
+                  boxShadow: active === index ? 'var(--shadow-sm)' : 'none',
+                  animation:
+                    active === index
+                      ? 'indicatorPop var(--transition-bounce)'
+                      : 'none',
+                  transform: active === index ? 'scale(1)' : 'scale(0.9)',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* CTA Button */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              position: 'relative',
+              zIndex: 101,
+            }}
+          >
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              <button
+                onMouseEnter={() => setHoveredButton(true)}
+                onMouseLeave={() => setHoveredButton(false)}
+                style={{
+                  padding: isMobile ? '1.2rem 2.5rem' : '1.5rem 4rem',
+                  fontSize: isMobile ? '1.1rem' : '1.3rem',
+                  fontWeight: '800',
+                  color: 'var(--text-primary)',
+                  background: 'var(--gradient-primary-reverse)',
+                  border: '2px solid var(--white-alpha-10)',
+                  borderRadius: isMobile
+                    ? 'var(--radius-md)'
+                    : 'var(--radius-lg)',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-medium)',
+                  boxShadow: hoveredButton
+                    ? 'var(--shadow-xl), var(--shadow-inset-strong)'
+                    : 'var(--shadow-lg)',
+                  transform: hoveredButton
+                    ? 'translateY(-4px) scale(1.05)'
+                    : 'translateY(0)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: isMobile ? '0.7rem' : '1rem',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <span style={{ position: 'relative', zIndex: 1 }}>
+                  {isMobile ? 'Assinar' : 'Assinar Agora'}
+                </span>
+                <svg
+                  width={isMobile ? '20' : '24'}
+                  height={isMobile ? '20' : '24'}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    transition: 'transform 0.3s ease',
+                    transform: hoveredButton
+                      ? 'translateX(5px)'
+                      : 'translateX(0)',
+                  }}
+                >
+                  <path
+                    d="M5 12H19M19 12L12 5M19 12L12 19"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '0',
+                    height: '0',
+                    borderRadius: '50%',
+                    background: 'var(--white-alpha-20)',
+                    transform: 'translate(-50%, -50%)',
+                    transition: 'width 0.6s ease, height 0.6s ease',
+                    ...(hoveredButton && { width: '300px', height: '300px' }),
+                  }}
+                />
+              </button>
+            </a>
+          </div>
+        </>
+      )}
 
       <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-30px); }
