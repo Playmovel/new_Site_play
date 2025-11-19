@@ -187,7 +187,7 @@ const CookieCard = styled.div`
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(164, 25, 2, 0.2), 0 8px 24px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 229, 1, 0.2);
+  border: 1px solid var(----primary-alpha-30);
 
   @media (max-width: 768px) {
     padding: 1.5rem;
@@ -207,7 +207,7 @@ const CardGlow = styled.div`
   height: 200%;
   background: radial-gradient(
     circle,
-    rgba(255, 229, 1, 0.15) 0%,
+    var(--primary-alpha-30) 0%,
     rgba(164, 25, 2, 0.08) 30%,
     transparent 70%
   );
@@ -271,7 +271,7 @@ const CookieIcon = styled.div`
 const IconPulse = styled.div`
   position: absolute;
   inset: -10px;
-  background: radial-gradient(circle, rgba(255, 229, 1, 0.4), transparent 70%);
+  background: radial-gradient(circle, var(--primary-alpha-60), transparent 70%);
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
 
@@ -297,7 +297,11 @@ const HeaderText = styled.div`
 const CookieTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #a41902 0%, #ffe501 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -347,7 +351,7 @@ const CookieText = styled.p`
 `
 
 const CookieLink = styled.a`
-  color: #a41902;
+  color: var(--color-primary);
   font-weight: 700;
   text-decoration: none;
   position: relative;
@@ -360,7 +364,11 @@ const CookieLink = styled.a`
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, #a41902, #ffe501);
+    background: linear-gradient(
+      90deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.3s ease;
@@ -396,14 +404,14 @@ const Feature = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 229, 1, 0.1);
+  background: var(--primary-alpha-20);
   padding: 0.6rem 0.9rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 229, 1, 0.3);
+  border: 1px solid var(--primary-alpha-20);
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 229, 1, 0.2);
+    background: var(--primary-alpha-15);
     transform: translateY(-2px);
   }
 
@@ -413,7 +421,7 @@ const Feature = styled.div`
 `
 
 const FeatureIcon = styled.span`
-  color: #a41902;
+  color: var(--color-primary);
   font-weight: bold;
   font-size: 1rem;
   flex-shrink: 0;
@@ -436,7 +444,11 @@ const ButtonGroup = styled.div`
 
 const AcceptButton = styled.button`
   width: 100%;
-  background: linear-gradient(135deg, #ffe501 0%, #a41902 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary) 0%,
+    var(--color-primary) 100%
+  );
   color: #fff;
   font-weight: 700;
   font-size: 1.05rem;
@@ -537,9 +549,9 @@ const CloseButton = styled.button`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(164, 25, 2, 0.1);
+  background: var(--primary-alpha-08);
   border: none;
-  color: #a41902;
+  color: var(--color-primary);
   font-size: 1.25rem;
   cursor: pointer;
   display: flex;
@@ -549,7 +561,7 @@ const CloseButton = styled.button`
   z-index: 2;
 
   &:hover {
-    background: rgba(164, 25, 2, 0.2);
+    background: var(--primary-alpha-08);
     transform: rotate(90deg) scale(1.1);
   }
 

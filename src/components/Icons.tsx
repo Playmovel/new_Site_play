@@ -1,11 +1,9 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+
 import { constants } from '../constants/contants'
 
 export default function SobreZyber() {
-  const [isPaused, setIsPaused] = useState(false)
-
   const features = [
     {
       id: 1,
@@ -236,23 +234,16 @@ export default function SobreZyber() {
           </InfoSection>
 
           {/* Cubo 3D - Lado Direito */}
-          <CubeSection
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
+          <CubeSection>
             <CubeContainer>
               <CubeScene>
                 <Cube
                   as={motion.div}
-                  animate={
-                    isPaused
-                      ? {}
-                      : {
-                          rotateX: 360,
-                          rotateY: 360,
-                          rotateZ: 360,
-                        }
-                  }
+                  animate={{
+                    rotateX: 360,
+                    rotateY: 360,
+                    rotateZ: 360,
+                  }}
                   transition={{
                     duration: 20,
                     repeat: Infinity,
@@ -302,10 +293,6 @@ export default function SobreZyber() {
                   </CubeFace>
                 </Cube>
               </CubeScene>
-
-              <HoverHint isPaused={isPaused}>
-                {isPaused ? '🎯 Pausado' : '🖱️ Hover para pausar'}
-              </HoverHint>
             </CubeContainer>
           </CubeSection>
         </ContentWrapper>
@@ -678,37 +665,37 @@ const FaceContent = styled.div`
   justify-content: center;
 `
 
-interface HoverHintProps {
-  isPaused: boolean
-}
+// interface HoverHintProps {
+//   isPaused: boolean
+// }
 
-const HoverHint = styled.div<HoverHintProps>`
-  position: absolute;
-  bottom: 1rem;
-  padding: 0.6rem 1.2rem;
-  background: ${(props) =>
-    props.isPaused ? 'var(--yellow-alpha-20)' : 'var(--white-alpha-10)'};
-  border: 2px solid
-    ${(props) =>
-      props.isPaused ? 'var(--color-yellow)' : 'var(--white-alpha-20)'};
-  border-radius: var(--radius-full);
-  color: ${(props) =>
-    props.isPaused ? 'var(--color-yellow)' : 'var(--text-primary)'};
-  font-size: 0.85rem;
-  font-weight: 600;
-  backdrop-filter: var(--blur-sm);
-  transition: all 0.3s ease;
-  z-index: 10;
-  box-shadow: ${(props) =>
-    props.isPaused
-      ? '0 0 20px var(--yellow-alpha-30)'
-      : '0 4px 15px rgba(0, 0, 0, 0.2)'};
+// const HoverHint = styled.div<HoverHintProps>`
+//   position: absolute;
+//   bottom: 1rem;
+//   padding: 0.6rem 1.2rem;
+//   background: ${(props) =>
+//     props.isPaused ? 'var(--yellow-alpha-20)' : 'var(--white-alpha-10)'};
+//   border: 2px solid
+//     ${(props) =>
+//       props.isPaused ? 'var(--color-yellow)' : 'var(--white-alpha-20)'};
+//   border-radius: var(--radius-full);
+//   color: ${(props) =>
+//     props.isPaused ? 'var(--color-yellow)' : 'var(--text-primary)'};
+//   font-size: 0.85rem;
+//   font-weight: 600;
+//   backdrop-filter: var(--blur-sm);
+//   transition: all 0.3s ease;
+//   z-index: 10;
+//   box-shadow: ${(props) =>
+//     props.isPaused
+//       ? '0 0 20px var(--yellow-alpha-30)'
+//       : '0 4px 15px rgba(0, 0, 0, 0.2)'};
 
-  @media (max-width: 640px) {
-    font-size: 0.75rem;
-    padding: 0.5rem 1rem;
-  }
-`
+//   @media (max-width: 640px) {
+//     font-size: 0.75rem;
+//     padding: 0.5rem 1rem;
+//   }
+// `
 
 const InfoSection = styled.div`
   display: flex;

@@ -136,7 +136,7 @@ const FooterContent = styled.div`
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 2rem;
-    text-align: left;
+    text-align: center;
   }
 `
 
@@ -155,6 +155,10 @@ const FooterColumn = styled.div`
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @media (max-width: 480px) {
+    align-items: center;
   }
 `
 
@@ -177,6 +181,11 @@ const ColumnTitle = styled.h3`
     height: 3px;
     background: var(--gradient-yellow);
     border-radius: 2px;
+
+    @media (max-width: 480px) {
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 
   @media (max-width: 480px) {
@@ -210,6 +219,14 @@ const FooterLink = styled.a`
     &::before {
       opacity: 1;
       left: 0;
+    }
+
+    @media (max-width: 480px) {
+      padding-left: 0;
+
+      &::before {
+        opacity: 0;
+      }
     }
   }
 

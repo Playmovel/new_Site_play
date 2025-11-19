@@ -3,6 +3,7 @@ import imagem from '../assets/cell.webp'
 import Botaoapple from '../assets/botao_apple.svg'
 import BotaoAndroid from '../assets/botao_google.svg'
 import { constants } from '../constants/contants'
+import useWindowSize from '../hooks/useWindowSize'
 
 // import { Container } from '@mui/material';
 
@@ -47,6 +48,7 @@ export default function InfoSection() {
     },
   ]
 
+  const { isMobile } = useWindowSize()
   const CardComponent = ({ info, index }: CardProps) => (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -237,7 +239,7 @@ export default function InfoSection() {
             <div
               style={{
                 width: '100%',
-                maxWidth: '400px',
+                maxWidth: isMobile ? '240px' : '400px',
                 height: '500px',
                 borderRadius: 'var(--radius-xl)',
                 boxShadow: 'var(--shadow-dark-md)',
@@ -260,7 +262,7 @@ export default function InfoSection() {
                 <img
                   src={imagem}
                   style={{
-                    width: '801px',
+                    width: isMobile ? '450px' : '801px',
                     height: 'auto',
                     objectFit: 'contain',
                     borderRadius: 'var(--radius-lg)',
