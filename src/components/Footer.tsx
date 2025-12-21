@@ -9,36 +9,33 @@ export default function Footer() {
         <FooterColumn>
           <ColumnTitle>Institucional</ColumnTitle>
           <FooterLink href="">Sobre nós</FooterLink>
-          <FooterLink href="#">
-            Como comprar na {constants.nameEmpresa}
-          </FooterLink>
-          <FooterLink href="#">FAQ</FooterLink>
         </FooterColumn>
 
         {/* COLUNA 2 */}
         <FooterColumn>
           <ColumnTitle>Atendimento</ColumnTitle>
-          <FooterLink href="https://atendimento.operadora.app.br/?companyId=362">
+          <FooterLink href={constants.linkSuporte}>
             Atendimento ao cliente
           </FooterLink>
-          <FooterLink href="#">Métodos de Pagamento</FooterLink>
-          <FooterLink href="#">Frete</FooterLink>
+          <FooterLink href={constants.linkPedirChip}>
+            Métodos de Pagamento
+          </FooterLink>
         </FooterColumn>
 
         {/* COLUNA 3 */}
         <FooterColumn>
           <ColumnTitle>Minha Conta</ColumnTitle>
-          <FooterLink href="#">Rastrear meu pedido</FooterLink>
-          <FooterLink href="#">Pedir meu chip</FooterLink>
+          {/* <FooterLink href="#">Rastrear meu pedido</FooterLink> */}
+          <FooterLink href={constants.linkPedirChip}>Pedir meu chip</FooterLink>
         </FooterColumn>
 
         {/* COLUNA 4 */}
         <FooterColumn>
           <ColumnTitle>Legal</ColumnTitle>
-          <FooterLink href="https://privacidade.operadora.app.br/#/Zyber">
+          <FooterLink href={constants.linkPoliticaDePrivacidade}>
             Política de Privacidade
           </FooterLink>
-          <FooterLink href="https://privacidade.operadora.app.br/#/adesao/Zyber">
+          <FooterLink href={constants.linkTermosDeAdesao}>
             Termo de Adesão
           </FooterLink>
         </FooterColumn>
@@ -50,23 +47,6 @@ export default function Footer() {
         <Copyright>
           © 2025 {constants.nameEmpresa}. Todos os direitos reservados.
         </Copyright>
-        <SocialLinks>
-          <SocialIcon
-            href="https://wa.me/qr/5ZQKIH3R6PAUB1"
-            aria-label="Facebook"
-          >
-            📘
-          </SocialIcon>
-          <SocialIcon
-            href="https://www.instagram.com/zyber_fibra/profilecard/?igsh=am80ZGF6c2prcGxq"
-            aria-label="Instagram"
-          >
-            📷
-          </SocialIcon>
-          <SocialIcon href="#" aria-label="LinkedIn">
-            💼
-          </SocialIcon>
-        </SocialLinks>
       </FooterBottom>
     </FooterContainer>
   )
@@ -273,26 +253,5 @@ const Copyright = styled.p`
 
   @media (max-width: 480px) {
     font-size: 0.85rem;
-  }
-`
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 1rem;
-`
-
-const SocialIcon = styled.a`
-  font-size: 1.5rem;
-  transition: transform 0.3s ease, filter 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover {
-    transform: translateY(-3px) scale(1.1);
-    filter: brightness(1.3);
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.3rem;
   }
 `

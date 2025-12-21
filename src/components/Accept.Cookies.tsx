@@ -58,7 +58,7 @@ export default function CookieConsent() {
               experiência no site da {constants.nameEmpresa}. Seus dados estão
               seguros e protegidos conforme nossa
               <CookieLink
-                href="https://privacidade.operadora.app.br/#/Zyber"
+                href={constants.linkPoliticaDePrivacidade}
                 target="_blank"
                 rel="noopener noreferrer"
               >

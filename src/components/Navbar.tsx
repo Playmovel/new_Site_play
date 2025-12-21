@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import logo from '../assets/logo.png'
+import { constants } from '../constants/contants'
 
 export default function Navbar() {
   const [activeItem, setActiveItem] = useState('Home')
@@ -204,7 +205,10 @@ export default function Navbar() {
             style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
             className="cta-section"
           >
-            <button
+            <a
+              href={constants.linkPedirChip}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 padding: '0.75rem 1.8rem',
                 background: 'var(--gradient-primary)',
@@ -219,6 +223,8 @@ export default function Navbar() {
                 whiteSpace: 'nowrap',
                 position: 'relative',
                 overflow: 'hidden',
+                textDecoration: 'none',
+                display: 'inline-block',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
@@ -230,7 +236,7 @@ export default function Navbar() {
               }}
             >
               <span style={{ position: 'relative', zIndex: 1 }}>
-                Fale Conosco
+                Adquira seu chip!
               </span>
               <div
                 style={{
@@ -244,7 +250,7 @@ export default function Navbar() {
                   animation: 'shimmer 2s infinite',
                 }}
               />
-            </button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -377,7 +383,10 @@ export default function Navbar() {
             )
           })}
 
-          <button
+          <a
+            href={constants.linkPedirChip}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               padding: '1rem',
               marginTop: '1rem',
@@ -390,6 +399,9 @@ export default function Navbar() {
               cursor: 'pointer',
               transition: 'var(--transition-fast)',
               boxShadow: 'var(--shadow-md)',
+              textDecoration: 'none',
+              display: 'block',
+              textAlign: 'center',
             }}
             onMouseDown={(e) => {
               e.currentTarget.style.transform = 'scale(0.98)'
@@ -398,8 +410,8 @@ export default function Navbar() {
               e.currentTarget.style.transform = 'scale(1)'
             }}
           >
-            Fale Conosco
-          </button>
+            Adquira seu chip!
+          </a>
         </div>
       </header>
 

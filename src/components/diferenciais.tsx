@@ -191,6 +191,7 @@ const FAQGrid = styled.div`
   gap: 1.8rem;
   width: 100%;
   box-sizing: border-box;
+  align-items: start;
 `
 
 const FAQItem = styled.div`

@@ -11,11 +11,11 @@ export default function Hero() {
   // Scroll animations
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start start", "end start"]
+    offset: ['start start', 'end start'],
   })
 
-  const yGlow1 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
-  const yGlow2 = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"])
+  const yGlow1 = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
+  const yGlow2 = useTransform(scrollYProgress, [0, 1], ['0%', '-30%'])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   useEffect(() => {
@@ -183,7 +183,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           style={{
             textAlign: isMobile ? 'center' : 'left',
           }}
@@ -253,7 +253,7 @@ export default function Hero() {
           </p>
 
           <a
-            href="https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0APoderia+me+ajudar%3F&type=phone_number&app_absent=0"
+            href={constants.linkPedirChip}
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: 'none' }}

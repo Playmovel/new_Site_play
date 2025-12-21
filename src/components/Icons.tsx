@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 import { constants } from '../constants/contants'
 
-export default function SobreZyber() {
+export default function SobreEmpresa() {
   const features = [
     {
       id: 1,

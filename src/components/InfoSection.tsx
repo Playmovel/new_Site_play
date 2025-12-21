@@ -286,12 +286,12 @@ export default function InfoSection() {
           {[
             {
               text: 'App Store',
-              href: 'https://apps.apple.com/us/app/zyber/id6746278691',
+              href: `${constants.linkAppApple}`,
               icon: Botaoapple,
             },
             {
               text: 'Google Play',
-              href: 'https://play.google.com/store/apps/details?id=app.mobile.zyber',
+              href: `${constants.linkAppAndroid}`,
               icon: BotaoAndroid,
             },
           ].map((btn, i) => (

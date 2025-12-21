@@ -6,11 +6,16 @@
  */
 
 :root {
-  /* ========== CORES PRIMÁRIAS ========== */
-  --color-primary: #df3b67;
-  --color-primary-light: #ff435c;
-  --color-primary-dark: #ac2d4f;
-  --color-primary-darker: #791f37;
+/*! Cores a serem mudadas*/
+--color-primary: #df3b67;
+--color-secondary: #020e28;
+/*! -------------""----------*/
+
+
+
+--color-primary-light: color-mix(in srgb, var(--color-primary) 70%, white);
+--color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, black);
+--color-primary-darker: color-mix(in srgb, var(--color-primary) 50%, black);
 
   /* Cores alternativas (vermelho/amarelo) */
   --color-red-primary: red;
@@ -20,9 +25,9 @@
   --color-yellow: #df3b67;
 
   /* ========== CORES SECUNDÁRIAS ========== */
-  --color-secondary: #020e28;
-  --color-secondary-light: #052874;
-  --color-secondary-blue: #6464ff;
+
+  --color-secondary-light: color-mix(in srgb, var(--color-secondary) 60%, white);
+  --color-secondary-blue: color-mix(in srgb, var(--color-secondary) 30%, #3b82f6);
 
   /* ========== CORES DE FUNDO ========== */
   --bg-dark-1: #0a0a0a;
@@ -60,29 +65,30 @@
   --gradient-yellow: linear-gradient(90deg, var(--color-yellow), transparent);
 
   /* ========== CORES COM OPACIDADE ========== */
-  --primary-alpha-02: rgba(223, 59, 103, 0.02);
-  --primary-alpha-05: rgba(223, 59, 103, 0.05);
-  --primary-alpha-08: rgba(223, 59, 103, 0.08);
-  --primary-alpha-10: rgba(223, 59, 103, 0.10);
-  --primary-alpha-15: rgba(223, 59, 103, 0.15);
-  --primary-alpha-20: rgba(223, 59, 103, 0.20);
-  --primary-alpha-30: rgba(223, 59, 103, 0.30);
-  --primary-alpha-40: rgba(223, 59, 103, 0.40);
-  --primary-alpha-50: rgba(223, 59, 103, 0.50);
-  --primary-alpha-60: rgba(223, 59, 103, 0.60);
-  --primary-alpha-80: rgba(223, 59, 103, 0.80);
+ --primary-alpha-02: color-mix(in srgb, var(--color-primary) 2%, transparent);
+  --primary-alpha-05: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  --primary-alpha-08: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --primary-alpha-10: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --primary-alpha-15: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  --primary-alpha-20: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  --primary-alpha-30: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  --primary-alpha-40: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  --primary-alpha-50: color-mix(in srgb, var(--color-primary) 50%, transparent);
+  --primary-alpha-60: color-mix(in srgb, var(--color-primary) 60%, transparent);
+  --primary-alpha-80: color-mix(in srgb, var(--color-primary) 80%, transparent);
 
-  --red-alpha-08: rgba(223, 59, 103, 0.08);
-  --red-alpha-10: rgba(223, 59, 103, 0.10);
-  --red-alpha-12: rgba(223, 59, 103, 0.15);
-  --red-alpha-15: rgba(223, 59, 103, 0.20);
-  --red-alpha-20: rgba(223, 59, 103, 0.30);
+--red-alpha-08: color-mix(in srgb, var(--color-primary) 8%, transparent);
+--red-alpha-10: color-mix(in srgb, var(--color-primary) 10%, transparent);
+--red-alpha-12: color-mix(in srgb, var(--color-primary) 12%, transparent);
+--red-alpha-15: color-mix(in srgb, var(--color-primary) 15%, transparent);
+--red-alpha-20: color-mix(in srgb, var(--color-primary) 20%, transparent);
 
---yellow-alpha-08: rgba(223, 59, 103, 0.08);
---yellow-alpha-10: rgba(223, 59, 103, 0.10);
---yellow-alpha-15: rgba(223, 59, 103, 0.15);
---yellow-alpha-20: rgba(223, 59, 103, 0.20);
---yellow-alpha-30: rgba(223, 59, 103, 0.30);
+--yellow-alpha-08: color-mix(in srgb, var(--color-primary) 8%, transparent);
+--yellow-alpha-10: color-mix(in srgb, var(--color-primary) 10%, transparent);
+--yellow-alpha-15: color-mix(in srgb, var(--color-primary) 15%, transparent);
+--yellow-alpha-20: color-mix(in srgb, var(--color-primary) 20%, transparent);
+--yellow-alpha-30: color-mix(in srgb, var(--color-primary) 30%, transparent);
+
 
 
   --secondary-blue-alpha-12: rgba(51, 150, 255, 0.12);

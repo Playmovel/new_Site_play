@@ -133,13 +133,6 @@ export default function CardSlider() {
     planos.length > 0
       ? planos.filter((p) => p.mostraApp !== false)
       : mockPlanos.filter((p) => p.mostraApp)
-  const activePlan = res[active]
-
-  const whatsappLink = activePlan
-    ? `https://api.whatsapp.com/send?phone=5511933019327&text=Ol%C3%A1%2C+sou+cliente+ZYBER%0AQuero+assinar+o+plano:+${encodeURIComponent(
-        activePlan.description,
-      )}`
-    : '#'
 
   const handleNext = () => {
     if (isTransitioning) return
@@ -1036,7 +1029,7 @@ export default function CardSlider() {
             }}
           >
             <a
-              href={whatsappLink}
+              href={constants.linkSuporte}
               target="_blank"
               rel="noopener noreferrer"
               style={{ textDecoration: 'none' }}
