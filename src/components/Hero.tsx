@@ -253,55 +253,57 @@ export default function Hero() {
             ilimitadas e muito mais.
           </p>
 
-          <a
-            href={constants.linkPedirChip}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none' }}
-          >
-            <button
-              style={{
-                padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
-                fontSize: isMobile ? '1rem' : '1.125rem',
-                fontWeight: '600',
-                color: buttonTextStyle.color,
-                background: 'var(--gradient-primary)',
-                border: 'none',
-                borderRadius: 'var(--radius-sm)',
-                cursor: 'pointer',
-                transition: 'var(--transition-fast)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)'
-              }}
+          {constants.linkPedirChip && (
+            <a
+              href={constants.linkPedirChip}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
             >
-              <span
+              <button
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  justifyContent: 'center',
+                  padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
+                  fontSize: isMobile ? '1rem' : '1.125rem',
+                  fontWeight: '600',
+                  color: buttonTextStyle.color,
+                  background: 'var(--gradient-primary)',
+                  border: 'none',
+                  borderRadius: 'var(--radius-sm)',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-fast)',
+                  boxShadow: 'var(--shadow-md)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)'
                 }}
               >
-                Pedir Chip
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12H19M19 12L12 5M19 12L12 19"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </button>
-          </a>
+                <span
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Pedir Chip
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </a>
+          )}
 
           <div
             style={{

@@ -6,9 +6,9 @@
  */
 
 :root {
-/*! Cores a serem mudadas*/
---color-primary: #df3b67;
---color-secondary: #020e28;
+/*! Cores genéricas para loading - serão substituídas pela API */
+--color-primary: #6b7280;
+--color-secondary: #1f2937;
 /*! -------------""----------*/
 
 
@@ -55,7 +55,7 @@
   --gradient-primary-reverse: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
   --gradient-primary-horizontal: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   --gradient-text-white: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
-  --gradient-text-primary: linear-gradient(135deg, var(--color-primary) 0%, #df3b67 100%);
+  --gradient-text-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   --gradient-bg: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 50%, var(--bg-dark-1) 100%);
   --gradient-bg-alt: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-3) 50%, var(--bg-dark-2) 100%);
   --gradient-radial-dark: radial-gradient(circle at top left, var(--bg-dark-2), var(--bg-dark-1) 80%);

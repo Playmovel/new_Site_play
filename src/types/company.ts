@@ -14,10 +14,10 @@ export interface AppTheme {
   colors: AppThemeColors;
 }
 
-// Default theme colors
+// Default theme colors (generic/neutral for loading state)
 export const defaultThemeColors: AppThemeColors = {
-  primary: "#df3b67",
-  secondary: "#020e28",
+  primary: "#6b7280",
+  secondary: "#1f2937",
 };
 
 // Parse appTheme JSON string safely
@@ -75,6 +75,11 @@ export interface CompanyData {
   image_header_app: string;
   token: string;
   app_screenshot?: string;
+  link_printapp?: string;
+  linkicon?: string;
+  termos_uso?: string | null;
+  politica_privacidade?: string | null;
+  vendas_chip?: string | null;
 }
 
 export interface CompanyRequest {

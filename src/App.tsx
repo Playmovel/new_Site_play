@@ -23,20 +23,23 @@ function App() {
     if (!isLoading) {
       document.title = constants.nameEmpresa;
 
-      // Update favicon dynamically from logo
-      if (constants.logotipo) {
-        const link: HTMLLinkElement =
-          document.querySelector("link[rel='icon']") ||
-          document.createElement("link");
-        link.rel = "icon";
-        link.href = constants.logotipo;
-
-        if (!document.querySelector("link[rel='icon']")) {
-          document.head.appendChild(link);
+      // Update favicon dynamically from linkIcon
+      if (constants.linkIcon) {
+        // Remove existing favicon
+        const existingLink = document.querySelector("link[rel='icon']");
+        if (existingLink) {
+          existingLink.remove();
         }
+
+        // Create new favicon link
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.type = "image/png";
+        link.href = constants.linkIcon;
+        document.head.appendChild(link);
       }
     }
-  }, [constants.nameEmpresa, constants.logotipo, isLoading]);
+  }, [constants.nameEmpresa, constants.linkIcon, isLoading]);
 
   return (
     <>

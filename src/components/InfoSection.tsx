@@ -179,7 +179,7 @@ export default function InfoSection() {
           <PhoneGlow />
 
           <PhoneMockup
-            screenImage={constants.appScreenshot}
+            screenImage={constants.printApp || constants.appScreenshot}
             alt="App Preview"
           />
         </PhoneWrapper>

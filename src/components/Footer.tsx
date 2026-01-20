@@ -13,33 +13,46 @@ export default function Footer() {
         </FooterColumn>
 
         {/* COLUNA 2 */}
-        <FooterColumn>
-          <ColumnTitle>Atendimento</ColumnTitle>
-          <FooterLink href={constants.linkSuporte}>
-            Atendimento ao cliente
-          </FooterLink>
-          <FooterLink href={constants.linkPedirChip}>
-            Métodos de Pagamento
-          </FooterLink>
-        </FooterColumn>
+        {(constants.linkSuporte || constants.linkPedirChip) && (
+          <FooterColumn>
+            <ColumnTitle>Atendimento</ColumnTitle>
+            {constants.linkSuporte && (
+              <FooterLink href={constants.linkSuporte}>
+                Atendimento ao cliente
+              </FooterLink>
+            )}
+            {constants.linkPedirChip && (
+              <FooterLink href={constants.linkPedirChip}>
+                Métodos de Pagamento
+              </FooterLink>
+            )}
+          </FooterColumn>
+        )}
 
         {/* COLUNA 3 */}
-        <FooterColumn>
-          <ColumnTitle>Minha Conta</ColumnTitle>
-          {/* <FooterLink href="#">Rastrear meu pedido</FooterLink> */}
-          <FooterLink href={constants.linkPedirChip}>Pedir meu chip</FooterLink>
-        </FooterColumn>
+        {constants.linkPedirChip && (
+          <FooterColumn>
+            <ColumnTitle>Minha Conta</ColumnTitle>
+            <FooterLink href={constants.linkPedirChip}>Pedir meu chip</FooterLink>
+          </FooterColumn>
+        )}
 
         {/* COLUNA 4 */}
-        <FooterColumn>
-          <ColumnTitle>Legal</ColumnTitle>
-          <FooterLink href={constants.linkPoliticaDePrivacidade}>
-            Política de Privacidade
-          </FooterLink>
-          <FooterLink href={constants.linkTermosDeAdesao}>
-            Termo de Adesão
-          </FooterLink>
-        </FooterColumn>
+        {(constants.linkPoliticaDePrivacidade || constants.linkTermosDeAdesao) && (
+          <FooterColumn>
+            <ColumnTitle>Legal</ColumnTitle>
+            {constants.linkPoliticaDePrivacidade && (
+              <FooterLink href={constants.linkPoliticaDePrivacidade}>
+                Política de Privacidade
+              </FooterLink>
+            )}
+            {constants.linkTermosDeAdesao && (
+              <FooterLink href={constants.linkTermosDeAdesao}>
+                Termo de Adesão
+              </FooterLink>
+            )}
+          </FooterColumn>
+        )}
       </FooterContent>
 
       <Divider />

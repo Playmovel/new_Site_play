@@ -521,7 +521,7 @@ const Card = ({
                 color: "rgba(255,255,255,0.9)",
               }}
             >
-              ,{plan?.value.split(",")[1]}
+              {plan?.value.split(",")[1]}
             </span>
             <span
               style={{
@@ -659,9 +659,10 @@ export default function CardSlider() {
 
   // Filter plans by network selection
   const filteredPlanos = useMemo(() => {
-    const basePlanos = planos.length > 0
-      ? planos.filter((p) => p.mostraApp !== false)
-      : mockPlanos.filter((p) => p.mostraApp);
+    const basePlanos =
+      planos.length > 0
+        ? planos.filter((p) => p.mostraApp !== false)
+        : mockPlanos.filter((p) => p.mostraApp);
 
     // If "AMBOS" is selected or company only has one network, show all plans
     if (selectedNetwork === "AMBOS" || rede !== "AMBOS") {

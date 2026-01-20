@@ -6,8 +6,8 @@ import { useAppConstants } from "../hooks/useAppConstants";
 export default function AboutUs() {
   const { constants } = useAppConstants();
 
-  // Use API logo if available, otherwise use fallback
-  const logoSrc = constants.logotipo || fallbackImage;
+  // Use API linkIcon if available, otherwise use fallback
+  const logoSrc = constants.linkIcon || fallbackImage;
   return (
     <Section>
       <Container>
