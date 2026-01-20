@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import { constants } from '../constants/contants'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function Footer() {
+  const { constants } = useAppConstants()
   return (
     <FooterContainer>
       <FooterContent>
@@ -143,7 +144,7 @@ const FooterColumn = styled.div`
 `
 
 const ColumnTitle = styled.h3`
-  color: var(--color-yellow);
+  color: var(--color-primary);
   font-size: 1.3rem;
   margin-bottom: 1rem;
   text-transform: uppercase;
@@ -159,7 +160,7 @@ const ColumnTitle = styled.h3`
     left: 0;
     width: 40px;
     height: 3px;
-    background: var(--gradient-yellow);
+    background: var(--gradient-primary);
     border-radius: 2px;
 
     @media (max-width: 480px) {
@@ -189,11 +190,11 @@ const FooterLink = styled.a`
     left: -20px;
     opacity: 0;
     transition: var(--transition-fast);
-    color: var(--color-yellow);
+    color: var(--color-primary);
   }
 
   &:hover {
-    color: var(--color-yellow);
+    color: var(--color-primary);
     padding-left: 20px;
 
     &::before {
@@ -221,7 +222,7 @@ const Divider = styled.div`
   background: linear-gradient(
     90deg,
     transparent,
-    var(--yellow-alpha-30),
+    var(--primary-alpha-30),
     transparent
   );
   margin: 2.5rem 0 1.5rem;

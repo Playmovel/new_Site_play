@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
 
-import logo from '../assets/logo.png'
-import { constants } from '../constants/contants'
+import logoFallback from '../assets/logo.png'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function Navbar() {
+  const { constants, buttonTextStyle } = useAppConstants()
+
+  // Use API logo if available, otherwise use fallback
+  const logoSrc = constants.logotipo || logoFallback
   const [activeItem, setActiveItem] = useState('Home')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -108,8 +112,8 @@ export default function Navbar() {
             }
           >
             <img
-              src={logo}
-              alt="Logo"
+              src={logoSrc}
+              alt={constants.nameEmpresa}
               style={{
                 height: '50px',
                 width: 'auto',
@@ -142,7 +146,7 @@ export default function Navbar() {
                   onClick={() => scrollToSection(item)}
                   style={{
                     color: isActive
-                      ? 'var(--bg-dark-1)'
+                      ? buttonTextStyle.color
                       : 'var(--white-alpha-80)',
                     fontWeight: '600',
                     fontSize: '0.95rem',
@@ -212,7 +216,7 @@ export default function Navbar() {
               style={{
                 padding: '0.75rem 1.8rem',
                 background: 'var(--gradient-primary)',
-                color: 'var(--text-primary)',
+                color: buttonTextStyle.color,
                 border: 'var(--border-white-subtle)',
                 borderRadius: 'var(--radius-sm)',
                 fontSize: '0.95rem',
@@ -391,7 +395,7 @@ export default function Navbar() {
               padding: '1rem',
               marginTop: '1rem',
               background: 'var(--gradient-primary)',
-              color: 'var(--text-primary)',
+              color: buttonTextStyle.color,
               border: 'var(--border-white-subtle)',
               borderRadius: 'var(--radius-sm)',
               fontSize: '1rem',

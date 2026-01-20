@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
-import { constants } from '../constants/contants'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function SobreEmpresa() {
+  const { constants } = useAppConstants()
   const features = [
     {
       id: 1,

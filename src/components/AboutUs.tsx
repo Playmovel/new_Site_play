@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import aboutImage from "../assets/favicon.png";
+import fallbackImage from "../assets/favicon.png";
+import { useAppConstants } from "../hooks/useAppConstants";
 
 export default function AboutUs() {
+  const { constants } = useAppConstants();
+
+  // Use API logo if available, otherwise use fallback
+  const logoSrc = constants.logotipo || fallbackImage;
   return (
     <Section>
       <Container>
@@ -34,7 +39,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         >
           <ImageContainer>
-            <img src={aboutImage} alt="Sobre nós" />
+            <img src={logoSrc} alt={constants.nameEmpresa} />
             <Glow />
           </ImageContainer>
         </ImageWrapper>
@@ -94,7 +99,7 @@ const TextContainer = styled.div`
 `;
 
 const Subtitle = styled.h4`
-  color: var(--color-yellow);
+  color: var(--color-primary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -126,7 +131,7 @@ const Paragraph = styled.p`
 `;
 
 const Highlight = styled.span`
-  color: var(--color-yellow);
+  color: var(--color-primary);
   font-weight: 600;
 `;
 
@@ -147,7 +152,7 @@ const ImageContainer = styled.div`
     transform: scale(1.05);
 
     img {
-      filter: drop-shadow(0 15px 40px var(--yellow-alpha-30));
+      filter: drop-shadow(0 15px 40px var(--primary-alpha-30));
     }
   }
 
@@ -156,7 +161,7 @@ const ImageContainer = styled.div`
     max-width: 420px;
     border-radius: var(--radius-xl);
     display: block;
-    filter: drop-shadow(0 10px 30px var(--yellow-alpha-30));
+    filter: drop-shadow(0 10px 30px var(--primary-alpha-30));
     transition: var(--transition-medium);
   }
 `;
@@ -164,7 +169,7 @@ const ImageContainer = styled.div`
 const Glow = styled.div`
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, var(--yellow-alpha-15), transparent 60%);
+  background: radial-gradient(circle, var(--primary-alpha-15), transparent 60%);
   pointer-events: none;
   mix-blend-mode: screen;
 `;

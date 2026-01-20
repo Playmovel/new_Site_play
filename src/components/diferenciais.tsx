@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { constants } from '../constants/contants'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function FAQ() {
+  const { constants } = useAppConstants()
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const faqs = [
@@ -255,7 +256,7 @@ const QuestionText = styled.h3<ToggleProps>`
 
   ${FAQQuestion}:hover & {
     color: ${(props) =>
-      props.isOpen ? 'var(--text-primary)' : 'var(--color-yellow)'};
+      props.isOpen ? 'var(--text-primary)' : 'var(--color-primary)'};
   }
 
   @media (max-width: 768px) {
@@ -266,7 +267,7 @@ const QuestionText = styled.h3<ToggleProps>`
 const Arrow = styled.span<ToggleProps>`
   font-size: 1rem;
   color: ${(props) =>
-    props.isOpen ? 'var(--color-yellow)' : 'var(--color-primary)'};
+    props.isOpen ? 'var(--color-primary)' : 'var(--color-primary)'};
   transition: var(--transition-medium);
   transform: ${(props) => (props.isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   display: inline-flex;
@@ -276,7 +277,7 @@ const Arrow = styled.span<ToggleProps>`
   width: 24px;
   height: 24px;
   background: ${(props) =>
-    props.isOpen ? 'var(--yellow-alpha-20)' : 'var(--primary-alpha-10)'};
+    props.isOpen ? 'var(--primary-alpha-20)' : 'var(--primary-alpha-10)'};
 `
 
 const FAQAnswer = styled.div<ToggleProps>`

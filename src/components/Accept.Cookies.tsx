@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { constants } from '../constants/contants'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function CookieConsent() {
+  const { constants } = useAppConstants()
   const [visible, setVisible] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
 

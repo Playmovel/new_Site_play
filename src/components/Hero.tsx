@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import useWindowSize from '../hooks/useWindowSize'
-import { constants } from '../constants/contants'
+import { useAppConstants } from '../hooks/useAppConstants'
 
 export default function Hero() {
+  const { constants, buttonTextStyle } = useAppConstants()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const sectionRef = useRef<HTMLDivElement | null>(null)
   const { isMobile } = useWindowSize()
@@ -263,7 +264,7 @@ export default function Hero() {
                 padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
                 fontSize: isMobile ? '1rem' : '1.125rem',
                 fontWeight: '600',
-                color: 'var(--text-primary)',
+                color: buttonTextStyle.color,
                 background: 'var(--gradient-primary)',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
