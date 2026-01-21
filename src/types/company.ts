@@ -10,7 +10,7 @@ export interface AppThemeColors {
 }
 
 export interface AppTheme {
-  darkLightMode: boolean;
+  darkLightMode?: boolean;
   colors: AppThemeColors;
 }
 
@@ -19,6 +19,12 @@ export const defaultThemeColors: AppThemeColors = {
   primary: "#6b7280",
   secondary: "#1f2937",
 };
+
+// Ensure color has # prefix
+function ensureHashPrefix(color: string): string {
+  if (!color) return color;
+  return color.startsWith("#") ? color : `#${color}`;
+}
 
 // Parse appTheme JSON string safely
 export function parseAppTheme(appThemeString: string | null | undefined): AppTheme | null {
@@ -29,7 +35,14 @@ export function parseAppTheme(appThemeString: string | null | undefined): AppThe
 
     // Validate the structure
     if (parsed?.colors?.primary && parsed?.colors?.secondary) {
-      return parsed;
+      // Ensure colors have # prefix for CSS compatibility
+      return {
+        ...parsed,
+        colors: {
+          primary: ensureHashPrefix(parsed.colors.primary),
+          secondary: ensureHashPrefix(parsed.colors.secondary),
+        },
+      };
     }
     return null;
   } catch {
