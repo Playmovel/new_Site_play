@@ -22,18 +22,9 @@ export default function NetworkButtonGroup({
     return null;
   }
 
-  // Determine button labels
-  const useCustomLabels = apelidoRede?.active === true;
-
-  const timLabel =
-    useCustomLabels && apelidoRede?.apelido_tim
-      ? apelidoRede.apelido_tim
-      : "Cobertura: TIM";
-
-  const vivoLabel =
-    useCustomLabels && apelidoRede?.apelido_vivo
-      ? apelidoRede.apelido_vivo
-      : "Cobertura: VIVO";
+  // Determine button labels - usa apelidos se disponíveis
+  const timLabel = apelidoRede?.apelido_tim || "Cobertura: TIM";
+  const vivoLabel = apelidoRede?.apelido_vivo || "Cobertura: VIVO";
 
   return (
     <Container>

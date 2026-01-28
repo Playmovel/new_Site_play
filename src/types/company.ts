@@ -4,6 +4,24 @@ export interface ApelidoRede {
   apelido_vivo: string;
 }
 
+export interface RedesSociais {
+  facebook: string | null;
+  instagram: string | null;
+  linkedin: string | null;
+  whatsapp: string | null;
+  bool_facebook: boolean;
+  bool_instagram: boolean;
+  bool_linkedin: boolean;
+  bool_whatsapp: boolean;
+}
+
+export interface Cobertura {
+  cobertura_tim: string | null;
+  cobertura_vivo: string | null;
+  bool_cobertura_tim: boolean;
+  bool_cobertura_vivo: boolean;
+}
+
 export interface AppThemeColors {
   primary: string;
   secondary: string;
@@ -92,7 +110,9 @@ export interface CompanyData {
   linkicon?: string;
   termos_uso?: string | null;
   politica_privacidade?: string | null;
-  vendas_chip?: string | null;
+  link_direciona_venda?: string | null;
+  redes_sociais?: RedesSociais | null;
+  cobertura?: Cobertura | null;
 }
 
 export interface CompanyRequest {

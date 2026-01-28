@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import logoFallback from "../assets/logo.png";
 import { useAppConstants } from "../hooks/useAppConstants";
@@ -11,6 +11,21 @@ export default function Navbar() {
   const [activeItem, setActiveItem] = useState("Home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [coberturaDropdownOpen, setCoberturaDropdownOpen] = useState(false);
+  const [mobileCoberturaSublevelOpen, setMobileCoberturaSublevelOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Determina a lógica de exibição da cobertura
+  const { cobertura, rede, apelidoRede } = constants;
+
+  const showCoberturaTim = (rede === "TIM" || rede === "AMBOS") && cobertura?.bool_cobertura_tim;
+  const showCoberturaVivo = (rede === "VIVO" || rede === "AMBOS") && cobertura?.bool_cobertura_vivo;
+  const showCoberturaDropdown = showCoberturaTim && showCoberturaVivo; // Ambas ativas = dropdown
+  const showCoberturaSingle = (showCoberturaTim || showCoberturaVivo) && !showCoberturaDropdown; // Apenas uma = botão simples
+
+  // Labels para cobertura (usa apelido se disponível)
+  const labelCoberturaTim = apelidoRede?.apelido_tim || "TIM";
+  const labelCoberturaVivo = apelidoRede?.apelido_vivo || "VIVO";
 
   const menuItems = ["Home", "Planos", "Sobre Nós", "Contato"];
 
@@ -19,7 +34,16 @@ export default function Navbar() {
     Home: "hero",
     Planos: "planos",
     "Sobre Nós": "sobre",
-    Contato: "faq",
+  };
+
+  const handleMenuClick = (item: string) => {
+    // Se for "Contato", abrir o link de chat em nova aba
+    if (item === "Contato" && constants.linkChat) {
+      window.open(constants.linkChat, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    scrollToSection(item);
   };
 
   const scrollToSection = (item: string) => {
@@ -49,6 +73,25 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Fecha dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setCoberturaDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Handler para clique em cobertura simples (uma rede)
+  const handleCoberturaSingleClick = () => {
+    const url = showCoberturaTim ? cobertura?.cobertura_tim : cobertura?.cobertura_vivo;
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <>
@@ -143,7 +186,7 @@ export default function Navbar() {
               return (
                 <div
                   key={item}
-                  onClick={() => scrollToSection(item)}
+                  onClick={() => handleMenuClick(item)}
                   style={{
                     color: isActive
                       ? buttonTextStyle.color
@@ -202,6 +245,183 @@ export default function Navbar() {
                 </div>
               );
             })}
+
+            {/* Cobertura - Dropdown ou botão simples */}
+            {showCoberturaDropdown && (
+              <div
+                ref={dropdownRef}
+                style={{ position: "relative" }}
+              >
+                <div
+                  onClick={() => setCoberturaDropdownOpen(!coberturaDropdownOpen)}
+                  style={{
+                    color: "var(--white-alpha-80)",
+                    fontWeight: "600",
+                    fontSize: "0.95rem",
+                    cursor: "pointer",
+                    position: "relative",
+                    padding: "0.75rem 1.5rem",
+                    borderRadius: "var(--radius-sm)",
+                    transition: "var(--transition-fast)",
+                    zIndex: 2,
+                    whiteSpace: "nowrap",
+                    background: coberturaDropdownOpen ? "var(--primary-alpha-10)" : "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "var(--text-primary)";
+                    e.currentTarget.style.background = "var(--primary-alpha-10)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!coberturaDropdownOpen) {
+                      e.currentTarget.style.color = "var(--white-alpha-80)";
+                      e.currentTarget.style.background = "transparent";
+                    }
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  Cobertura
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{
+                      transform: coberturaDropdownOpen ? "rotate(180deg)" : "rotate(0)",
+                      transition: "transform 0.2s ease",
+                    }}
+                  >
+                    <path
+                      d="M2.5 4.5L6 8L9.5 4.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+
+                {/* Dropdown menu */}
+                {coberturaDropdownOpen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "calc(100% + 0.5rem)",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      background: "rgba(10, 10, 10, 0.95)",
+                      backdropFilter: "var(--blur-md)",
+                      border: "var(--border-primary)",
+                      borderRadius: "var(--radius-md)",
+                      padding: "0.5rem",
+                      minWidth: "180px",
+                      boxShadow: "var(--shadow-dark-lg)",
+                      zIndex: 100,
+                    }}
+                  >
+                    <a
+                      href={cobertura?.cobertura_tim || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "block",
+                        padding: "0.75rem 1rem",
+                        color: "var(--white-alpha-80)",
+                        textDecoration: "none",
+                        borderRadius: "var(--radius-sm)",
+                        transition: "var(--transition-fast)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--primary-alpha-15)";
+                        e.currentTarget.style.color = "var(--color-primary)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "var(--white-alpha-80)";
+                      }}
+                      onClick={() => setCoberturaDropdownOpen(false)}
+                    >
+                      {labelCoberturaTim}
+                    </a>
+                    <a
+                      href={cobertura?.cobertura_vivo || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "block",
+                        padding: "0.75rem 1rem",
+                        color: "var(--white-alpha-80)",
+                        textDecoration: "none",
+                        borderRadius: "var(--radius-sm)",
+                        transition: "var(--transition-fast)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--primary-alpha-15)";
+                        e.currentTarget.style.color = "var(--color-primary)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "var(--white-alpha-80)";
+                      }}
+                      onClick={() => setCoberturaDropdownOpen(false)}
+                    >
+                      {labelCoberturaVivo}
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Cobertura - Botão simples (apenas uma rede ativa) */}
+            {showCoberturaSingle && (
+              <div
+                onClick={handleCoberturaSingleClick}
+                style={{
+                  color: "var(--white-alpha-80)",
+                  fontWeight: "600",
+                  fontSize: "0.95rem",
+                  cursor: "pointer",
+                  position: "relative",
+                  padding: "0.75rem 1.5rem",
+                  borderRadius: "var(--radius-sm)",
+                  transition: "var(--transition-fast)",
+                  zIndex: 2,
+                  whiteSpace: "nowrap",
+                  background: "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--text-primary)";
+                  e.currentTarget.style.background = "var(--primary-alpha-10)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--white-alpha-80)";
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                Cobertura
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "8px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "0",
+                    height: "2px",
+                    background: "var(--color-primary)",
+                    borderRadius: "2px",
+                    transition: "var(--transition-fast)",
+                  }}
+                  className="underline"
+                />
+              </div>
+            )}
           </nav>
 
           {/* CTA Button */}
@@ -351,7 +571,7 @@ export default function Navbar() {
               <div
                 key={item}
                 onClick={() => {
-                  scrollToSection(item);
+                  handleMenuClick(item);
                   setIsMobileMenuOpen(false);
                 }}
                 style={{
@@ -388,6 +608,156 @@ export default function Navbar() {
               </div>
             );
           })}
+
+          {/* Cobertura Mobile - Dropdown com sublevel */}
+          {showCoberturaDropdown && (
+            <div>
+              <div
+                onClick={() => setMobileCoberturaSublevelOpen(!mobileCoberturaSublevelOpen)}
+                style={{
+                  color: "var(--white-alpha-80)",
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  padding: "1rem",
+                  borderRadius: "var(--radius-sm)",
+                  transition: "var(--transition-fast)",
+                  background: mobileCoberturaSublevelOpen ? "var(--primary-alpha-15)" : "transparent",
+                  border: "1px solid transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--primary-alpha-15)";
+                  e.currentTarget.style.color = "var(--color-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!mobileCoberturaSublevelOpen) {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--white-alpha-80)";
+                  }
+                }}
+              >
+                Cobertura
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  style={{
+                    transform: mobileCoberturaSublevelOpen ? "rotate(180deg)" : "rotate(0)",
+                    transition: "transform 0.2s ease",
+                  }}
+                >
+                  <path
+                    d="M2.5 4.5L6 8L9.5 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+
+              {/* Sublevel items */}
+              {mobileCoberturaSublevelOpen && (
+                <div style={{ paddingLeft: "1rem" }}>
+                  <a
+                    href={cobertura?.cobertura_tim || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{
+                      display: "block",
+                      color: "var(--white-alpha-70)",
+                      fontWeight: "500",
+                      fontSize: "0.95rem",
+                      padding: "0.75rem 1rem",
+                      borderRadius: "var(--radius-sm)",
+                      transition: "var(--transition-fast)",
+                      textDecoration: "none",
+                      borderLeft: "2px solid var(--primary-alpha-30)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--primary-alpha-10)";
+                      e.currentTarget.style.color = "var(--color-primary)";
+                      e.currentTarget.style.borderLeftColor = "var(--color-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "var(--white-alpha-70)";
+                      e.currentTarget.style.borderLeftColor = "var(--primary-alpha-30)";
+                    }}
+                  >
+                    {labelCoberturaTim}
+                  </a>
+                  <a
+                    href={cobertura?.cobertura_vivo || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{
+                      display: "block",
+                      color: "var(--white-alpha-70)",
+                      fontWeight: "500",
+                      fontSize: "0.95rem",
+                      padding: "0.75rem 1rem",
+                      borderRadius: "var(--radius-sm)",
+                      transition: "var(--transition-fast)",
+                      textDecoration: "none",
+                      borderLeft: "2px solid var(--primary-alpha-30)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--primary-alpha-10)";
+                      e.currentTarget.style.color = "var(--color-primary)";
+                      e.currentTarget.style.borderLeftColor = "var(--color-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "var(--white-alpha-70)";
+                      e.currentTarget.style.borderLeftColor = "var(--primary-alpha-30)";
+                    }}
+                  >
+                    {labelCoberturaVivo}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Cobertura Mobile - Botão simples (apenas uma rede ativa) */}
+          {showCoberturaSingle && (
+            <div
+              onClick={() => {
+                handleCoberturaSingleClick();
+                setIsMobileMenuOpen(false);
+              }}
+              style={{
+                color: "var(--white-alpha-80)",
+                fontWeight: "600",
+                fontSize: "1rem",
+                cursor: "pointer",
+                padding: "1rem",
+                borderRadius: "var(--radius-sm)",
+                transition: "var(--transition-fast)",
+                background: "transparent",
+                border: "1px solid transparent",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--primary-alpha-15)";
+                e.currentTarget.style.color = "var(--color-primary)";
+                e.currentTarget.style.transform = "translateX(8px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--white-alpha-80)";
+                e.currentTarget.style.transform = "translateX(0)";
+              }}
+            >
+              Cobertura
+            </div>
+          )}
 
           {constants.linkPedirChip && (
             <a

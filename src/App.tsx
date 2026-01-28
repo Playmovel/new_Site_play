@@ -1,19 +1,12 @@
 import { useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import PlanosCarousel from "./components/PlanosCarousel";
-import Footer from "./components/Footer";
-import "./index.css";
-import Icons from "./components/Icons";
-import Diferenciais from "./components/diferenciais";
-import AboutUs from "./components/AboutUs";
-import InfoSection from "./components/InfoSection";
-import CookieConsent from "./components/Accept.Cookies";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HomePage, PrivacyPolicyPage, TermsOfUsePage, NotFoundPage } from "./pages";
 import LoadingScreen from "./components/LoadingScreen";
 import { useAppConstants } from "./hooks/useAppConstants";
 import { useTheme } from "./hooks/useTheme";
+import "./index.css";
 
-function App() {
+function AppContent() {
   const { constants, isLoading, themeColors } = useAppConstants();
 
   // Apply theme colors when data is loaded
@@ -41,23 +34,25 @@ function App() {
     }
   }, [constants.nameEmpresa, constants.linkIcon, isLoading]);
 
+  if (isLoading) {
+    return <LoadingScreen isLoading={isLoading} />;
+  }
+
   return (
-    <>
-      <LoadingScreen isLoading={isLoading} />
-      {!isLoading && (
-        <>
-          <Navbar />
-          <Hero />
-          <InfoSection />
-          <PlanosCarousel />
-          <AboutUs />
-          <Icons />
-          <Diferenciais />
-          <Footer />
-          <CookieConsent />
-        </>
-      )}
-    </>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/privacidade" element={<PrivacyPolicyPage />} />
+      <Route path="/termos" element={<TermsOfUsePage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

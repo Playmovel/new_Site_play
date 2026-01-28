@@ -1193,7 +1193,7 @@ export default function CardSlider() {
             }}
           >
             <a
-              href={constants.linkSuporte}
+              href={constants.linkPedirChip}
               target="_blank"
               rel="noopener noreferrer"
               style={{ textDecoration: "none" }}

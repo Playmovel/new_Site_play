@@ -514,41 +514,44 @@ const StoreLink = styled.a`
 `;
 
 const StoreButton = styled.button`
-  padding: 0.75rem 1.5rem;
-  background: var(--gradient-primary);
-  border: var(--border-white-subtle);
-  border-radius: var(--radius-md);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 56px;
+  transition: all 0.3s ease;
+  display: block;
+  overflow: hidden;
+  box-shadow:
+    0 0 15px var(--primary-alpha-40),
+    0 0 30px var(--primary-alpha-20),
+    0 4px 15px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:
+      0 0 25px var(--primary-alpha-70),
+      0 0 50px var(--primary-alpha-40),
+      0 0 80px var(--primary-alpha-20),
+      0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  &:hover img {
+    filter: brightness(1.1);
   }
 
   &:active {
-    transform: translateY(0);
-  }
-
-  @media (max-width: 400px) {
-    padding: 0.5rem 1rem;
-    height: 48px;
+    transform: translateY(0) scale(1);
   }
 `;
 
 const StoreIcon = styled.img`
-  height: 40px;
+  height: 50px;
   width: auto;
   display: block;
+  transition: filter 0.3s ease;
 
   @media (max-width: 400px) {
-    height: 32px;
+    height: 42px;
   }
 `;

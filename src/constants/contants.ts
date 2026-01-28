@@ -1,4 +1,5 @@
-import type { CompanyData } from "../types/company";
+import type { CompanyData, RedesSociais, Cobertura, ApelidoRede } from "../types/company";
+import { ensureExternalUrl } from "../utils/urlHelpers";
 
 export type VarType = {
   nameEmpresa: string;
@@ -9,11 +10,16 @@ export type VarType = {
   linkPoliticaDePrivacidade: string;
   linkTermosDeAdesao: string;
   linkSuporte: string;
+  linkChat: string;
   logotipo: string;
   linkIcon: string;
   linkWebsite: string;
   appScreenshot: string;
   printApp: string;
+  redesSociais: RedesSociais | null;
+  cobertura: Cobertura | null;
+  rede: "TIM" | "VIVO" | "AMBOS";
+  apelidoRede: ApelidoRede | null;
 };
 
 // Valores padrão (fallback) - serão substituídos pelos dados da API
@@ -29,29 +35,59 @@ export const defaultConstants: VarType = {
   linkPoliticaDePrivacidade: `https://privacidade.operadora.app.br/#/Play`,
   linkTermosDeAdesao: `https://privacidade.operadora.app.br/#/adesao/Play`,
   linkSuporte: `https://atendimento.operadora.app.br/?companyId=${companyId}`,
+  linkChat: `https://atendimento.operadora.app.br/?companyId=${companyId}`,
   logotipo: "",
   linkIcon: "",
   linkWebsite: "",
   appScreenshot: "",
   printApp: "",
+  redesSociais: null,
+  cobertura: null,
+  rede: "AMBOS",
+  apelidoRede: null,
 };
 
 // Função para transformar dados da API em constants
 export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
+  // Formata as redes sociais com URLs corretas
+  const redesSociais: RedesSociais | null = data.redes_sociais
+    ? {
+        ...data.redes_sociais,
+        facebook: ensureExternalUrl(data.redes_sociais.facebook),
+        instagram: ensureExternalUrl(data.redes_sociais.instagram),
+        linkedin: ensureExternalUrl(data.redes_sociais.linkedin),
+        whatsapp: ensureExternalUrl(data.redes_sociais.whatsapp),
+      }
+    : null;
+
+  // Formata a cobertura com URLs corretas
+  const cobertura: Cobertura | null = data.cobertura
+    ? {
+        ...data.cobertura,
+        cobertura_tim: ensureExternalUrl(data.cobertura.cobertura_tim),
+        cobertura_vivo: ensureExternalUrl(data.cobertura.cobertura_vivo),
+      }
+    : null;
+
   return {
     nameEmpresa: data.tradename || data.companyname || defaultConstants.nameEmpresa,
     companyId: data.companyId || defaultConstants.companyId,
-    linkAppApple: data.link_appstore || defaultConstants.linkAppApple,
-    linkAppAndroid: data.link_playstore || defaultConstants.linkAppAndroid,
-    linkPedirChip: data.vendas_chip || data.link_chat || "",
-    linkPoliticaDePrivacidade: data.politica_privacidade || "",
-    linkTermosDeAdesao: data.termos_uso || "",
-    linkSuporte: data.link_chat || "",
-    logotipo: data.logotipo || "",
-    linkIcon: data.linkicon || "",
-    linkWebsite: data.link_website || "",
-    appScreenshot: data.app_screenshot || "",
-    printApp: data.link_printapp || "",
+    linkAppApple: ensureExternalUrl(data.link_appstore) || defaultConstants.linkAppApple,
+    linkAppAndroid: ensureExternalUrl(data.link_playstore) || defaultConstants.linkAppAndroid,
+    linkPedirChip: ensureExternalUrl(data.link_direciona_venda) || ensureExternalUrl(data.link_chat) || "",
+    linkPoliticaDePrivacidade: ensureExternalUrl(data.politica_privacidade) || "",
+    linkTermosDeAdesao: ensureExternalUrl(data.termos_uso) || "",
+    linkSuporte: ensureExternalUrl(data.link_chat) || "",
+    linkChat: ensureExternalUrl(data.link_chat) || "",
+    logotipo: ensureExternalUrl(data.logotipo) || "",
+    linkIcon: ensureExternalUrl(data.linkicon) || "",
+    linkWebsite: ensureExternalUrl(data.link_website) || "",
+    appScreenshot: ensureExternalUrl(data.app_screenshot) || "",
+    printApp: ensureExternalUrl(data.link_printapp) || "",
+    redesSociais,
+    cobertura,
+    rede: (data.rede as "TIM" | "VIVO" | "AMBOS") || "AMBOS",
+    apelidoRede: data.apelido_rede || null,
   };
 };
 
