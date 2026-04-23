@@ -81,9 +81,9 @@ export default function InfoSection() {
       icon: "💳",
     },
     {
-      title: "Acúmulo de Gigas",
-      content: "Gerencie e acompanhe seus gigas acumulados em tempo real.",
-      icon: "📊",
+      title: "Cobertura de Rede",
+      content: "Consulte a disponibilidade da cobertura e encontre a melhor rede para a sua região.",
+      icon: "📶",
     },
   ];
 

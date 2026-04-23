@@ -1,27 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
+import { MdAllInclusive, MdCall } from "react-icons/md";
 import { useSwipe } from "../hooks/useSwipe";
 import useWindowSize from "../hooks/useWindowSize";
-import axios from "axios";
 import { useAppConstants, type RedeType } from "../hooks/useAppConstants";
+import { usePlanos } from "../hooks/usePlanos";
+import type { PlanoAPI } from "../services/planService";
 import NetworkButtonGroup from "./NetworkButtonGroup";
-
-interface PlanoAPI {
-  id?: number;
-  planid?: string;
-  description: string;
-  value: string;
-  gigas: string;
-  min: string;
-  sms?: string;
-  mostraApp?: boolean;
-  rede?: string;
-  modelo?: string;
-}
-
-interface APIResponse {
-  Original: PlanoAPI[];
-  personalizado: PlanoAPI[];
-}
 
 interface CardProps {
   plan: PlanoAPI | null;
@@ -36,6 +20,17 @@ interface CardProps {
   cardPadding: string;
   cardMinHeight: string;
   resLength: number;
+}
+
+function hasUnlimitedMinutes(plan: PlanoAPI | null): boolean {
+  const normalizedMin = plan?.min?.trim().toLowerCase() ?? "";
+  const normalizedDescription = plan?.description?.toLowerCase() ?? "";
+
+  return (
+    normalizedMin === "999" ||
+    normalizedMin === "ilimitado" ||
+    normalizedDescription.includes("ilimitado")
+  );
 }
 
 const Card = ({
@@ -54,6 +49,7 @@ const Card = ({
 }: CardProps) => {
   const isTurbo = plan?.description.includes("TURBO");
   const isActive = index === active;
+  const planHasUnlimitedMinutes = hasUnlimitedMinutes(plan);
 
   // Calcular offset normalizado
   const offset = (index - active + resLength) % resLength;
@@ -350,6 +346,7 @@ const Card = ({
           {/* WhatsApp */}
           <div
             style={{
+              position: "relative",
               display: "flex",
               alignItems: "center",
               gap: "1rem",
@@ -399,6 +396,7 @@ const Card = ({
           {/* Ligações */}
           <div
             style={{
+              position: "relative",
               display: "flex",
               alignItems: "center",
               gap: "1rem",
@@ -413,14 +411,43 @@ const Card = ({
                 width: "36px",
                 height: "36px",
                 borderRadius: "var(--radius-sm)",
-                background: "rgba(100, 100, 255, 0.1)",
+                background: planHasUnlimitedMinutes
+                  ? "var(--primary-alpha-15)"
+                  : "rgba(100, 100, 255, 0.1)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.2rem",
+                fontSize: 0,
+                lineHeight: 0,
+                color: planHasUnlimitedMinutes
+                  ? "var(--color-primary)"
+                  : "#d0d0d0",
               }}
             >
-              📞
+              {planHasUnlimitedMinutes ? "∞" : "📞"}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                left: "1rem",
+                top: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: planHasUnlimitedMinutes
+                  ? "var(--color-primary)"
+                  : "#d0d0d0",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+              }}
+            >
+              {planHasUnlimitedMinutes ? (
+                <MdAllInclusive size={24} />
+              ) : (
+                <MdCall size={20} />
+              )}
             </div>
             <div style={{ textAlign: "left", flex: 1 }}>
               <div
@@ -430,8 +457,8 @@ const Card = ({
                   color: "#d0d0d0",
                 }}
               >
-                {plan?.min === "999"
-                  ? "Chamadas Ilimitadas"
+                {planHasUnlimitedMinutes
+                  ? "Minutos Ilimitados"
                   : `${plan?.min} Minutos`}
               </div>
               <div
@@ -441,7 +468,7 @@ const Card = ({
                   marginTop: "2px",
                 }}
               >
-                {plan?.min === "999"
+                {planHasUnlimitedMinutes
                   ? "Para todo Brasil"
                   : "Para qualquer operadora"}
               </div>
@@ -609,72 +636,102 @@ const mockPlanos: PlanoAPI[] = [
 
 export default function CardSlider() {
   const { constants, rede, apelidoRede, buttonTextStyle } = useAppConstants();
+  const { data: planos = [], isLoading } = usePlanos(constants.companyId);
   const [active, setActive] = useState(0);
   const [hoveredButton, setHoveredButton] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);
-  const [planos, setPlanos] = useState<PlanoAPI[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedNetwork, setSelectedNetwork] = useState<RedeType>("AMBOS");
+  const [selectedNetwork, setSelectedNetwork] = useState<RedeType>(
+    rede === "AMBOS" ? "AMBOS" : rede,
+  );
   const { isMobile, windowSize } = useWindowSize();
 
-  // Fetch plans from API
-  useEffect(() => {
-    const fetchPlanos = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.post<APIResponse>(
-          "https://sistema.playmovel.com.br/api/app/planos/visualizar",
-          {
-            companyid: `${constants.companyId}`,
-          },
-        );
+  const basePlanos = useMemo(() => {
+    return planos.length > 0
+      ? planos.filter((p) => p.mostraApp === true)
+      : mockPlanos.filter((p) => p.mostraApp === true);
+  }, [planos]);
 
-        const { Original, personalizado } = response.data;
+  const availableNetworks = useMemo(() => {
+    const companyAllowsTim = rede === "TIM" || rede === "AMBOS";
+    const companyAllowsVivo = rede === "VIVO" || rede === "AMBOS";
 
-        // Filter: all personalizado + Original where mostraApp === true
-        const filteredOriginal = Original.filter((p) => p.mostraApp === true);
-        const allPlans = [...personalizado, ...filteredOriginal];
+    const normalizedPlanNetworks = basePlanos.map((plan) => {
+      const planRede = plan.rede?.toUpperCase();
 
-        // Sort by gigas (ascending - menor para maior)
-        const sortedPlans = allPlans.sort((a, b) => {
-          const gigasA = parseInt(a.gigas) || 0;
-          const gigasB = parseInt(b.gigas) || 0;
-          return gigasA - gigasB;
-        });
-
-        setPlanos(sortedPlans);
-      } catch (error) {
-        console.error("Error fetching plans:", error);
-        // Fallback to mock data if API fails
-        setPlanos(mockPlanos);
-      } finally {
-        setIsLoading(false);
+      if (planRede === "TIM" || planRede === "VIVO" || planRede === "AMBOS") {
+        return planRede as RedeType;
       }
-    };
 
-    fetchPlanos();
-  }, []);
+      return rede;
+    });
+
+    const hasTimPlans = normalizedPlanNetworks.some(
+      (planRede) => planRede === "TIM" || planRede === "AMBOS",
+    );
+    const hasVivoPlans = normalizedPlanNetworks.some(
+      (planRede) => planRede === "VIVO" || planRede === "AMBOS",
+    );
+
+    const showTimButton = companyAllowsTim && hasTimPlans;
+    const showVivoButton = companyAllowsVivo && hasVivoPlans;
+    const showAllButton = showTimButton && showVivoButton;
+
+    const defaultNetwork: RedeType = showAllButton
+      ? "AMBOS"
+      : showTimButton
+        ? "TIM"
+        : showVivoButton
+          ? "VIVO"
+          : "AMBOS";
+
+    return {
+      showAllButton,
+      showTimButton,
+      showVivoButton,
+      defaultNetwork,
+    };
+  }, [basePlanos, rede]);
+
+  useEffect(() => {
+    const allowedNetworks = new Set<RedeType>();
+
+    if (availableNetworks.showAllButton) {
+      allowedNetworks.add("AMBOS");
+    }
+
+    if (availableNetworks.showTimButton) {
+      allowedNetworks.add("TIM");
+    }
+
+    if (availableNetworks.showVivoButton) {
+      allowedNetworks.add("VIVO");
+    }
+
+    if (allowedNetworks.size > 0 && !allowedNetworks.has(selectedNetwork)) {
+      setSelectedNetwork(availableNetworks.defaultNetwork);
+    }
+  }, [availableNetworks, selectedNetwork]);
 
   // Filter plans by network selection
   const filteredPlanos = useMemo(() => {
-    const basePlanos =
-      planos.length > 0
-        ? planos.filter((p) => p.mostraApp !== false)
-        : mockPlanos.filter((p) => p.mostraApp);
-
-    // If "AMBOS" is selected or company only has one network, show all plans
-    if (selectedNetwork === "AMBOS" || rede !== "AMBOS") {
+    if (selectedNetwork === "AMBOS") {
       return basePlanos;
     }
 
-    // Filter by selected network: show plans that match the network OR have "AMBOS"
     return basePlanos.filter((p) => {
       const planRede = p.rede?.toUpperCase();
-      return planRede === selectedNetwork || planRede === "AMBOS";
+      const normalizedPlanRede =
+        planRede === "TIM" || planRede === "VIVO" || planRede === "AMBOS"
+          ? planRede
+          : rede;
+
+      return (
+        normalizedPlanRede === selectedNetwork || normalizedPlanRede === "AMBOS"
+      );
     });
-  }, [planos, selectedNetwork, rede]);
+  }, [basePlanos, selectedNetwork, rede]);
 
   const res = filteredPlanos;
 
@@ -750,6 +807,7 @@ export default function CardSlider() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTransitioning, active]);
 
   // Valores responsivos
@@ -879,10 +937,12 @@ export default function CardSlider() {
 
       {/* Network Filter ButtonGroup */}
       <NetworkButtonGroup
-        rede={rede}
         apelidoRede={apelidoRede}
         selectedNetwork={selectedNetwork}
         onNetworkChange={setSelectedNetwork}
+        showAllButton={availableNetworks.showAllButton}
+        showTimButton={availableNetworks.showTimButton}
+        showVivoButton={availableNetworks.showVivoButton}
         buttonTextColor={buttonTextStyle.color}
       />
 

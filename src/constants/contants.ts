@@ -1,4 +1,9 @@
-import type { CompanyData, RedesSociais, Cobertura, ApelidoRede } from "../types/company";
+import type {
+  CompanyData,
+  RedesSociais,
+  Cobertura,
+  ApelidoRede,
+} from "../types/company";
 import { ensureExternalUrl } from "../utils/urlHelpers";
 
 export type VarType = {
@@ -20,10 +25,25 @@ export type VarType = {
   cobertura: Cobertura | null;
   rede: "TIM" | "VIVO" | "AMBOS";
   apelidoRede: ApelidoRede | null;
+  whatsappAtendimentoLink: string;
 };
 
 // Valores padrão (fallback) - serão substituídos pelos dados da API
-const companyId = Number(import.meta.env.VITE_COMPANY_ID) || 46;
+const companyId = Number(import.meta.env.VITE_COMPANY_ID) || 407;
+
+function buildWhatsAppLink(phone?: string | null): string {
+  const digitsOnly = phone?.replace(/\D/g, "") ?? "";
+
+  if (!digitsOnly) {
+    return "";
+  }
+
+  const phoneWithCountryCode = digitsOnly.startsWith("55")
+    ? digitsOnly
+    : `55${digitsOnly}`;
+
+  return `https://wa.me/${phoneWithCountryCode}`;
+}
 
 export const defaultConstants: VarType = {
   nameEmpresa: "Play Móvel",
@@ -45,6 +65,7 @@ export const defaultConstants: VarType = {
   cobertura: null,
   rede: "AMBOS",
   apelidoRede: null,
+  whatsappAtendimentoLink: "",
 };
 
 // Função para transformar dados da API em constants
@@ -70,12 +91,19 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     : null;
 
   return {
-    nameEmpresa: data.tradename || data.companyname || defaultConstants.nameEmpresa,
+    nameEmpresa:
+      data.tradename || data.companyname || defaultConstants.nameEmpresa,
     companyId: data.companyId || defaultConstants.companyId,
-    linkAppApple: ensureExternalUrl(data.link_appstore) || defaultConstants.linkAppApple,
-    linkAppAndroid: ensureExternalUrl(data.link_playstore) || defaultConstants.linkAppAndroid,
-    linkPedirChip: ensureExternalUrl(data.link_direciona_venda) || ensureExternalUrl(data.link_chat) || "",
-    linkPoliticaDePrivacidade: ensureExternalUrl(data.politica_privacidade) || "",
+    linkAppApple:
+      ensureExternalUrl(data.link_appstore) || defaultConstants.linkAppApple,
+    linkAppAndroid:
+      ensureExternalUrl(data.link_playstore) || defaultConstants.linkAppAndroid,
+    linkPedirChip:
+      ensureExternalUrl(data.link_direciona_venda) ||
+      ensureExternalUrl(data.link_chat) ||
+      "",
+    linkPoliticaDePrivacidade:
+      ensureExternalUrl(data.politica_privacidade) || "",
     linkTermosDeAdesao: ensureExternalUrl(data.termos_uso) || "",
     linkSuporte: ensureExternalUrl(data.link_chat) || "",
     linkChat: ensureExternalUrl(data.link_chat) || "",
@@ -88,6 +116,7 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     cobertura,
     rede: (data.rede as "TIM" | "VIVO" | "AMBOS") || "AMBOS",
     apelidoRede: data.apelido_rede || null,
+    whatsappAtendimentoLink: buildWhatsAppLink(data.telefone || data.celular),
   };
 };
 

@@ -3,26 +3,32 @@ import type { ApelidoRede } from "../types/company";
 import type { RedeType } from "../hooks/useAppConstants";
 
 interface NetworkButtonGroupProps {
-  rede: RedeType;
   apelidoRede: ApelidoRede | null;
   selectedNetwork: RedeType;
   onNetworkChange: (network: RedeType) => void;
+  showAllButton: boolean;
+  showTimButton: boolean;
+  showVivoButton: boolean;
   buttonTextColor?: string;
 }
 
 export default function NetworkButtonGroup({
-  rede,
   apelidoRede,
   selectedNetwork,
   onNetworkChange,
+  showAllButton,
+  showTimButton,
+  showVivoButton,
   buttonTextColor = "var(--text-primary)",
 }: NetworkButtonGroupProps) {
-  // Only show if company supports both networks
-  if (rede !== "AMBOS") {
+  const visibleButtons = [showAllButton, showTimButton, showVivoButton].filter(
+    Boolean,
+  ).length;
+
+  if (visibleButtons === 0) {
     return null;
   }
 
-  // Determine button labels - usa apelidos se disponíveis
   const timLabel = apelidoRede?.apelido_tim || "Cobertura: TIM";
   const vivoLabel = apelidoRede?.apelido_vivo || "Cobertura: VIVO";
 
@@ -37,35 +43,43 @@ export default function NetworkButtonGroup({
           lineHeight: 1.7,
         }}
       >
-        Escolha a cobertura de rede que mais se adequa às suas necessidades:
+        {visibleButtons > 1
+          ? "Escolha a cobertura de rede que mais se adequa às suas necessidades:"
+          : "Cobertura disponível para este parceiro:"}
       </p>
       <ButtonGroup>
-        <NetworkButton
-          $isActive={selectedNetwork === "AMBOS"}
-          $activeTextColor={buttonTextColor}
-          onClick={() => onNetworkChange("AMBOS")}
-        >
-          <ButtonIcon>📶</ButtonIcon>
-          <ButtonText>Todas as Coberturas</ButtonText>
-        </NetworkButton>
+        {showAllButton && (
+          <NetworkButton
+            $isActive={selectedNetwork === "AMBOS"}
+            $activeTextColor={buttonTextColor}
+            onClick={() => onNetworkChange("AMBOS")}
+          >
+            <ButtonIcon>📶</ButtonIcon>
+            <ButtonText>Todas as Coberturas</ButtonText>
+          </NetworkButton>
+        )}
 
-        <NetworkButton
-          $isActive={selectedNetwork === "TIM"}
-          $activeTextColor={buttonTextColor}
-          onClick={() => onNetworkChange("TIM")}
-        >
-          <ButtonIcon>📡</ButtonIcon>
-          <ButtonText>{timLabel}</ButtonText>
-        </NetworkButton>
+        {showTimButton && (
+          <NetworkButton
+            $isActive={selectedNetwork === "TIM"}
+            $activeTextColor={buttonTextColor}
+            onClick={() => onNetworkChange("TIM")}
+          >
+            <ButtonIcon>📡</ButtonIcon>
+            <ButtonText>{timLabel}</ButtonText>
+          </NetworkButton>
+        )}
 
-        <NetworkButton
-          $isActive={selectedNetwork === "VIVO"}
-          $activeTextColor={buttonTextColor}
-          onClick={() => onNetworkChange("VIVO")}
-        >
-          <ButtonIcon>📡</ButtonIcon>
-          <ButtonText>{vivoLabel}</ButtonText>
-        </NetworkButton>
+        {showVivoButton && (
+          <NetworkButton
+            $isActive={selectedNetwork === "VIVO"}
+            $activeTextColor={buttonTextColor}
+            onClick={() => onNetworkChange("VIVO")}
+          >
+            <ButtonIcon>📡</ButtonIcon>
+            <ButtonText>{vivoLabel}</ButtonText>
+          </NetworkButton>
+        )}
       </ButtonGroup>
     </Container>
   );

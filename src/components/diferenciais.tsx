@@ -1,24 +1,30 @@
-import { useState } from 'react'
-import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { useAppConstants } from '../hooks/useAppConstants'
+import { useState } from "react";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { useAppConstants } from "../hooks/useAppConstants";
+import { usePlanos } from "../hooks/usePlanos";
+import { getLowestPlanoValueLabel } from "../services/planService";
 
 export default function FAQ() {
-  const { constants } = useAppConstants()
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const { constants } = useAppConstants();
+  const { data: planos = [] } = usePlanos(constants.companyId);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const lowestPlanValueLabel = getLowestPlanoValueLabel(planos);
+  const activationValueText = lowestPlanValueLabel
+    ? `no valor mínimo de R$ ${lowestPlanValueLabel}`
+    : "no valor do plano escolhido";
 
   const faqs = [
     {
       id: 1,
-      pergunta: 'É necessário pagar alguma taxa para aderir ao plano?',
-      resposta:
-        'Não há cobrança de taxa de adesão ao Plano. Para aderir ao plano, o Cliente deve adquirir e ativar previamente o chip da AIVA no aplicativo. A ativação do plano é feita automaticamente após a realização da primeira recarga, no valor mínimo de R$ 34,90 (Trinta e quatro reais e noventa centavos), após o isso o Cliente receberá automaticamente a confirmação de ativação do plano por SMS e/ou App.',
+      pergunta: "É necessário pagar alguma taxa para aderir ao plano?",
+      resposta: `Não há cobrança de taxa de adesão ao Plano. Para aderir ao plano, o Cliente deve adquirir e ativar previamente o chip da ${constants.nameEmpresa} no aplicativo. A ativação do plano é feita automaticamente após a realização da primeira recarga, ${activationValueText}, após isso o Cliente receberá automaticamente a confirmação de ativação do plano por SMS e/ou App.`,
     },
     {
       id: 2,
-      pergunta: 'Como é feita a renovação do plano?',
-      resposta:
-        'A renovação do plano é automática, e ocorre no dia seguinte ao término da validade do mesmo, que é de 30 (trinta) dias. Para isso, o Cliente precisa efetuar o pagamento da sua próxima assinatura através de um dos métodos disponíveis no aplicativo AIVA (Pix, Boleto e Cartão de Crédito ou Débito). O Cliente poderá manifestar-se em contrário, pela não renovação do plano, podendo ainda, optar por outra promoção em vigor se assim o desejar, basta efetuar a solicitação pelo APP AIVA.',
+      pergunta: "Como é feita a renovação do plano?",
+      resposta: `A renovação do plano é automática, e ocorre no dia seguinte ao término da validade do mesmo, que é de 30 (trinta) dias. Para isso, o Cliente precisa efetuar o pagamento da sua próxima assinatura através de um dos métodos disponíveis no aplicativo ${constants.nameEmpresa} (Pix, Boleto e Cartão de Crédito ou Débito). O Cliente poderá manifestar-se em contrário, pela não renovação do plano, podendo ainda, optar por outra promoção em vigor se assim o desejar, basta efetuar a solicitação pelo APP ${constants.nameEmpresa}.`,
     },
     {
       id: 3,
@@ -27,22 +33,21 @@ export default function FAQ() {
     },
     {
       id: 4,
-      pergunta: 'É possível fazer ligações internacionais (DDI)?',
+      pergunta: "É possível fazer ligações internacionais (DDI)?",
       resposta:
-        'Não é possível. Os benefícios dos serviços de voz/sms do plano não são válidos para ligações internacionais.',
+        "Não é possível. Os benefícios dos serviços de voz/sms do plano não são válidos para ligações internacionais.",
     },
-  ]
+  ];
 
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
     <Section id="faq">
-      {/* Animated grid background */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -51,41 +56,40 @@ export default function FAQ() {
           linear-gradient(var(--primary-alpha-10) 1px, transparent 1px),
           linear-gradient(90deg, var(--primary-alpha-10) 1px, transparent 1px)
         `,
-          backgroundSize: '60px 60px',
+          backgroundSize: "60px 60px",
           opacity: 0.6,
-          pointerEvents: 'none',
-          animation: 'gridMove 20s linear infinite',
-        }}
-      />
-
-      {/* Floating orbs */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '15%',
-          right: '10%',
-          width: '400px',
-          height: '400px',
-          background:
-            'radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'var(--blur-xl)',
-          animation: 'float 8s ease-in-out infinite',
+          pointerEvents: "none",
+          animation: "gridMove 20s linear infinite",
         }}
       />
 
       <div
         style={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '5%',
-          width: '350px',
-          height: '350px',
+          position: "absolute",
+          top: "15%",
+          right: "10%",
+          width: "400px",
+          height: "400px",
           background:
-            'radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'var(--blur-xl)',
-          animation: 'float 10s ease-in-out infinite reverse',
+            "radial-gradient(circle, var(--primary-alpha-15) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "var(--blur-xl)",
+          animation: "float 8s ease-in-out infinite",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20%",
+          left: "5%",
+          width: "350px",
+          height: "350px",
+          background:
+            "radial-gradient(circle, rgba(100,100,255,0.1) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "var(--blur-xl)",
+          animation: "float 10s ease-in-out infinite reverse",
         }}
       />
 
@@ -131,15 +135,13 @@ export default function FAQ() {
         }
       `}</style>
     </Section>
-  )
+  );
 }
 
-/* --- Tipos --- */
 interface ToggleProps {
-  isOpen: boolean
+  isOpen: boolean;
 }
 
-/* --- Styled Components --- */
 const Section = styled.section`
   width: 100%;
   padding: 6rem 1.5rem;
@@ -147,7 +149,7 @@ const Section = styled.section`
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-`
+`;
 
 const Container = styled.div`
   max-width: 1200px;
@@ -157,7 +159,7 @@ const Container = styled.div`
   z-index: 1;
   box-sizing: border-box;
   padding: 0 1rem;
-`
+`;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
@@ -172,7 +174,7 @@ const SectionTitle = styled.h2`
   @media (max-width: 768px) {
     font-size: 2rem;
   }
-`
+`;
 
 const Subtitle = styled.p`
   font-size: 1.2rem;
@@ -184,18 +186,27 @@ const Subtitle = styled.p`
     font-size: 1rem;
     margin-bottom: 3rem;
   }
-`
+`;
 
 const FAQGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.8rem;
   width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
   box-sizing: border-box;
-  align-items: start;
-`
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
 
 const FAQItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: var(--bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -209,46 +220,48 @@ const FAQItem = styled.div`
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-alpha-30);
   }
-`
+`;
 
 const FAQQuestion = styled.div<ToggleProps>`
   padding: 1.8rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 116px;
   cursor: pointer;
   background: ${(props) =>
-    props.isOpen ? 'var(--bg-card-active)' : 'transparent'};
+    props.isOpen ? "var(--bg-card-active)" : "transparent"};
   transition: var(--transition-medium);
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: 4px;
     background: ${(props) =>
-      props.isOpen ? 'var(--color-primary)' : 'transparent'};
+      props.isOpen ? "var(--color-primary)" : "transparent"};
     transition: var(--transition-medium);
   }
 
   &:hover {
     background: ${(props) =>
-      props.isOpen ? 'var(--bg-card-active)' : 'var(--white-alpha-05)'};
+      props.isOpen ? "var(--bg-card-active)" : "var(--white-alpha-05)"};
   }
 
   @media (max-width: 768px) {
+    min-height: auto;
     padding: 1.5rem;
   }
-`
+`;
 
 const QuestionText = styled.h3<ToggleProps>`
   font-size: 1.15rem;
   font-weight: 600;
   color: ${(props) =>
-    props.isOpen ? 'var(--text-primary)' : 'var(--text-primary)'};
+    props.isOpen ? "var(--text-primary)" : "var(--text-primary)"};
   margin: 0;
   transition: var(--transition-fast);
   line-height: 1.5;
@@ -256,35 +269,37 @@ const QuestionText = styled.h3<ToggleProps>`
 
   ${FAQQuestion}:hover & {
     color: ${(props) =>
-      props.isOpen ? 'var(--text-primary)' : 'var(--color-primary)'};
+      props.isOpen ? "var(--text-primary)" : "var(--color-primary)"};
   }
 
   @media (max-width: 768px) {
     font-size: 1rem;
   }
-`
+`;
 
 const Arrow = styled.span<ToggleProps>`
   font-size: 1rem;
   color: ${(props) =>
-    props.isOpen ? 'var(--color-primary)' : 'var(--color-primary)'};
+    props.isOpen ? "var(--color-primary)" : "var(--color-primary)"};
   transition: var(--transition-medium);
-  transform: ${(props) => (props.isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${(props) => (props.isOpen ? "rotate(180deg)" : "rotate(0deg)")};
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  margin-left: 1rem;
   border-radius: 50%;
   width: 24px;
   height: 24px;
   background: ${(props) =>
-    props.isOpen ? 'var(--primary-alpha-20)' : 'var(--primary-alpha-10)'};
-`
+    props.isOpen ? "var(--primary-alpha-20)" : "var(--primary-alpha-10)"};
+`;
 
 const FAQAnswer = styled.div<ToggleProps>`
-  max-height: ${(props) => (props.isOpen ? '600px' : '0')};
+  max-height: ${(props) => (props.isOpen ? "600px" : "0")};
   overflow: hidden;
   transition: var(--transition-medium);
-`
+`;
 
 const AnswerText = styled.p`
   padding: 2rem;
@@ -303,4 +318,4 @@ const AnswerText = styled.p`
     padding: 1.5rem;
     font-size: 0.95rem;
   }
-`
+`;
