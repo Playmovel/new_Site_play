@@ -31,20 +31,6 @@ export type VarType = {
 // Valores padrao (fallback) - serao substituidos pelos dados da API
 const companyId = Number(import.meta.env.VITE_COMPANY_ID) || 407;
 
-function buildWhatsAppLink(phone?: string | null): string {
-  const digitsOnly = phone?.replace(/\D/g, "") ?? "";
-
-  if (!digitsOnly) {
-    return "";
-  }
-
-  const phoneWithCountryCode = digitsOnly.startsWith("55")
-    ? digitsOnly
-    : `55${digitsOnly}`;
-
-  return `https://wa.me/${phoneWithCountryCode}`;
-}
-
 function parseRedesSociais(
   redesSociais: CompanyData["redes_sociais"],
 ): RedesSociais | null {
@@ -132,7 +118,7 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     cobertura,
     rede: (data.rede as "TIM" | "VIVO" | "AMBOS") || "AMBOS",
     apelidoRede: data.apelido_rede || null,
-    whatsappAtendimentoLink: buildWhatsAppLink(data.telefone || data.celular),
+    whatsappAtendimentoLink: redesSociais?.whatsapp || "",
   };
 };
 
