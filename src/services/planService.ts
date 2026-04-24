@@ -4,6 +4,7 @@ export interface PlanoAPI {
   id?: number;
   planid?: string;
   description: string;
+  descricao_infiniti?: string;
   value: string;
   gigas: string;
   min: string;

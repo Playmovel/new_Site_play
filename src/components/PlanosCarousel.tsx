@@ -25,11 +25,16 @@ interface CardProps {
 function hasUnlimitedMinutes(plan: PlanoAPI | null): boolean {
   const normalizedMin = plan?.min?.trim().toLowerCase() ?? "";
   const normalizedDescription = plan?.description?.toLowerCase() ?? "";
+  const normalizedInfinitiVoiceDescription = plan?.descricao_infiniti
+    ?.split("|")[0]
+    ?.replace(/\s+/g, "")
+    .toLowerCase() ?? "";
 
   return (
     normalizedMin === "999" ||
     normalizedMin === "ilimitado" ||
-    normalizedDescription.includes("ilimitado")
+    normalizedDescription.includes("ilimitado") ||
+    normalizedInfinitiVoiceDescription === "playvoz1000min"
   );
 }
 
