@@ -9,10 +9,12 @@ export interface RedesSociais {
   instagram: string | null;
   linkedin: string | null;
   whatsapp: string | null;
+  atendimento: string | null;
   bool_facebook: boolean;
   bool_instagram: boolean;
   bool_linkedin: boolean;
   bool_whatsapp: boolean;
+  bool_atendimento: boolean;
 }
 
 export interface Cobertura {
@@ -45,7 +47,9 @@ function ensureHashPrefix(color: string): string {
 }
 
 // Parse appTheme JSON string safely
-export function parseAppTheme(appThemeString: string | null | undefined): AppTheme | null {
+export function parseAppTheme(
+  appThemeString: string | null | undefined,
+): AppTheme | null {
   if (!appThemeString) return null;
 
   try {
@@ -90,7 +94,7 @@ export interface CompanyData {
   link_playstore: string;
   link_appstore: string;
   link_website: string;
-  link_chat: string;
+  link_chat: boolean;
   pospago: boolean;
   link_contrato: string;
   consultor: string;
@@ -111,7 +115,7 @@ export interface CompanyData {
   termos_uso?: string | null;
   politica_privacidade?: string | null;
   link_direciona_venda?: string | null;
-  redes_sociais?: RedesSociais | null;
+  redes_sociais?: RedesSociais | string | null;
   cobertura?: Cobertura | null;
 }
 

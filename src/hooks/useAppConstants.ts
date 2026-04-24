@@ -36,10 +36,11 @@ const defaultApelidoRede: ApelidoRede = {
 export function useAppConstants(): UseAppConstantsReturn {
   const { data, isLoading, isError, error } = useCompanyData();
 
-  const constants = useMemo(() => {
+  const constants = useMemo<VarType>(() => {
     if (data) {
       return mapCompanyDataToConstants(data);
     }
+
     return defaultConstants;
   }, [data]);
 
@@ -47,6 +48,7 @@ export function useAppConstants(): UseAppConstantsReturn {
     if (data?.rede === "TIM" || data?.rede === "VIVO" || data?.rede === "AMBOS") {
       return data.rede;
     }
+
     return "AMBOS";
   }, [data]);
 
@@ -57,10 +59,12 @@ export function useAppConstants(): UseAppConstantsReturn {
   const themeColors = useMemo<AppThemeColors>(() => {
     if (data?.appTheme) {
       const parsed = parseAppTheme(data.appTheme);
+
       if (parsed?.colors) {
         return parsed.colors;
       }
     }
+
     return defaultThemeColors;
   }, [data]);
 

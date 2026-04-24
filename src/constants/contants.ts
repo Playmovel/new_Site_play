@@ -28,7 +28,7 @@ export type VarType = {
   whatsappAtendimentoLink: string;
 };
 
-// Valores padrão (fallback) - serão substituídos pelos dados da API
+// Valores padrao (fallback) - serao substituidos pelos dados da API
 const companyId = Number(import.meta.env.VITE_COMPANY_ID) || 407;
 
 function buildWhatsAppLink(phone?: string | null): string {
@@ -45,17 +45,35 @@ function buildWhatsAppLink(phone?: string | null): string {
   return `https://wa.me/${phoneWithCountryCode}`;
 }
 
+function parseRedesSociais(
+  redesSociais: CompanyData["redes_sociais"],
+): RedesSociais | null {
+  if (!redesSociais) {
+    return null;
+  }
+
+  if (typeof redesSociais === "string") {
+    try {
+      return JSON.parse(redesSociais) as RedesSociais;
+    } catch {
+      console.warn("Failed to parse redes_sociais:", redesSociais);
+      return null;
+    }
+  }
+
+  return redesSociais;
+}
+
 export const defaultConstants: VarType = {
-  nameEmpresa: "Play Móvel",
-  companyId: companyId,
-  linkAppApple: "https://apps.apple.com/us/app/play-m%C3%B3vel/id1624910613",
-  linkAppAndroid:
-    "https://play.google.com/store/apps/details?id=app.mobile.ios.infiniti&pli=1",
+  nameEmpresa: "Play Movel",
+  companyId,
+  linkAppApple: "",
+  linkAppAndroid: "",
   linkPedirChip: "https://loja.playmovel.com.br/Shop",
-  linkPoliticaDePrivacidade: `https://privacidade.operadora.app.br/#/Play`,
-  linkTermosDeAdesao: `https://privacidade.operadora.app.br/#/adesao/Play`,
-  linkSuporte: `https://atendimento.operadora.app.br/?companyId=${companyId}`,
-  linkChat: `https://atendimento.operadora.app.br/?companyId=${companyId}`,
+  linkPoliticaDePrivacidade: "https://privacidade.operadora.app.br/#/Play",
+  linkTermosDeAdesao: "https://privacidade.operadora.app.br/#/adesao/Play",
+  linkSuporte: "",
+  linkChat: "",
   logotipo: "",
   linkIcon: "",
   linkWebsite: "",
@@ -68,20 +86,23 @@ export const defaultConstants: VarType = {
   whatsappAtendimentoLink: "",
 };
 
-// Função para transformar dados da API em constants
+// Funcao para transformar dados da API em constants
 export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
-  // Formata as redes sociais com URLs corretas
-  const redesSociais: RedesSociais | null = data.redes_sociais
+  const parsedRedesSociais = parseRedesSociais(data.redes_sociais);
+
+  const redesSociais: RedesSociais | null = parsedRedesSociais
     ? {
-        ...data.redes_sociais,
-        facebook: ensureExternalUrl(data.redes_sociais.facebook),
-        instagram: ensureExternalUrl(data.redes_sociais.instagram),
-        linkedin: ensureExternalUrl(data.redes_sociais.linkedin),
-        whatsapp: ensureExternalUrl(data.redes_sociais.whatsapp),
+        ...parsedRedesSociais,
+        facebook: ensureExternalUrl(parsedRedesSociais.facebook),
+        instagram: ensureExternalUrl(parsedRedesSociais.instagram),
+        linkedin: ensureExternalUrl(parsedRedesSociais.linkedin),
+        whatsapp: ensureExternalUrl(parsedRedesSociais.whatsapp),
+        atendimento: ensureExternalUrl(parsedRedesSociais.atendimento),
       }
     : null;
 
-  // Formata a cobertura com URLs corretas
+  const chatLink = ensureExternalUrl(redesSociais?.atendimento);
+
   const cobertura: Cobertura | null = data.cobertura
     ? {
         ...data.cobertura,
@@ -94,19 +115,14 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     nameEmpresa:
       data.tradename || data.companyname || defaultConstants.nameEmpresa,
     companyId: data.companyId || defaultConstants.companyId,
-    linkAppApple:
-      ensureExternalUrl(data.link_appstore) || defaultConstants.linkAppApple,
-    linkAppAndroid:
-      ensureExternalUrl(data.link_playstore) || defaultConstants.linkAppAndroid,
-    linkPedirChip:
-      ensureExternalUrl(data.link_direciona_venda) ||
-      ensureExternalUrl(data.link_chat) ||
-      "",
+    linkAppApple: ensureExternalUrl(data.link_appstore) || "",
+    linkAppAndroid: ensureExternalUrl(data.link_playstore) || "",
+    linkPedirChip: ensureExternalUrl(data.link_direciona_venda) || "",
     linkPoliticaDePrivacidade:
       ensureExternalUrl(data.politica_privacidade) || "",
     linkTermosDeAdesao: ensureExternalUrl(data.termos_uso) || "",
-    linkSuporte: ensureExternalUrl(data.link_chat) || "",
-    linkChat: ensureExternalUrl(data.link_chat) || "",
+    linkSuporte: chatLink,
+    linkChat: chatLink,
     logotipo: ensureExternalUrl(data.logotipo) || "",
     linkIcon: ensureExternalUrl(data.linkicon) || "",
     linkWebsite: ensureExternalUrl(data.link_website) || "",
@@ -120,5 +136,5 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
   };
 };
 
-// Mantém compatibilidade com código existente
+// Mantem compatibilidade com codigo existente
 export const constants = defaultConstants;

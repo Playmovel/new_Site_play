@@ -58,6 +58,18 @@ const PhoneMockup = ({
 
 export default function InfoSection() {
   const { constants } = useAppConstants();
+  const storeButtons = [
+    {
+      text: "App Store",
+      href: constants.linkAppApple,
+      icon: Botaoapple,
+    },
+    {
+      text: "Google Play",
+      href: constants.linkAppAndroid,
+      icon: BotaoAndroid,
+    },
+  ].filter((button) => Boolean(button.href));
 
   const InfosLeft: InfoItem[] = [
     {
@@ -185,31 +197,22 @@ export default function InfoSection() {
         </PhoneWrapper>
 
         {/* Botões */}
-        <ButtonsWrapper>
-          {[
-            {
-              text: "App Store",
-              href: constants.linkAppApple,
-              icon: Botaoapple,
-            },
-            {
-              text: "Google Play",
-              href: constants.linkAppAndroid,
-              icon: BotaoAndroid,
-            },
-          ].map((btn, i) => (
-            <StoreLink
-              key={i}
-              href={btn.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <StoreButton>
-                <StoreIcon src={btn.icon} alt={btn.text} />
-              </StoreButton>
-            </StoreLink>
-          ))}
-        </ButtonsWrapper>
+        {storeButtons.length > 0 && (
+          <ButtonsWrapper>
+            {storeButtons.map((btn) => (
+              <StoreLink
+                key={btn.text}
+                href={btn.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <StoreButton>
+                  <StoreIcon src={btn.icon} alt={btn.text} />
+                </StoreButton>
+              </StoreLink>
+            ))}
+          </ButtonsWrapper>
+        )}
       </CenterColumn>
 
       {/* Coluna Direita */}
