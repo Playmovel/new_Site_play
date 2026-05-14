@@ -23,6 +23,12 @@ interface CardProps {
 }
 
 function hasUnlimitedMinutes(plan: PlanoAPI | null): boolean {
+  // Prioridade: flag explicito no override comercial do parceiro
+  // (beneficios_adicionais_personalizados.minutos_ilimitados).
+  if (plan?.beneficios_adicionais_personalizados?.minutos_ilimitados === true) {
+    return true;
+  }
+
   const normalizedMin = plan?.min?.trim().toLowerCase() ?? "";
   const normalizedDescription = plan?.description?.toLowerCase() ?? "";
   const normalizedInfinitiVoiceDescription = plan?.descricao_infiniti
@@ -36,6 +42,21 @@ function hasUnlimitedMinutes(plan: PlanoAPI | null): boolean {
     normalizedDescription.includes("ilimitado") ||
     normalizedInfinitiVoiceDescription === "playvoz1000min"
   );
+}
+
+// Texto de minutos a exibir no card. Prioridade:
+//   1) "Minutos Ilimitados" se hasUnlimitedMinutes
+//   2) "{N} Minutos" usando beneficios_adicionais_personalizados.min
+//   3) "{N} Minutos" do plan.min (legado)
+function getMinutosLabel(plan: PlanoAPI | null, isUnlimited: boolean): string {
+  if (isUnlimited) {
+    return "Minutos Ilimitados";
+  }
+  const overrideMin = plan?.beneficios_adicionais_personalizados?.min;
+  if (overrideMin != null) {
+    return `${overrideMin} Minutos`;
+  }
+  return `${plan?.min ?? 0} Minutos`;
 }
 
 const Card = ({
@@ -267,13 +288,22 @@ const Card = ({
           {plan?.description}
         </h3>
 
-        {/* Features com design tech */}
+        {/* Features com design tech.
+            maxHeight equivalente a 3 rows (Internet/WhatsApp/Minutos);
+            qualquer item alem disso (beneficios adicionais) entra no scroll
+            interno para o card nao crescer alem desse limite. */}
         <div
+          className="beneficios-scroll"
           style={{
             display: "flex",
             flexDirection: "column",
             gap: "0.75rem",
             marginBottom: "2rem",
+            maxHeight: isMobile ? "220px" : "235px",
+            overflowY: "auto",
+            paddingRight: "4px",
+            scrollbarWidth: "thin",
+            scrollbarColor: "var(--primary-alpha-30) transparent",
           }}
         >
           {/* Internet */}
@@ -288,6 +318,7 @@ const Card = ({
               borderRadius: "var(--radius-md)",
               border: "1px solid var(--primary-alpha-20)",
               overflow: "hidden",
+              flexShrink: 0,
             }}
           >
             <div
@@ -360,6 +391,7 @@ const Card = ({
                 "linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(37, 211, 102, 0.02) 100%)",
               borderRadius: "var(--radius-md)",
               border: "1px solid rgba(37, 211, 102, 0.2)",
+              flexShrink: 0,
             }}
           >
             <div
@@ -409,6 +441,7 @@ const Card = ({
               background: "rgba(255, 255, 255, 0.02)",
               borderRadius: "var(--radius-md)",
               border: "var(--border-white-subtle)",
+              flexShrink: 0,
             }}
           >
             <div
@@ -462,9 +495,7 @@ const Card = ({
                   color: "#d0d0d0",
                 }}
               >
-                {planHasUnlimitedMinutes
-                  ? "Minutos Ilimitados"
-                  : `${plan?.min} Minutos`}
+                {getMinutosLabel(plan, planHasUnlimitedMinutes)}
               </div>
               <div
                 style={{
@@ -479,6 +510,103 @@ const Card = ({
               </div>
             </div>
           </div>
+
+          {/* Beneficios adicionais (SVA, etc.) - renderizam DENTRO do
+              container de features (que tem o maxHeight + scroll). Os 3
+              base (Internet/WhatsApp/Minutos) ficam no topo; com beneficios
+              o card scrolla para mostrar os adicionais. */}
+          {plan?.beneficios_adicionais_personalizados?.beneficios?.map(
+            (beneficio, idx) => (
+              <div
+                key={`beneficio-${plan?.id ?? plan?.planid ?? "x"}-${idx}`}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
+                  padding: "0.9rem 1rem",
+                  background: "var(--bg-card-active)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--primary-alpha-20)",
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: "4px",
+                    background:
+                      "linear-gradient(180deg, var(--color-primary) 0%, transparent 100%)",
+                  }}
+                />
+                <div
+                  style={{
+                    width: isMobile ? "36px" : "40px",
+                    height: isMobile ? "36px" : "40px",
+                    borderRadius: "var(--radius-sm)",
+                    background: "var(--primary-alpha-15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                  }}
+                >
+                  {beneficio.imagem ? (
+                    <img
+                      src={beneficio.imagem}
+                      alt={beneficio.nome}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: isMobile ? "1.1rem" : "1.3rem",
+                      }}
+                    >
+                      🎁
+                    </span>
+                  )}
+                </div>
+                <div style={{ textAlign: "left", flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "700",
+                      color: "var(--color-primary)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {beneficio.nome}
+                  </div>
+                  {beneficio.descricao && (
+                    <div
+                      style={{
+                        fontSize: "0.65rem",
+                        color: "var(--text-dark)",
+                        marginTop: "2px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {beneficio.descricao}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ),
+          )}
         </div>
 
         {/* Preço com design futurista */}
@@ -1404,6 +1532,23 @@ export default function CardSlider() {
           50% {
             transform: translate(-50%, -50%) translateZ(25px) scale(1.03);
           }
+        }
+
+        /* Scrollbar customizado pro container de beneficios adicionais.
+           Mantem largura fina e cor primaria translucida pra nao competir
+           visualmente com o resto do card. */
+        .beneficios-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+        .beneficios-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .beneficios-scroll::-webkit-scrollbar-thumb {
+          background: var(--primary-alpha-30);
+          border-radius: 3px;
+        }
+        .beneficios-scroll::-webkit-scrollbar-thumb:hover {
+          background: var(--primary-alpha-50);
         }
 
       `}</style>

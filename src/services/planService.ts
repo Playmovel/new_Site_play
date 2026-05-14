@@ -1,5 +1,22 @@
 import { api } from "./api";
 
+export interface PlanoBeneficio {
+  nome: string;
+  imagem?: string | null;
+  descricao?: string | null;
+}
+
+// Override comercial do parceiro sobre o plano base (planid). Pode acrescentar
+// gigas/min/sms, marcar minutos como ilimitados (VoIP/etc) e adicionar SVAs
+// que entram no preco mas nao existem no contrato com a operadora.
+export interface PlanoBeneficiosAdicionais {
+  gb?: number | null;
+  min?: number | null;
+  sms?: number | null;
+  minutos_ilimitados?: boolean;
+  beneficios?: PlanoBeneficio[];
+}
+
 export interface PlanoAPI {
   id?: number;
   planid?: string;
@@ -12,6 +29,7 @@ export interface PlanoAPI {
   mostraApp?: boolean;
   rede?: string;
   modelo?: string;
+  beneficios_adicionais_personalizados?: PlanoBeneficiosAdicionais | null;
 }
 
 interface PlanosResponse {
