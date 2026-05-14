@@ -46,14 +46,19 @@ function ensureHashPrefix(color: string): string {
   return color.startsWith("#") ? color : `#${color}`;
 }
 
-// Parse appTheme JSON string safely
+// Parse appTheme safely. Pode vir como string JSON (contrato esperado pelo
+// CompanyController::consultaEmpresasemtokenAppSite) ou como objeto ja
+// decodificado (quando o cast 'sitetheme' => 'array' do CompanyModel ativa).
+// Tolerar ambos pra nao quebrar o tema do site se o backend mudar.
 export function parseAppTheme(
-  appThemeString: string | null | undefined,
+  appTheme: unknown,
 ): AppTheme | null {
-  if (!appThemeString) return null;
+  if (!appTheme) return null;
 
   try {
-    const parsed = JSON.parse(appThemeString) as AppTheme;
+    const parsed = (typeof appTheme === "string"
+      ? JSON.parse(appTheme)
+      : appTheme) as AppTheme;
 
     // Validate the structure
     if (parsed?.colors?.primary && parsed?.colors?.secondary) {
@@ -68,7 +73,7 @@ export function parseAppTheme(
     }
     return null;
   } catch {
-    console.warn("Failed to parse appTheme:", appThemeString);
+    console.warn("Failed to parse appTheme:", appTheme);
     return null;
   }
 }
@@ -98,7 +103,9 @@ export interface CompanyData {
   pospago: boolean;
   link_contrato: string;
   consultor: string;
-  appTheme: string;
+  // Pode vir como string JSON ou como objeto ja decodificado dependendo do
+  // cast no CompanyModel. parseAppTheme tolera ambos.
+  appTheme: string | AppTheme | null;
   appversion: string | null;
   mvnoparent: string | null;
   mvnoparentid: string | null;
