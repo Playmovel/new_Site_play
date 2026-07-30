@@ -123,7 +123,14 @@ export default function PrivacyPolicyPage() {
               </Topic>
               <Topic>
                 <TopicNumber>2.11</TopicNumber>
-                Qualquer outra informação pessoal que você nos enviar.
+                Qualquer outra informação pessoal que você nos enviar;
+              </Topic>
+              <Topic>
+                <TopicNumber>2.12</TopicNumber>
+                Dados biométricos faciais e dados de documento de identificação,
+                coletados exclusivamente no processo de ativação de linhas móveis,
+                por exigência regulatória, conforme detalhado na Seção 13 desta
+                Política.
               </Topic>
             </TopicList>
             <Paragraph>
@@ -441,6 +448,138 @@ export default function PrivacyPolicyPage() {
             <SectionTitle>12. Cookies</SectionTitle>
             <Paragraph>
               Nosso site usa cookies.
+            </Paragraph>
+          </Section>
+
+          <Section>
+            <SectionTitle>
+              13. Biometria Facial na Ativação de Linhas Móveis
+            </SectionTitle>
+            <Paragraph>
+              Em atendimento a exigência da Agência Nacional de Telecomunicações
+              (ANATEL) e às diretrizes operacionais repassadas pela Surf Telecom
+              S.A., prestadora de rede que suporta os serviços da{" "}
+              {constants.nameEmpresa}, as novas ativações de chip passam a exigir a
+              coleta e a validação de biometria facial do consumidor. A implantação é
+              escalonada: Código Nacional (CN) 97 a partir de 21/07/2026 e demais
+              Códigos Nacionais de forma gradual a partir de 10/08/2026, com
+              conclusão prevista até setembro de 2026.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.1</TopicNumber>
+                <strong>Natureza do dado e base legal</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              A imagem facial é dado pessoal sensível, nos termos do artigo 5º,
+              inciso II, da Lei nº 13.709/2018 (LGPD). Seu tratamento tem como
+              fundamento o cumprimento de obrigação legal e regulatória pelo
+              controlador, nos termos do artigo 7º, inciso II, e do artigo 11, inciso
+              II, alínea “a”, da LGPD, não se baseando em consentimento para
+              finalidades comerciais.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.2</TopicNumber>
+                <strong>Dados coletados</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              São coletados a imagem facial do consumidor e os elementos de prova de
+              vida necessários à validação, os dados do documento de identificação
+              apresentado e os dados técnicos associados à operação, tais como
+              identificador do chip (ICCID), número da linha (MSISDN), endereço IP,
+              data e hora do acesso e informações do dispositivo utilizado.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.3</TopicNumber>
+                <strong>Finalidade</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Os dados biométricos são tratados exclusivamente para confirmar a
+              identidade do titular da linha, prevenir fraudes na habilitação e
+              cumprir a exigência regulatória aplicável. Não são utilizados para
+              marketing, formação de perfil comportamental, publicidade,
+              enriquecimento de bases cadastrais ou treinamento de modelos, nem são
+              comercializados a terceiros.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.4</TopicNumber>
+                <strong>Compartilhamento</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Para a execução da validação, os dados são compartilhados com a Surf
+              Telecom S.A. e com o prestador de identificação digital por ela
+              contratado, responsáveis pela plataforma de coleta e certificação
+              biométrica, bem como com autoridades reguladoras e órgãos públicos
+              quando houver obrigação legal ou determinação fundamentada nesse
+              sentido. Os agentes envolvidos estão obrigados a observar a LGPD e as
+              normas de segurança da informação aplicáveis.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.5</TopicNumber>
+                <strong>Retenção e eliminação</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Os dados biométricos são retidos pelo prazo necessário à comprovação da
+              regularidade da habilitação perante a ANATEL e ao cumprimento das
+              obrigações legais aplicáveis. Encerrada essa finalidade, os dados são
+              eliminados ou anonimizados, nos termos do artigo 16 da LGPD.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.6</TopicNumber>
+                <strong>Segurança</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              A coleta ocorre em ambiente próprio, com tráfego protegido por
+              criptografia, controle de acesso restrito ao pessoal autorizado e
+              registro das operações de tratamento, conforme descrito na Seção 7
+              desta Política.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.7</TopicNumber>
+                <strong>Consequência da não realização</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Por se tratar de exigência regulatória, a não realização da biometria
+              facial impede a conclusão da ativação. Até a aprovação da validação a
+              linha permanece em estado ativo restrito e, decorridos 30 (trinta) dias
+              corridos do envio do primeiro SMS com o link de coleta sem conclusão do
+              processo, o chip é cancelado, sem ônus ao consumidor, conforme o Termo
+              de Adesão.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>13.8</TopicNumber>
+                <strong>Direitos do titular</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              O titular pode, a qualquer tempo, solicitar confirmação do tratamento,
+              acesso, correção, informação sobre o uso compartilhado, anonimização,
+              bloqueio ou eliminação de dados tratados em desconformidade com a lei,
+              nos termos dos artigos 17 a 20 da LGPD, pelos canais indicados nesta
+              Política. O exercício desses direitos não afasta a obrigação legal de
+              retenção descrita no item 13.5.
             </Paragraph>
           </Section>
         </ContentWrapper>

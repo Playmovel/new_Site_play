@@ -63,6 +63,140 @@ export default function TermsOfUsePage() {
               adquirido e ativado previamente uma linha {constants.nameEmpresa} e escolher por
               um dos valores de recarga disponíveis.
             </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.1</TopicNumber>
+                <strong>
+                  Validação biométrica facial na ativação (exigência regulatória)
+                </strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Em atendimento a exigência da Agência Nacional de Telecomunicações
+              (ANATEL) e às diretrizes operacionais repassadas pela Surf Telecom
+              S.A., prestadora de rede que suporta os serviços da{" "}
+              {constants.nameEmpresa}, as novas ativações de chip passam a exigir a
+              coleta e a validação de biometria facial do consumidor. Trata-se de
+              etapa obrigatória e condicionante: a ativação somente é concluída após
+              a aprovação da biometria.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.2</TopicNumber>
+                <strong>Cronograma de implantação</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              A exigência é implantada de forma escalonada, conforme cronograma
+              definido pela Surf Telecom: Código Nacional (CN) 97 a partir de
+              21/07/2026; demais Códigos Nacionais de forma gradual a partir de
+              10/08/2026, com conclusão prevista até setembro de 2026. Enquanto a
+              exigência não estiver implantada no CN da linha adquirida, a ativação
+              segue o fluxo anterior, sem coleta de biometria.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.3</TopicNumber>
+                <strong>Como funciona</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Após a solicitação de ativação, o consumidor recebe um SMS contendo o
+              link para a coleta da biometria facial, realizada em plataforma da Surf
+              Telecom e de seu parceiro de identificação digital. Para receber o SMS
+              e acessar o link, o chip deve permanecer inserido no aparelho celular.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.4</TopicNumber>
+                <strong>Estado de ativo restrito</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Até a conclusão e a aprovação da biometria, a linha permanece em estado
+              ativo restrito, habilitada exclusivamente para acessar a página de
+              coleta da biometria, receber SMS e originar chamadas para os números de
+              atendimento. Nesse estado a linha não origina chamadas, não origina
+              SMS, não possui navegação irrestrita, não recebe chamadas, não aceita
+              recarga e não realiza portabilidade.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.5</TopicNumber>
+                <strong>Prazo para conclusão da biometria</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              O consumidor dispõe de 30 (trinta) dias corridos, contados do envio do
+              primeiro SMS com o link, para concluir a biometria facial. Não
+              concluída a validação nesse prazo, a linha não será ativada e o chip
+              será cancelado, sem qualquer ônus ao consumidor.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.6</TopicNumber>
+                <strong>Ausência de cobrança durante o estado restrito</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Enquanto a linha permanecer em estado ativo restrito não há efetiva
+              prestação de serviço ao consumidor. Por essa razão, não haverá cobrança
+              de assinatura, franquia, taxa de ativação ou custo de validação
+              biométrica nesse período, considerando-se como fato gerador da cobrança
+              a aprovação da biometria e a consequente liberação plena da linha.
+              Tentativas de validação biométrica reprovadas não são cobradas e podem
+              ser repetidas dentro do prazo do item 1.5.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.7</TopicNumber>
+                <strong>Manutenção das condições comerciais</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              A exigência de biometria facial não altera o plano/benefício
+              contratado, seu preço, sua validade ou suas franquias. O fluxo
+              comercial e a experiência de contratação permanecem os mesmos, sendo a
+              biometria uma etapa adicional e obrigatória do processo de ativação.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.8</TopicNumber>
+                <strong>Recusa e falhas na validação</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              Por se tratar de exigência regulatória, a recusa em realizar a
+              biometria facial impede a ativação da linha. Caso o consumidor opte por
+              não concluir o processo, ou caso a validação não seja concluída por
+              indisponibilidade técnica das plataformas envolvidas, fica assegurada a
+              restituição integral de eventuais valores pagos pelo chip e pelo
+              plano/benefício não ativado.
+            </Paragraph>
+
+            <TopicList>
+              <Topic>
+                <TopicNumber>1.9</TopicNumber>
+                <strong>Tratamento dos dados biométricos</strong>
+              </Topic>
+            </TopicList>
+            <Paragraph>
+              A imagem facial constitui dado pessoal sensível, nos termos do artigo
+              5º, inciso II, da Lei nº 13.709/2018 (LGPD), e é tratada exclusivamente
+              para a finalidade de validação de identidade na habilitação da linha,
+              em cumprimento de obrigação legal e regulatória. As condições de
+              coleta, compartilhamento, retenção e exclusão desses dados, bem como os
+              direitos do titular, estão descritas na Política de Privacidade da{" "}
+              {constants.nameEmpresa}.
+            </Paragraph>
           </Section>
 
           <Section>
