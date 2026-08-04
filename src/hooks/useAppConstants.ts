@@ -8,8 +8,13 @@ import {
 import type { ApelidoRede, AppThemeColors } from "../types/company";
 import { parseAppTheme, defaultThemeColors } from "../types/company";
 import { getButtonTextColor } from "../utils/colorContrast";
+import {
+  normalizeCompanyNetworks,
+  type RedeNetwork,
+} from "../utils/redeHelpers";
 
-export type RedeType = "TIM" | "VIVO" | "AMBOS";
+// "AMBOS" e o valor do seletor "todas as coberturas", nao uma rede.
+export type RedeType = RedeNetwork | "AMBOS";
 
 interface ButtonTextStyle {
   color: string;
@@ -22,6 +27,7 @@ interface UseAppConstantsReturn {
   isError: boolean;
   error: Error | null;
   rede: RedeType;
+  redes: RedeNetwork[];
   apelidoRede: ApelidoRede | null;
   themeColors: AppThemeColors;
   buttonTextStyle: ButtonTextStyle;
@@ -44,13 +50,15 @@ export function useAppConstants(): UseAppConstantsReturn {
     return defaultConstants;
   }, [data]);
 
-  const rede = useMemo<RedeType>(() => {
-    if (data?.rede === "TIM" || data?.rede === "VIVO" || data?.rede === "AMBOS") {
-      return data.rede;
-    }
-
-    return "AMBOS";
+  const redes = useMemo<RedeNetwork[]>(() => {
+    return normalizeCompanyNetworks(data?.rede);
   }, [data]);
+
+  // Compatibilidade com quem ainda espera um escalar (Navbar): uma unica rede
+  // vira ela mesma, mais de uma vira "AMBOS".
+  const rede = useMemo<RedeType>(() => {
+    return redes.length === 1 ? redes[0] : "AMBOS";
+  }, [redes]);
 
   const apelidoRede = useMemo(() => {
     return data?.apelido_rede ?? defaultApelidoRede;
@@ -78,6 +86,7 @@ export function useAppConstants(): UseAppConstantsReturn {
     isError,
     error: error ?? null,
     rede,
+    redes,
     apelidoRede,
     themeColors,
     buttonTextStyle,

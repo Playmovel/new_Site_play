@@ -9,6 +9,7 @@ interface NetworkButtonGroupProps {
   showAllButton: boolean;
   showTimButton: boolean;
   showVivoButton: boolean;
+  showAvtButton: boolean;
   buttonTextColor?: string;
 }
 
@@ -19,11 +20,15 @@ export default function NetworkButtonGroup({
   showAllButton,
   showTimButton,
   showVivoButton,
+  showAvtButton,
   buttonTextColor = "var(--text-primary)",
 }: NetworkButtonGroupProps) {
-  const visibleButtons = [showAllButton, showTimButton, showVivoButton].filter(
-    Boolean,
-  ).length;
+  const visibleButtons = [
+    showAllButton,
+    showTimButton,
+    showVivoButton,
+    showAvtButton,
+  ].filter(Boolean).length;
 
   if (visibleButtons === 0) {
     return null;
@@ -31,6 +36,7 @@ export default function NetworkButtonGroup({
 
   const timLabel = apelidoRede?.apelido_tim || "Cobertura: TIM";
   const vivoLabel = apelidoRede?.apelido_vivo || "Cobertura: VIVO";
+  const avtLabel = apelidoRede?.apelido_avt || "Cobertura: AVT";
 
   return (
     <Container>
@@ -78,6 +84,17 @@ export default function NetworkButtonGroup({
           >
             <ButtonIcon>📡</ButtonIcon>
             <ButtonText>{vivoLabel}</ButtonText>
+          </NetworkButton>
+        )}
+
+        {showAvtButton && (
+          <NetworkButton
+            $isActive={selectedNetwork === "AVT"}
+            $activeTextColor={buttonTextColor}
+            onClick={() => onNetworkChange("AVT")}
+          >
+            <ButtonIcon>📡</ButtonIcon>
+            <ButtonText>{avtLabel}</ButtonText>
           </NetworkButton>
         )}
       </ButtonGroup>

@@ -5,6 +5,10 @@ import type {
   ApelidoRede,
 } from "../types/company";
 import { ensureExternalUrl } from "../utils/urlHelpers";
+import {
+  normalizeCompanyNetworks,
+  type RedeNetwork,
+} from "../utils/redeHelpers";
 
 export type VarType = {
   nameEmpresa: string;
@@ -23,7 +27,8 @@ export type VarType = {
   printApp: string;
   redesSociais: RedesSociais | null;
   cobertura: Cobertura | null;
-  rede: "TIM" | "VIVO" | "AMBOS";
+  rede: RedeNetwork | "AMBOS";
+  redes: RedeNetwork[];
   apelidoRede: ApelidoRede | null;
   whatsappAtendimentoLink: string;
 };
@@ -68,6 +73,7 @@ export const defaultConstants: VarType = {
   redesSociais: null,
   cobertura: null,
   rede: "AMBOS",
+  redes: ["TIM", "VIVO"],
   apelidoRede: null,
   whatsappAtendimentoLink: "",
 };
@@ -88,6 +94,8 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     : null;
 
   const chatLink = ensureExternalUrl(redesSociais?.atendimento);
+
+  const companyNetworks = normalizeCompanyNetworks(data.rede);
 
   const cobertura: Cobertura | null = data.cobertura
     ? {
@@ -116,7 +124,8 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     printApp: ensureExternalUrl(data.link_printapp) || "",
     redesSociais,
     cobertura,
-    rede: (data.rede as "TIM" | "VIVO" | "AMBOS") || "AMBOS",
+    rede: companyNetworks.length === 1 ? companyNetworks[0] : "AMBOS",
+    redes: companyNetworks,
     apelidoRede: data.apelido_rede || null,
     whatsappAtendimentoLink: redesSociais?.whatsapp || "",
   };

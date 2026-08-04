@@ -5,6 +5,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import { useAppConstants, type RedeType } from "../hooks/useAppConstants";
 import { usePlanos } from "../hooks/usePlanos";
 import type { PlanoAPI } from "../services/planService";
+import { REDE_NETWORKS, normalizePlanNetworks } from "../utils/redeHelpers";
 import NetworkButtonGroup from "./NetworkButtonGroup";
 
 interface CardProps {
@@ -768,16 +769,15 @@ const mockPlanos: PlanoAPI[] = [
 ];
 
 export default function CardSlider() {
-  const { constants, rede, apelidoRede, buttonTextStyle } = useAppConstants();
+  const { constants, redes, apelidoRede, buttonTextStyle } = useAppConstants();
   const { data: planos = [], isLoading } = usePlanos(constants.companyId);
   const [active, setActive] = useState(0);
   const [hoveredButton, setHoveredButton] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);
-  const [selectedNetwork, setSelectedNetwork] = useState<RedeType>(
-    rede === "AMBOS" ? "AMBOS" : rede,
-  );
+  // Reajustado pelo efeito abaixo assim que availableNetworks resolve.
+  const [selectedNetwork, setSelectedNetwork] = useState<RedeType>("AMBOS");
   const { isMobile, windowSize } = useWindowSize();
 
   const basePlanos = useMemo(() => {
@@ -787,45 +787,33 @@ export default function CardSlider() {
   }, [planos]);
 
   const availableNetworks = useMemo(() => {
-    const companyAllowsTim = rede === "TIM" || rede === "AMBOS";
-    const companyAllowsVivo = rede === "VIVO" || rede === "AMBOS";
-
-    const normalizedPlanNetworks = basePlanos.map((plan) => {
-      const planRede = plan.rede?.toUpperCase();
-
-      if (planRede === "TIM" || planRede === "VIVO" || planRede === "AMBOS") {
-        return planRede as RedeType;
-      }
-
-      return rede;
-    });
-
-    const hasTimPlans = normalizedPlanNetworks.some(
-      (planRede) => planRede === "TIM" || planRede === "AMBOS",
-    );
-    const hasVivoPlans = normalizedPlanNetworks.some(
-      (planRede) => planRede === "VIVO" || planRede === "AMBOS",
+    const planNetworks = basePlanos.map((plan) =>
+      normalizePlanNetworks(plan.rede, redes),
     );
 
-    const showTimButton = companyAllowsTim && hasTimPlans;
-    const showVivoButton = companyAllowsVivo && hasVivoPlans;
-    const showAllButton = showTimButton && showVivoButton;
+    // Um botao so aparece quando o parceiro vende aquela rede E existe ao
+    // menos um plano nela.
+    const visibleNetworks = REDE_NETWORKS.filter(
+      (network) =>
+        redes.includes(network) &&
+        planNetworks.some((networks) => networks.includes(network)),
+    );
+
+    // "Todas as Coberturas" so faz sentido com mais de uma rede na tela.
+    const showAllButton = visibleNetworks.length > 1;
 
     const defaultNetwork: RedeType = showAllButton
       ? "AMBOS"
-      : showTimButton
-        ? "TIM"
-        : showVivoButton
-          ? "VIVO"
-          : "AMBOS";
+      : (visibleNetworks[0] ?? "AMBOS");
 
     return {
       showAllButton,
-      showTimButton,
-      showVivoButton,
+      showTimButton: visibleNetworks.includes("TIM"),
+      showVivoButton: visibleNetworks.includes("VIVO"),
+      showAvtButton: visibleNetworks.includes("AVT"),
       defaultNetwork,
     };
-  }, [basePlanos, rede]);
+  }, [basePlanos, redes]);
 
   useEffect(() => {
     const allowedNetworks = new Set<RedeType>();
@@ -842,6 +830,10 @@ export default function CardSlider() {
       allowedNetworks.add("VIVO");
     }
 
+    if (availableNetworks.showAvtButton) {
+      allowedNetworks.add("AVT");
+    }
+
     if (allowedNetworks.size > 0 && !allowedNetworks.has(selectedNetwork)) {
       setSelectedNetwork(availableNetworks.defaultNetwork);
     }
@@ -853,18 +845,10 @@ export default function CardSlider() {
       return basePlanos;
     }
 
-    return basePlanos.filter((p) => {
-      const planRede = p.rede?.toUpperCase();
-      const normalizedPlanRede =
-        planRede === "TIM" || planRede === "VIVO" || planRede === "AMBOS"
-          ? planRede
-          : rede;
-
-      return (
-        normalizedPlanRede === selectedNetwork || normalizedPlanRede === "AMBOS"
-      );
-    });
-  }, [basePlanos, selectedNetwork, rede]);
+    return basePlanos.filter((p) =>
+      normalizePlanNetworks(p.rede, redes).includes(selectedNetwork),
+    );
+  }, [basePlanos, selectedNetwork, redes]);
 
   const res = filteredPlanos;
 
@@ -1076,6 +1060,7 @@ export default function CardSlider() {
         showAllButton={availableNetworks.showAllButton}
         showTimButton={availableNetworks.showTimButton}
         showVivoButton={availableNetworks.showVivoButton}
+        showAvtButton={availableNetworks.showAvtButton}
         buttonTextColor={buttonTextStyle.color}
       />
 

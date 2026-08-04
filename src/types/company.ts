@@ -2,6 +2,7 @@ export interface ApelidoRede {
   active: boolean;
   apelido_tim: string;
   apelido_vivo: string;
+  apelido_avt?: string;
 }
 
 export interface RedesSociais {
@@ -110,7 +111,9 @@ export interface CompanyData {
   mvnoparent: string | null;
   mvnoparentid: string | null;
   logotipo: string;
-  rede: string;
+  // O contrato atual (SGM v2) devolve string[]; o legado ainda manda string
+  // simples ou string JSON. Normalizar sempre com normalizeCompanyNetworks.
+  rede: string | string[];
   modulo_esim: boolean;
   valor_esim: string;
   apelido_rede: ApelidoRede;
