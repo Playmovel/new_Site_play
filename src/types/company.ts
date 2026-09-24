@@ -25,6 +25,23 @@ export interface Cobertura {
   bool_cobertura_vivo: boolean;
 }
 
+// Endereco da loja fisica (tb_company.endereco_site), editado no SGM em
+// Minha Operadora > Aplicacoes > Site > Gerenciamento. Independente do
+// endereco fiscal (cep/endereco/numeroendereco). latitude/longitude null =
+// o mapa e montado a partir do endereco em texto.
+export interface EnderecoSite {
+  exibir: boolean;
+  cep: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  uf: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
 export interface AppThemeColors {
   primary: string;
   secondary: string;
@@ -127,6 +144,7 @@ export interface CompanyData {
   link_direciona_venda?: string | null;
   redes_sociais?: RedesSociais | string | null;
   cobertura?: Cobertura | null;
+  endereco_site?: EnderecoSite | string | null;
 }
 
 export interface CompanyRequest {

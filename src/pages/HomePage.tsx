@@ -7,6 +7,7 @@ import Diferenciais from "../components/diferenciais";
 import AboutUs from "../components/AboutUs";
 import InfoSection from "../components/InfoSection";
 import CookieConsent from "../components/Accept.Cookies";
+import StoreLocation from "../components/StoreLocation";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,7 @@ export default function HomePage() {
       <AboutUs />
       <Icons />
       <Diferenciais />
+      <StoreLocation />
       <Footer />
       <CookieConsent />
     </>

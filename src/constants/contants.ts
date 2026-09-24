@@ -3,6 +3,7 @@ import type {
   RedesSociais,
   Cobertura,
   ApelidoRede,
+  EnderecoSite,
 } from "../types/company";
 import { ensureExternalUrl } from "../utils/urlHelpers";
 import {
@@ -31,6 +32,8 @@ export type VarType = {
   redes: RedeNetwork[];
   apelidoRede: ApelidoRede | null;
   whatsappAtendimentoLink: string;
+  // null = parceiro nao cadastrou ou desligou "Exibir no site".
+  enderecoLoja: EnderecoSite | null;
 };
 
 // Valores padrao (fallback) - serao substituidos pelos dados da API
@@ -55,6 +58,29 @@ function parseRedesSociais(
   return redesSociais;
 }
 
+// So devolve o endereco quando o parceiro ligou "Exibir no site" e ha o
+// minimo para mostrar e localizar (logradouro + cidade).
+function parseEnderecoLoja(
+  endereco: CompanyData["endereco_site"],
+): EnderecoSite | null {
+  if (!endereco) return null;
+
+  let parsed: EnderecoSite | null = null;
+  if (typeof endereco === "string") {
+    try {
+      parsed = JSON.parse(endereco) as EnderecoSite;
+    } catch {
+      console.warn("Failed to parse endereco_site:", endereco);
+      return null;
+    }
+  } else {
+    parsed = endereco;
+  }
+
+  if (!parsed?.exibir || !parsed.logradouro || !parsed.cidade) return null;
+  return parsed;
+}
+
 export const defaultConstants: VarType = {
   nameEmpresa: "Play Movel",
   companyId,
@@ -76,6 +102,7 @@ export const defaultConstants: VarType = {
   redes: ["TIM", "VIVO"],
   apelidoRede: null,
   whatsappAtendimentoLink: "",
+  enderecoLoja: null,
 };
 
 // Funcao para transformar dados da API em constants
@@ -128,6 +155,7 @@ export const mapCompanyDataToConstants = (data: CompanyData): VarType => {
     redes: companyNetworks,
     apelidoRede: data.apelido_rede || null,
     whatsappAtendimentoLink: redesSociais?.whatsapp || "",
+    enderecoLoja: parseEnderecoLoja(data.endereco_site),
   };
 };
 
