@@ -1,6 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HomePage, PrivacyPolicyPage, TermsOfUsePage, NotFoundPage } from "./pages";
+import {
+  LandingPage,
+  DocsAuthGate,
+  PrivacyPolicyPage,
+  TermsOfUsePage,
+  NotFoundPage,
+} from "./pages";
 import LoadingScreen from "./components/LoadingScreen";
 import { useAppConstants } from "./hooks/useAppConstants";
 import { useTheme } from "./hooks/useTheme";
@@ -34,16 +40,19 @@ function AppContent() {
     }
   }, [constants.nameEmpresa, constants.linkIcon, isLoading]);
 
-  if (isLoading) {
-    return <LoadingScreen isLoading={isLoading} />;
-  }
+  // A landing ('/') é estática e não depende da API da empresa — não fica
+  // atrás do LoadingScreen. As demais páginas (que usam os dados da empresa)
+  // continuam gated enquanto `useAppConstants` carrega.
+  const gated = (element: ReactNode) =>
+    isLoading ? <LoadingScreen isLoading={isLoading} /> : element;
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/privacidade" element={<PrivacyPolicyPage />} />
-      <Route path="/termos" element={<TermsOfUsePage />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/docs" element={<DocsAuthGate />} />
+      <Route path="/privacidade" element={gated(<PrivacyPolicyPage />)} />
+      <Route path="/termos" element={gated(<TermsOfUsePage />)} />
+      <Route path="*" element={gated(<NotFoundPage />)} />
     </Routes>
   );
 }
