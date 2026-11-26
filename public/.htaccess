@@ -1,0 +1,16 @@
+# SPA fallback: entrega o index.html para as rotas do React
+# (/docs, /privacidade, /termos). Sem isso, acessar essas URLs direto
+# ou dar F5 cai no 404 do servidor (os arquivos nao existem em disco).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # arquivos e pastas reais sao servidos normalmente
+  # (assets/, landing-media/, favicon.png e as pastas de subdominio)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # qualquer outra rota vai para o app React
+  RewriteRule ^ index.html [L]
+</IfModule>
