@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   LandingPage,
-  DocsPage,
+  DocsAuthGate,
   PrivacyPolicyPage,
   TermsOfUsePage,
   NotFoundPage,
@@ -49,7 +49,7 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/docs" element={<DocsPage />} />
+      <Route path="/docs" element={<DocsAuthGate />} />
       <Route path="/privacidade" element={gated(<PrivacyPolicyPage />)} />
       <Route path="/termos" element={gated(<TermsOfUsePage />)} />
       <Route path="*" element={gated(<NotFoundPage />)} />
