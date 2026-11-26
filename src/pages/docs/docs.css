@@ -19,7 +19,9 @@
   font-family: "Manrope", system-ui, -apple-system, sans-serif;
   color: var(--d-ink);
   background: var(--d-bg);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden; /* sem scroll de janela: cada painel rola sozinho */
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   -webkit-font-smoothing: antialiased;
@@ -28,13 +30,35 @@
 .docs *::before,
 .docs *::after { box-sizing: border-box; }
 
+/* barras de rolagem no tema (Firefox + WebKit) */
+.docs-side,
+.docs-main { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.16) transparent; }
+.docs-side::-webkit-scrollbar,
+.docs-main::-webkit-scrollbar { width: 10px; height: 10px; }
+.docs-side::-webkit-scrollbar-track,
+.docs-main::-webkit-scrollbar-track { background: transparent; }
+.docs-side::-webkit-scrollbar-thumb,
+.docs-main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.docs-side::-webkit-scrollbar-thumb:hover,
+.docs-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(237, 10, 100, 0.55);
+  background-clip: padding-box;
+}
+
+/* foco: tira o anel padrão do navegador no clique, mantém no teclado */
+.docs button:focus { outline: none; }
+.docs button:focus-visible { outline: 2px solid var(--d-mag-hi); outline-offset: -2px; border-radius: 8px; }
+
 /* ───── Sidebar ───── */
 .docs-side {
-  position: sticky;
-  top: 0;
-  align-self: start;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background: linear-gradient(180deg, #06072a, #04051f);
   border-right: 1px solid var(--d-line);
   padding: 22px 14px 40px;
@@ -171,7 +195,10 @@
 .docs-ep .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ───── Main ───── */
-.docs-main { padding: 40px clamp(20px, 4vw, 64px) 120px; max-width: 1040px; }
+.docs-main { height: 100%; overflow-y: auto; overscroll-behavior: contain; padding: 40px clamp(20px, 4vw, 64px) 120px; }
+.docs-main > .docs-top,
+.docs-main > article,
+.docs-main > .docs-intro { max-width: 1040px; }
 .docs-top {
   display: flex;
   flex-wrap: wrap;
@@ -295,7 +322,7 @@ table.params td.ds { color: var(--d-mut); }
 
 /* mobile */
 @media (max-width: 860px) {
-  .docs { grid-template-columns: 1fr; }
-  .docs-side { position: static; height: auto; max-height: 48vh; border-right: 0; border-bottom: 1px solid var(--d-line); }
-  .docs-main { padding: 26px 20px 100px; }
+  .docs { grid-template-columns: 1fr; height: auto; min-height: 100dvh; overflow: visible; }
+  .docs-side { height: auto; max-height: 50vh; border-right: 0; border-bottom: 1px solid var(--d-line); }
+  .docs-main { height: auto; overflow: visible; padding: 26px 20px 100px; }
 }
