@@ -8517,6 +8517,304 @@
      ]
     }
    ]
+  },
+  {
+   "id": "loja",
+   "label": "Loja de Chip (Integracao)",
+   "name": "Loja de Chip",
+   "description": "API multi-tenant da loja de chip (pedirmeuchip). Todas as rotas usam /api/loja/{slug}/..., onde {slug} e o subdominio do parceiro. [CONFIRMAR o host de producao com a equipe] ATENCAO: hoje a API nao exige token/chave (so o slug na URL). Endpoints de consulta de PII por CPF ficaram fora desta doc de proposito. Os exemplos usam valores de placeholder, sem dado real.",
+   "baseUrl": "https://sistema.playmovel.com.br",
+   "total": 10,
+   "tree": [
+    {
+     "type": "folder",
+     "name": "Loja e catalogo",
+     "description": "",
+     "children": [
+      {
+       "type": "endpoint",
+       "id": "loja-ep-1",
+       "name": "Configuracao da loja",
+       "method": "GET",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}",
+       "description": "Dados da loja do parceiro: nome, cores, logo, metodos de pagamento aceitos e catalogo de produtos. `{slug}` = subdominio do parceiro (ex.: `minhaloja`).",
+       "auth": false,
+       "params": {
+        "mode": null,
+        "fields": [],
+        "raw": null,
+        "lang": null
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"tenant\": {\"id\": 12, \"slug\": \"minhaloja\", \"name\": \"Minha Loja\", \"logo_url\": \"https://.../logo.png\", \"primary_color\": \"#ED0A64\", \"secondary_color\": \"#04051F\", \"payment_methods\": [\"pix\", \"boleto\", \"credito\"], \"active\": true, \"companyid\": 27}, \"products\": [{\"id\": 1, \"name\": \"Chip Play\", \"description\": \"Chip fisico Multirede\", \"type\": \"fisico\", \"price\": 10.0, \"shipping_price\": 9.9, \"image_url\": null}, {\"id\": 2, \"name\": \"eSIM Play\", \"description\": \"eSIM pelo app\", \"type\": \"esim\", \"price\": 10.0, \"shipping_price\": 0, \"image_url\": null}]}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-2",
+       "name": "Planos de eSIM",
+       "method": "GET",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/planos",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/planos",
+       "description": "Planos de eSIM disponiveis para compra neste parceiro (so os marcados para aparecer e com ICCID eSIM disponivel na rede do plano).",
+       "auth": false,
+       "params": {
+        "mode": null,
+        "fields": [],
+        "raw": null,
+        "lang": null
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"planos\": [{\"id\": 101, \"nome\": \"Play 15GB\", \"preco_plano\": 54.9, \"rede\": \"TIM\", \"gigas\": 15, \"min\": 0, \"sms\": 0}]}"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "folder",
+     "name": "Endereco e cupom",
+     "description": "",
+     "children": [
+      {
+       "type": "endpoint",
+       "id": "loja-ep-3",
+       "name": "Consultar endereco por CEP",
+       "method": "POST",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/cep",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/cep",
+       "description": "Retorna o endereco a partir do CEP (sem numero/complemento).",
+       "auth": false,
+       "params": {
+        "mode": "raw",
+        "fields": [],
+        "raw": "{\"cep\": \"01001000\"}",
+        "lang": "json"
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"logradouro\": \"Praca da Se\", \"bairro\": \"Se\", \"cidade\": \"Sao Paulo\", \"estado\": \"SP\"}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-4",
+       "name": "Validar cupom",
+       "method": "POST",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/coupon",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/coupon",
+       "description": "Valida um cupom e devolve o desconto. `quantity` e `cpf` entram para aplicar as mesmas regras do checkout (base por componente, elegibilidade, limite por cliente, primeira compra).",
+       "auth": false,
+       "params": {
+        "mode": "raw",
+        "fields": [],
+        "raw": "{\"code\": \"BEMVINDO\", \"product_id\": 1, \"subtotal\": 19.9, \"quantity\": 1, \"cpf\": \"<cpf do cliente>\"}",
+        "lang": "json"
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"valid\": true, \"discount\": 5.0, \"type\": \"fixed\", \"value\": 5.0, \"aplicar_em\": \"pedido\"}"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "folder",
+     "name": "Pedidos",
+     "description": "",
+     "children": [
+      {
+       "type": "endpoint",
+       "id": "loja-ep-5",
+       "name": "Criar pedido",
+       "method": "POST",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order",
+       "description": "Cria o pedido. `address` varia por tipo: chip fisico envia completo; eSIM+PIX/boleto nao envia; eSIM+cartao envia so { cep, numero }. `card_data` so quando `payment_method` = `credito`. `planid_personalizado` e obrigatorio para produto eSIM.",
+       "auth": false,
+       "params": {
+        "mode": "raw",
+        "fields": [],
+        "raw": "{\"product_id\": 1, \"customer\": {\"name\": \"<nome>\", \"cpf\": \"<cpf>\", \"email\": \"<email>\", \"phone\": \"<telefone>\"}, \"address\": {\"cep\": \"01001000\", \"logradouro\": \"<rua>\", \"numero\": \"<numero>\", \"bairro\": \"<bairro>\", \"cidade\": \"<cidade>\", \"estado\": \"SP\"}, \"coupon_code\": \"BEMVINDO\", \"payment_method\": \"pix\", \"quantity\": 1, \"card_data\": {\"holder\": \"<nome no cartao>\", \"number\": \"<numero do cartao>\", \"expiry\": \"MM/AA\", \"cvv\": \"<cvv>\"}, \"planid_personalizado\": 101}",
+        "lang": "json"
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 201,
+         "status": "Created",
+         "lang": "json",
+         "body": "{\"order\": {\"id\": 5001, \"order_number\": \"PMC-5001\", \"status\": \"pending\", \"total\": 19.9, \"subtotal\": 19.9, \"discount\": 0, \"quantity\": 1, \"payment_method\": \"pix\", \"asaas_invoice_url\": null, \"asaas_pix_qrcode\": \"<base64 do QR>\", \"asaas_pix_key\": \"<copia e cola PIX>\", \"tracking_code\": null, \"product_id\": 1, \"product_name\": \"Chip Play\", \"product_type\": \"fisico\", \"created_at\": \"2026-11-27T10:00:00Z\"}}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-6",
+       "name": "Status do pedido",
+       "method": "GET",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order/{id}",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order/{id}",
+       "description": "Status e detalhes de um pedido. `{id}` = id do pedido. Observacao: a resposta inclui `cliente_cpf` e `cliente_nome` do pedido.",
+       "auth": false,
+       "params": {
+        "mode": null,
+        "fields": [],
+        "raw": null,
+        "lang": null
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"order\": {\"id\": 5001, \"order_number\": \"PMC-5001\", \"status\": \"paid\", \"total\": 19.9, \"subtotal\": 19.9, \"discount\": 0, \"quantity\": 1, \"payment_method\": \"pix\", \"tracking_code\": \"BR123456789\", \"cliente_cpf\": \"<cpf>\", \"cliente_nome\": \"<nome>\", \"product_type\": \"fisico\", \"created_at\": \"2026-11-27T10:00:00Z\"}}"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "folder",
+     "name": "Ativacao de eSIM",
+     "description": "",
+     "children": [
+      {
+       "type": "endpoint",
+       "id": "loja-ep-7",
+       "name": "Info do eSIM reservado",
+       "method": "GET",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order/{id}/esim-info",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order/{id}/esim-info",
+       "description": "ICCID reservado e status do eSIM do pedido. Retorna 202 enquanto a reserva estiver pendente (pagamento nao confirmado). `plano_pendente=true` indica reserva antiga sem plano: o parceiro deve mostrar o seletor de planos antes de ativar.",
+       "auth": false,
+       "params": {
+        "mode": null,
+        "fields": [],
+        "raw": null,
+        "lang": null
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"iccid\": \"<iccid>\", \"rede\": \"TIM\", \"status\": \"CONFIRMADO\", \"planid\": 101, \"plano_pendente\": false, \"confirmado_em\": \"2026-11-27T10:05:00Z\"}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-8",
+       "name": "Definir plano da reserva",
+       "method": "PATCH",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order/{id}/plano",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order/{id}/plano",
+       "description": "Grava o plano escolhido numa reserva de backfill (que estava sem plano). Imutavel: retorna 409 se o plano ja foi definido.",
+       "auth": false,
+       "params": {
+        "mode": "raw",
+        "fields": [],
+        "raw": "{\"plano_id\": 101}",
+        "lang": "json"
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"ok\": true, \"planid\": 101, \"nome\": \"Play 15GB\", \"preco\": 54.9}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-9",
+       "name": "Ativar linha eSIM",
+       "method": "POST",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order/{id}/ativar-linha",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order/{id}/ativar-linha",
+       "description": "Dispara a ativacao da linha eSIM (sem app da operadora). Segunda cobranca: o cliente ja pagou o eSIM, agora paga o plano. Retorna a fatura (Asaas) do plano para pagamento.",
+       "auth": false,
+       "params": {
+        "mode": "raw",
+        "fields": [],
+        "raw": "{\"ddd\": \"61\", \"payment_method\": \"pix\"}",
+        "lang": "json"
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"ativacao_payment_id\": \"<id>\", \"fatura\": \"<id da fatura>\", \"invoice_url\": \"https://fatura.operadora.app.br/<id>\", \"pix\": {\"payload\": \"<copia e cola PIX>\", \"encodedImage\": \"<base64>\", \"expirationDate\": \"2026-11-27T11:00:00Z\"}, \"pay\": {\"id\": \"<id>\"}}"
+        }
+       ]
+      },
+      {
+       "type": "endpoint",
+       "id": "loja-ep-10",
+       "name": "Status da ativacao + QR do eSIM",
+       "method": "GET",
+       "host": "https://sistema.playmovel.com.br",
+       "path": "/api/loja/{slug}/order/{id}/ativacao-status",
+       "fullUrl": "https://sistema.playmovel.com.br/api/loja/{slug}/order/{id}/ativacao-status",
+       "description": "Status da fatura de ativacao e, quando pago, os dados do eSIM (QR Code / LPA). `apps` traz os links das lojas do parceiro quando status = `paid` ou `active`.",
+       "auth": false,
+       "params": {
+        "mode": null,
+        "fields": [],
+        "raw": null,
+        "lang": null
+       },
+       "responses": [
+        {
+         "name": "Sucesso",
+         "code": 200,
+         "status": "OK",
+         "lang": "json",
+         "body": "{\"status\": \"active\", \"iccid\": \"<iccid>\", \"esim\": {\"qrcode\": \"<base64 do QR>\", \"smdp\": \"<smdp>\", \"code\": \"<code>\", \"lpa\": \"LPA:1$...$...\", \"link_qrcode\": \"https://.../qr.png\", \"path_pdf\": \"https://.../esim.pdf\"}, \"apps\": {\"playstore\": \"https://play.google.com/...\", \"appstore\": \"https://apps.apple.com/...\"}}"
+        }
+       ]
+      }
+     ]
+    }
+   ]
   }
  ]
 }
