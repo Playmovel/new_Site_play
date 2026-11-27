@@ -24,9 +24,6 @@ if (!WA_OK) { const f = document.getElementById('wafab'); if (f) f.style.visibil
 document.querySelectorAll('.dep').forEach(f=>{const v=f.querySelector('video'),btn=f.querySelector('.dep-play'); if(!v||!btn) return;
   btn.addEventListener('click',()=>{document.querySelectorAll('.dep video').forEach(o=>{if(o!==v)o.pause()}); v.controls=true; v.play(); f.classList.add('playing');});
   v.addEventListener('ended',()=>{f.classList.remove('playing'); v.controls=false;});});
-// WhatsApp comercial da revenda (troque se for outro número). Sem número: leva ao Instagram.
-const WA_REVENDA = WA_NUMBER;
-document.querySelectorAll('[data-wa-rev]').forEach(a=>{ if (/^\d{12,13}$/.test(WA_REVENDA)) a.href='https://wa.me/'+WA_REVENDA+'?text='+encodeURIComponent(a.dataset.waRev); });
 
 /* ══ ATIVAÇÕES RECENTES ════════════════════════
    Preencha SOMENTE com ativações REAIS (ex.: exportadas do HubPlay),
@@ -58,12 +55,12 @@ const hdr = document.getElementById('hdr');
 const onScroll = () => hdr.classList.toggle('scrolled', scrollY > 24);
 onScroll(); addEventListener('scroll', onScroll, {passive:true});
 
-// Barra fixa mobile / botão WA: aparecem depois do hero, somem no CTA final
+// Barra fixa mobile / botão WA: aparecem depois do hero, somem no rodapé
 const mbar = document.getElementById('mbar'), fab = document.getElementById('wafab');
 let heroGone = false, finalIn = false;
 const sync = () => { const s = heroGone && !finalIn; mbar.classList.toggle('show', s); fab.classList.toggle('show', s); };
-new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting; sync(); }).observe(document.getElementById('hero-ctas'));
-new IntersectionObserver(([e]) => { finalIn = e.isIntersecting; sync(); }).observe(document.getElementById('revenda'));
+const heroCtas = document.getElementById('hero-ctas'); if (heroCtas) new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting; sync(); }).observe(heroCtas);
+const finalEl = document.querySelector('.ftr'); if (finalEl) new IntersectionObserver(([e]) => { finalIn = e.isIntersecting; sync(); }).observe(finalEl);
 
 // Revelação suave
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -8% 0px'});
